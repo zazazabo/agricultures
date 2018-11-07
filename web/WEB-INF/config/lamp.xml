@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xforms>
+    <xform desc="灯具" id="lampform">
+        <xhandle desc="查询灯具表" id="getlampList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name AS commname,*FROM  t_sensor tl,t_baseinfo AS tb WHERE tl.l_comaddr = tb.comaddr AND    @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_factorycode AND @l_groupe AND @l_deplayment AND @pid">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>
+                    <xfltpara id="l_factorycode" nrp="1=1" para="l_factorycode" sql="l_factorycode = :l_factorycode"></xfltpara>
+                    <xfltpara id="l_groupe" nrp="1=1" para="l_groupe" sql="l_groupe = :l_groupe"></xfltpara>
+                    <xfltpara id="l_deplayment" nrp="1=1" para="l_deplayment" sql="l_deplayment = :l_deplayment"></xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="getComaddrList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@id AND @comaddr AND @pid">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id = ':id'">
+                    </xfltpara>
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>     
+        
+        
+        <xhandle desc="查询灯具是否存" id="existlamp" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM  t_sensor tl WHERE    @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@l_factorycode AND @l_comaddr">
+                    <xfltpara id="l_factorycode" nrp="1=2" para="l_factorycode" sql="l_factorycode = :l_factorycode"></xfltpara>
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        
+        <xhandle desc="查询灯具是否存" id="existlamp" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM  t_sensor tl WHERE    @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@l_factorycode AND @l_comaddr">
+                    <xfltpara id="l_factorycode" nrp="1=2" para="l_factorycode" sql="l_factorycode = :l_factorycode"></xfltpara>
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>     
+        
+        <xhandle desc="查询所有灯具" id="getAllLamp" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT l_comaddr, l_code FROM t_sensor tl WHERE    @CONDITION GROUP BY tl.l_comaddr,tl.l_code" var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_deplayment AND @pid ">
+                    <xfltpara id="l_deplayment" nrp="1=2" para="l_deplayment" sql="l_deplayment = :l_deplayment "></xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>
+        <xhandle desc="删除灯具" id="deleteLamp" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_sensor where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@ID ">
+                    <xfltpara id="ID" nrp="1=1" para="id" sql="id =  :id "></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具基本信息" id="modifylamp" rtnype="JSON">
+            <xsql id="a1" para="l_name,l_groupe,l_worktype" tpe="DDL" tpl="update t_sensor set l_name=':l_name',l_groupe=:l_groupe,l_worktype=:l_worktype where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=':id'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具基本状态" id="modifylampstatus" rtnype="JSON">
+            <xsql id="a1" para="voltage,electric,activepower,presence,l_value,temperature" tpe="DDL" tpl="update t_sensor set voltage=':voltage',electric=':electric',activepower=':activepower',presence=:presence,l_value=:l_value,temperature=:temperature where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@l_comaddr AND @l_code ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                    <xfltpara id="l_code" nrp="1=2" para="l_code" sql="l_code=':l_code'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具调光值" id="modifyvalue" rtnype="JSON">
+            <xsql id="a1" para="l_value" tpe="DDL" tpl="update t_sensor set l_value=:l_value where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=':id'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具调光值" id="modifygroupeval" rtnype="JSON">
+            <xsql id="a1" para="l_value" tpe="DDL" tpl="update t_sensor set l_value=:l_value where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@l_comaddr AND @l_groupe ">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                    <xfltpara id="l_groupe" nrp="1=2" para="l_groupe" sql="l_groupe=':l_groupe'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具调光值" id="modifygroupevalAll" rtnype="JSON">
+            <xsql id="a1" para="l_value" tpe="DDL" tpl="update t_sensor set l_value=:l_value where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@l_comaddr ">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具部署状态" id="modifyDepayment" rtnype="JSON">
+            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_sensor set l_deplayment=:l_deplayment where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具部署状态按装置号" id="modifyDepaymentByset" rtnype="JSON">
+            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_sensor set l_deplayment=:l_deplayment where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@l_code AND @l_comaddr ">
+                    <xfltpara id="l_code" nrp="1=2" para="l_code" sql="l_code=:l_code"></xfltpara>
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改所有灯具部署状态" id="modifyAllDepayment" rtnype="JSON">
+            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_sensor set l_deplayment=:l_deplayment where l_deplayment=1 AND @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@l_comaddr ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="添加灯具" id="addlamp" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="name,l_worktype,l_groupe,l_name,l_factorycode,l_comaddr" tpe="DDL" tpl="insert into t_sensor(name,l_worktype,l_groupe,l_name,l_factorycode,l_comaddr,l_deplayment) values(':name',:l_worktype,:l_groupe,':l_name',':l_factorycode',':l_comaddr',0) " var="rs"></xsql>
+        </xhandle>
+        <xhandle desc="修改灯具工作方式" id="modifyworktype" rtnype="JSON">
+            <xsql id="a1" para="l_worktype" tpe="DDL" tpl="update t_sensor set l_worktype=:l_worktype where l_deplayment=1 AND @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @oldl_groupe  AND @l_code ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                    <xfltpara id="oldl_groupe" nrp="1=1" para="oldl_groupe" sql="oldl_groupe=':oldl_groupe'"></xfltpara>
+                    <xfltpara id="l_code" nrp="1=1" para="l_code" sql="l_code=:l_code"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改所有灯具工作方式" id="modifyALLworktype" rtnype="JSON">
+            <xsql id="a1" para="l_worktype" tpe="DDL" tpl="update t_sensor set l_worktype=:l_worktype where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND  @l_deplayment ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                    <xfltpara id="l_deplayment" nrp="1=2" para="l_deplayment" sql="l_deplayment=:l_deplayment"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具组号" id="modifygroup" rtnype="JSON">
+            <xsql id="a1" para="l_groupe" tpe="DDL" tpl="update t_sensor set l_groupe=:l_groupe where l_deplayment=1 AND @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @oldl_groupe  AND @l_code ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                    <xfltpara id="oldl_groupe" nrp="1=1" para="oldl_groupe" sql="oldl_groupe=':oldl_groupe'"></xfltpara>
+                    <xfltpara id="l_code" nrp="1=1" para="l_code" sql="l_code=:l_code"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改所有灯具组号" id="modifyAllgroup" rtnype="JSON">
+            <xsql id="a1" para="l_groupe" tpe="DDL" tpl="update t_sensor set l_groupe=:l_groupe where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_deplayment ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                    <xfltpara id="l_deplayment" nrp="1=2" para="l_deplayment" sql="l_deplayment=:l_deplayment"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    <xform desc="灯具方案" id="planForm">
+        <xhandle desc="修改灯具所在的时间表" id="modifylampplantime" rtnype="JSON">
+            <xsql id="a1" para="l_plantime" tpe="DDL" tpl="update t_sensor set l_plantime=':l_plantime' where l_deplayment=1 AND @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@l_comaddr AND @l_groupe ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                    <xfltpara id="l_groupe" nrp="1=2" para="l_groupe" sql="l_groupe=':l_groupe'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具所在的场景表" id="modifylampplanscene" rtnype="JSON">
+            <xsql id="a1" para="l_planscene" tpe="DDL" tpl="update t_sensor set l_planscene=':l_planscene' where l_deplayment=1 AND @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@l_comaddr AND @l_groupe ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                    <xfltpara id="l_groupe" nrp="1=2" para="l_groupe" sql="l_groupe=':l_groupe'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="方案编号获取方案信息" id="getLampPlanData" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan tp where  @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@p_code">
+                    <xfltpara id="p_code" nrp="1=2" para="p_code" sql="p_code = ':p_code'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具方案场景2" id="editlampscenebycode" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="p_name,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_scene6,p_scene7,p_scene8" tpe="DDL" tpl="update t_plan set p_name=':p_name',p_scene1=':p_scene1',p_scene2=':p_scene2',p_scene3=':p_scene3',p_scene4=':p_scene4',p_scene5=':p_scene5',p_scene6=':p_scene6',p_scene7=':p_scene7',p_scene8=':p_scene8' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@p_code ">
+                    <xfltpara id="p_code" nrp="1=2" para="p_code" sql="p_code=':p_code'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具方案场景" id="editlampscene" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="p_name,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_scene6,p_scene7,p_scene8" tpe="DDL" tpl="update t_plan set p_name=':p_name',p_scene1=':p_scene1',p_scene2=':p_scene2',p_scene3=':p_scene3',p_scene4=':p_scene4',p_scene5=':p_scene5',p_scene6=':p_scene6',p_scene7=':p_scene7',p_scene8=':p_scene8' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=:id"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="添加灯具方案" id="addlamp" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="pid,p_name,p_type,p_time1,p_time2,p_time3,p_time4,p_time5,p_time6" tpe="DDL" tpl="insert into t_plan(p_attr,pid,p_type,p_name,p_time1,p_time2,p_time3,p_time4,p_time5,p_time6) values(1,':pid',:p_type,':p_name',':p_time1',':p_time2',':p_time3',':p_time4',':p_time5',':p_time6') " var="rs"></xsql>
+        </xhandle>
+        <xhandle desc="灯具部署方案列表" id="getLampPlan" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan tp where  @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@p_attr AND @p_type AND @p_code AND @pid">
+                    <xfltpara id="p_attr" nrp="1=1" para="p_attr" sql="p_attr = :p_attr"></xfltpara>
+                    <xfltpara id="p_type" nrp="1=1" para="p_type" sql="p_type = :p_type"></xfltpara>
+                    <xfltpara id="p_code" nrp="1=1" para="p_code" sql="p_code = :p_code"></xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="添加灯具方案场景" id="addscene" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="p_name,pid,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_scene6,p_scene7,p_scene8" tpe="DDL" tpl="insert into t_plan(p_attr,pid,p_type,p_name,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_scene6,p_scene7,p_scene8) values(1,':pid',:p_type,':p_name',':p_scene1',':p_scene2',':p_scene3',':p_scene4',':p_scene5',':p_scene6',':p_scene7',':p_scene8') " var="rs"></xsql>
+        </xhandle>
+        <xhandle desc="修改灯具方案时间" id="editlamp" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="p_name,p_time1,p_time2,p_time3,p_time4,p_time5,p_time6" tpe="DDL" tpl="update t_plan set p_name=':p_name',p_time1=':p_time1',p_time2=':p_time2',p_time3=':p_time3',p_time4=':p_time4',p_time5=':p_time5',p_time6=':p_time6' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@p_code">
+                    <xfltpara id="p_code" nrp="1=2" para="p_code" sql="p_code=':p_code'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改灯具方案时间" id="editlamp1" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="p_name,p_time1,p_time2,p_time3,p_time4,p_time5,p_time6" tpe="DDL" tpl="update t_plan set p_name=':p_name',p_time1=':p_time1',p_time2=':p_time2',p_time3=':p_time3',p_time4=':p_time4',p_time5=':p_time5',p_time6=':p_time6' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=:id"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    <xform desc="灯具分组" id="GroupeForm">
+        <xhandle desc="" id="getGroupe" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT DISTINCT l_groupe AS id,l_groupe AS text FROM t_sensor where @CONDITION " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_deplayment">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>
+                    <xfltpara id="l_deplayment" nrp="1=2" para="l_deplayment" sql="l_deplayment = :l_deplayment"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="getPlanlist" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.p_code as id,tl.p_code as text,* FROM t_plan tl where  @CONDITION " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@attr AND @pid ">
+                    <xfltpara id="attr" nrp="1=2" para="attr" sql="p_attr=:attr"></xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+</xforms>

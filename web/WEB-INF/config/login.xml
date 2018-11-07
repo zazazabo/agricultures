@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xforms>
+
+    <xform desc="login" id="loginform">
+        <xhandle desc="登陆" id="loginhand" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_user WHERE   @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@name AND @password ">
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'">
+                    </xfltpara>
+                    <xfltpara id="password" nrp="1=1" para="password" sql="password = ':password'">
+                    </xfltpara>            
+                </xflt>      
+            </xsql>
+                       
+        </xhandle>                 
+    </xform>
+    
+    <xform desc="主页" id="main">
+        <xhand id="home" rtn="main.jsp" rtnype="PGE">           
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_user WHERE   @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id = ':id'">
+                    </xfltpara>
+                </xflt>      
+            </xsql>  
+
+            <xsql id="a3" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM   t_menu tm,t_role tr WHERE tm.m_code=tr.code AND tr.enable=1 AND  @CONDITION   ORDER BY m_code ASC" var="menulist">
+                <xflt id="CONDITION" nrp="" tpl="@role AND @m_parent  ">  
+                    <xfltpara id="role" nrp="1=2" para="role" sql="roletype = :role">
+                    </xfltpara>
+                    <xfltpara id="m_parent" nrp="1=1" para="m_parent" sql="tm.m_parent = :m_parent">
+                    </xfltpara>
+                </xflt>
+            </xsql>   
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select * from t_lan " var="lans">     
+            </xsql>                 
+        </xhand>
+        <xhand id="lan" desc="语言" rtnype="JSON">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select * from t_lan " var="lans">     
+            </xsql> 
+        </xhand>
+   
+        
+        <xhandle desc="查看故障信息数量" id="fualtCount" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select count(id) as number from t_fault where f_Isfault is null AND @CONDITION" var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="f_comaddr in (select comaddr from t_baseinfo where pid=':pid')">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+            
+        </xhandle>
+        
+        <xhandle desc="修改故障信息为已读" id="updfualt" rtnype="JSON">
+            <xsql id="a1" para="f_handletime,f_handlep" tpe="DDL" tpl="update t_fault set f_Isfault = 0,f_handletime=':f_handletime',f_handlep=':f_handlep'  where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+              
+        <xhandle desc="查询所有故障信息" id="faultInfo" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select *  from t_fault where f_Isfault is null AND @CONDITION order by f_day desc" var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@pid AND @f_comaddr AND @l_factorycode">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="f_comaddr in (select comaddr from t_baseinfo where pid=':pid')">
+                    </xfltpara>
+                    <xfltpara id="f_comaddr" nrp="1=1" para="f_comaddr" sql="f_comaddr=':f_comaddr'">
+                    </xfltpara>
+                    <xfltpara id="l_factorycode" nrp="1=1" para="l_factorycode" sql="l_factorycode=':l_factorycode'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        
+        <xhandle desc="查询所有故障管理人员信息" id="peopleInfo" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_people  where u_pid like '%P00001%'" var="bootstrap"> 
+                <xflt id="CONDITION" nrp="" tpl="@u_pid">
+                    <xfltpara id="u_pid" nrp="1=1" para="pid" sql="u_pid like'%:pid%'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        
+        <xhandle desc="根据项目编号查询项目名称" id="getpojcetname" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select name from t_project where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@code">
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code=':code'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    
+    <xform desc="地图导航" id="map">
+        <xhandle desc="查询所有网关信息" id="map" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr AND @area AND @pid">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                    <xfltpara id="area" nrp="1=1" para="area" sql="area = ':area'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="查询所有灯具信息" id="lamp" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_lamp where @CONDITION " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_name AND @pid">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
+                    </xfltpara>
+                    <xfltpara id="l_name" nrp="1=1" para="l_name" sql="l_name = ':l_name'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="查询所有网关经纬度" id="lnglat" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION" var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@pid AND @comaddr">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="查询所有网关" id="getallcomaddr" rtnype="JSON">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="SELECT comaddr as id,comaddr as text  FROM t_baseinfo where @CONDITION" var="list">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>  
+                      
+        </xhandle>
+        <xhandle desc="修改网关经纬度" id="updatelnglat" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="Longitude,latitude"  tpe="DDL" tpl="update t_baseinfo set Longitude=':Longitude',latitude=':latitude' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=:comaddr">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        <xhandle desc="修改灯具经纬度" id="updateLamplnglat" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="Longitude,latitude"  tpe="DDL" tpl="update t_lamp set Longitude=':Longitude',latitude=':latitude' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        <xhandle desc="查询灯具分布列表" id="queryLamp" rtnype="JSON">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="SELECT *  FROM t_lamp  AS tb where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr AND @pid">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
+                    </xfltpara>
+                </xflt>      
+            </xsql> 
+            <xsql id="a3" list="true" page="true" tpe="SQL" tpl=" select f_comaddr,f_setcode from t_fault where f_type ='ERC44' and @CONDITION " var="rs2">
+                <xflt id="CONDITION" nrp="" tpl="@f_day">
+                    <xfltpara id="f_day" nrp="1=1" para="f_day" sql="f_day=':f_day'">
+                    </xfltpara>
+                </xflt>  
+            </xsql>              
+        </xhandle>
+        <xhandle desc="获取所有项目" id="getProject" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.code as id,tl.name as text FROM t_project as tl" var="list">
+               
+            </xsql>
+        </xhandle> 
+        <xhandle desc="开关灯、调光" id="lampval" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="l_value"  tpe="DDL" tpl="update t_lamp set l_value=':l_value' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_code">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="comaddr" sql="l_comaddr=:comaddr">
+                    </xfltpara>
+                    <xfltpara id="l_code" nrp="1=1" para="l_code" sql="l_code=:l_code">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+    </xform>
+    
+    
+    
+    <xform desc="统计数据" id="reportmanage">
+                         
+        <xhandle desc="按日查询数据" id="getday" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select CONVERT(varchar(100),day, 23) as d,SUM( (CONVERT(decimal (18, 2), power45)-  CONVERT(decimal (18, 2), power00))) AS val  from t_power where  @CONDITION   GROUP BY day order by day desc" var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr AND @star AND @end AND @pid">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'"> 
+                    </xfltpara> 
+                    <xfltpara id="star" nrp="1=1" para="star" sql="day &gt;= ':star'"> 
+                    </xfltpara> 
+                    <xfltpara id="end" nrp="1=1" para="end" sql="day &lt;= ':end'"> 
+                    </xfltpara> 
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
+                    </xfltpara>          
+                </xflt>
+            </xsql>
+        </xhandle> 
+        
+        <xhandle desc="按月查询数据" id="getmother" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select CONVERT(varchar(7), day, 120) as mother,SUM( (CONVERT(decimal (18, 2), power45)-  CONVERT(decimal (18, 2), power00))) AS val from t_power where @CONDITION  group by CONVERT(varchar(7), day, 120)  order by CONVERT(varchar(7), day, 120) desc" var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr AND @star AND @end AND @pid">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'"> 
+                    </xfltpara> 
+                    <xfltpara id="star" nrp="1=1" para="star" sql="CONVERT(varchar(7), day, 120) &gt;= ':star'"> 
+                    </xfltpara> 
+                    <xfltpara id="end" nrp="1=1" para="end" sql="CONVERT(varchar(7), day, 120) &lt;= ':end'"> 
+                    </xfltpara> 
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
+                    </xfltpara>          
+                </xflt>
+            </xsql>
+        </xhandle> 
+        
+        <xhandle desc="按年查询数据" id="getyear" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select datename(yyyy,day) as years,SUM( (CONVERT(decimal (18, 2), power45)-  CONVERT(decimal (18, 2), power00))) AS val from t_power where @CONDITION  group by datename(yyyy,day)  order by datename(yyyy,day) desc" var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr AND @star AND @end AND @pid">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'"> 
+                    </xfltpara> 
+                    <xfltpara id="star" nrp="1=1" para="star" sql="datename(yyyy,day) &gt;= ':star'"> 
+                    </xfltpara> 
+                    <xfltpara id="end" nrp="1=1" para="end" sql="datename(yyyy,day) &lt;= ':end'"> 
+                    </xfltpara> 
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
+                    </xfltpara>          
+                </xflt>
+            </xsql>
+        </xhandle> 
+    </xform>
+    
+    <xform desc="用户管理" id="usermanage">
+        <xhandle desc="查看用户名是否存在" id="isusername" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select name from t_user where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@name">
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'"> 
+                    </xfltpara>           
+                </xflt>
+            </xsql>
+        </xhandle> 
+        <xhandle desc="获取人员列表" id="query" rtnype="JSON">
+            <xsql desc="查询该用户的子用户" id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_user    WHERE   @CONDITION   " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@u_parent_id">
+                    <xfltpara id="u_parent_id" nrp="1=1" para="u_parent_id" sql="u_parent_id = ':u_parent_id'"> 
+                    </xfltpara>           
+                </xflt>        
+            </xsql>               
+        </xhandle> 
+        <xhand des="查看拥有操作权限" id="power"  rtnype="JSON">    
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select code,roletype,enable from t_role where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@roletype AND @code">
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype = ':roletype'">
+                    </xfltpara>
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code like ':code_%'">
+                    </xfltpara>
+                </xflt>      
+            </xsql>            
+        </xhand>
+        <xhandle desc="查看所有角色" id="rolemenu" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT DISTINCT roletype as id,name as text FROM t_role where @CONDITION " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@parent_id">
+                    <xfltpara id="parent_id" nrp="1=1" para="parent_id" sql="parent_id = ':parent_id'">
+                    </xfltpara>
+                </xflt> 
+            </xsql>
+        </xhandle> 
+        <xhandle desc="添加用户" id="addUser" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="name,sex,phone,department,email,password,pid,m_code,u_parent_id" tpe="DDL" tpl="insert into t_user(name,sex,phone,department,email,password,m_code,u_parent_id,pid) values(':name',':sex',':phone',':department',':email',':password',':m_code',':u_parent_id',':pid') " var="rs">
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改用户" id="editUser" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="department,sex,email,phone,pid,name,m_code" tpe="DDL" tpl="update t_user set department=':department',sex=':sex',email=':email',phone=':phone',pid=':pid',name=':name',m_code=':m_code' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        <xhandle desc="修改密码" id="updatePwd" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="password" tpe="DDL" tpl="update t_user set password=':password' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        <xhandle desc="获取所有项目" id="getProject" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.code as id,tl.name as text FROM t_project tl where @CONDITION  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@code ">
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code = ':code' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        <xhandle desc="获取当前用户下的子角色" id="rolemenu" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT DISTINCT roletype as id,name as text FROM t_role where @CONDITION " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@parent_id ">
+                    <xfltpara id="parent_id" nrp="1=1" para="parent_id" sql="parent_id = ':parent_id' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>  
+        <xhandle desc="查看用户是否存在子用户" id="loopsunuser" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="SQL" tpl="select * from t_user where  @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@u_parent_id ">
+                    <xfltpara id="u_parent_id" nrp="1=1" para="id" sql="u_parent_id =  :id ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>   
+        <xhandle desc="删除用户表" id="deleteUser" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_user where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id =  :id ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    
+    <xform desc="权限管理" id="rolemanage">
+        <xhandle desc="权限分配" id="getpower" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="enable"  tpe="DDL" tpl=" update t_role set enable=':enable' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@code AND @roletype">
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code=:code">
+                    </xfltpara>
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype=:roletype">
+                    </xfltpara>
+                </xflt>
+                
+            </xsql>
+        </xhandle>
+        <xhandle desc="添加角色" id="addrole" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="name,roletype,code,enable,parent_id" tpe="DDL" tpl="insert into t_role(name,roletype,code,enable,parent_id) values(':name',:roletype,':code',':enable',':parent_id') " var="rs">
+            </xsql>
+        </xhandle> 
+        <xhandle desc="获取角色" id="getrole" rtnype="JSON">
+            <xsql desc="获取当前登陆用户的权限" id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM t_role AS tr where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@roletype AND @enable">
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype = :roletype">
+                    </xfltpara> 
+                    <xfltpara id="enable" nrp="1=1" para="enable" sql="enable = :enable">
+                    </xfltpara>                                 
+                </xflt>        
+            </xsql>  
+            <xsql desc="获取用户名" id="a2" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM t_role AS tr where @CONDITION " var="rsname">
+                <xflt id="CONDITION" nrp="" tpl="@name">
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'">
+                    </xfltpara>                                  
+                </xflt>        
+            </xsql>   
+            
+            
+            <xsql desc="获取最大角色编码" id="a2" list="true" page="true" tpe="SQL" tpl="  SELECT MAX(roletype) AS maxtype FROM t_role AS tr " var="rsmax">      
+            </xsql>                                         
+        </xhandle>
+        
+        <xhandle desc="获取菜单列表" id="queryZtree" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select m_code AS id,m_parent as pId,m_title as name,m_icon as icon  from  t_menu,t_role   WHERE code = m_code and enable = 1 and   @CONDITION  ORDER BY m_code ASC  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@roletype">
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype = ':roletype'">
+                    </xfltpara>             
+                </xflt>        
+            </xsql>               
+        </xhandle> 
+        
+        <xhandle desc="查询角色是否拥有该权限" id="iscode" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select code from t_role where enable = 1 and @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@roletype AND @code ">
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype = ':roletype' ">
+                    </xfltpara>
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code = ':code' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>   
+        
+        <xhandle desc="取消单个权限" id="updaterole" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="" tpe="DDL" tpl="update t_role set enable = 0 where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@code AND @roletype ">
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code=:code">
+                    </xfltpara>
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype=:roletype">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="取消多个权限" id="updateMrole" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="" tpe="DDL" tpl="update t_role set enable = 0 where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@code AND @roletype ">
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code like ':code%'">
+                    </xfltpara>
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype=:roletype">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>    
+    </xform>
+    
+    <xform desc="报警设置" id="warnning">
+        <xhandle desc="告警列表" id="queryData" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_people where @CONDITION" var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@u_pid">
+                    <xfltpara id="u_pid" nrp="1=1" para="pid" sql="u_pid = ':pid'">
+                    </xfltpara>
+                </xflt> 
+            </xsql>               
+        </xhandle>
+        <xhandle desc="获取警告类型" id="warntype" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_warn ORDER BY w_id ASC  " var="list">            
+            </xsql>               
+        </xhandle>
+        <xhandle desc="添加警告人员信息" id="addpeople" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="u_phone,u_name,u_email,u_content,u_pid" tpe="DDL" tpl="insert into t_people (u_phone,u_name,u_email,u_content,u_pid) values (':u_phone',':u_name',':u_email',':u_content',':u_pid')" var="rs">
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改警告人员信息" id="update" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="u_name,u_phone,u_email,u_content" tpe="DDL" tpl="update t_people set u_name =':u_name' ,u_phone =':u_phone' ,u_email =':u_email',u_content=':u_content' where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@u_id ">
+                    <xfltpara id="u_id" nrp="1=1" para="u_id" sql="u_id=:u_id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>  
+        <xhandle desc="删除警告人员信息" id="deletepeople" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_people  where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@u_id ">
+                    <xfltpara id="u_id" nrp="1=1" para="u_id" sql="u_id =  :u_id ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+    </xform>
+    
+    <xform desc="报警记录" id="policereord">
+        <xhandle desc="查看报警记录信息" id="reordInfo" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_fault where @CONDITION order by f_day desc " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@f_day1 AND @f_day2 AND @pid">
+                    <xfltpara id="f_day1" nrp="1=1" para="statr" sql="f_day &gt;=  ':statr' ">
+                    </xfltpara>
+                    
+                    <xfltpara id="f_day2" nrp="1=1" para="end" sql="f_day &lt;= ':end'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="f_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>               
+    </xform>
+    
+    <xform desc="操作日志" id="oplog">
+        <xhandle desc="查看操作日志信息" id="oplogInfo" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_oplog where  @CONDITION order by o_time desc" var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@o_time AND @end AND @o_pid">
+                    <xfltpara id="o_time" nrp="1=1" para="statr" sql="o_time &gt;=  ':statr 00:00:00'  ">
+                    </xfltpara>
+                    <xfltpara id="end" nrp="1=1" para="end" sql="o_time &lt;=  ':end 23:59:59' ">
+                    </xfltpara>
+                    <xfltpara id="o_pid" nrp="1=1" para="pid" sql="o_pid like  '%:pid%' ">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>  
+        <xhandle desc="添加操作日志" id="addoplog" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="name,time,comment,type,pid,page,l_comaddr" tpe="DDL" tpl="insert into t_oplog(o_name,o_time,o_comment,o_type,o_pid,o_page,o_comaddr) values(':name',':time',':comment',':type',':pid',':page',':l_comaddr') " var="rs">
+            </xsql>
+        </xhandle>              
+    </xform>
+    
+    <xform desc="项目管理" id="project">
+        <xhandle desc="项目列表" id="queryProject" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_project    WHERE   @CONDITION" var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@name AND @unit AND @code ">
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'"> 
+                    </xfltpara>
+                    <xfltpara id="unit" nrp="1=1" para="unit" sql="unit = ':unit'">
+                    </xfltpara> 
+                    <xfltpara id="code" nrp="1=1" para="pid" sql="code =':pid'">
+                    </xfltpara>             
+                </xflt>        
+            </xsql>   
+        </xhandle>  
+        <xhandle desc="添加项目" id="addProject" rtnype="JSON">
+            <xsql id="a1" para="name,area" tpe="DDL" tpl="insert into t_project(name,area) values(':name',':area') " var="rs">
+            </xsql>
+        </xhandle>    
+        <xhandle desc="查找最后一个项目编码" id="selectlatcode" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select code  from t_project where id = (select max(id) from t_project) " var="codes">
+                
+            </xsql>  
+        </xhandle> 
+        
+        <xhandle desc="查找当前用户的父用户" id="selectparent" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select u_parent_id from t_user where @CONDITION" var="ups">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>  
+        </xhandle>  
+        
+        <xhandle desc="添加项目到当前用户的管理权限下" id="addpid" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="npid" tpe="DDL" tpl="update t_user set pid = pid+':npid' where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+          
+        <xhandle desc="删除项目表" id="delete" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_project where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id =  :id ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        
+        <xhandle desc="查找项目下是否有网关" id="getbase" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid = ':pid' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        
+        <xhandle desc="修改项目表" id="updProject" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="area,name" tpe="DDL" tpl="update t_project set area = ':area',name=':name' where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        
+        <xhandle desc="获取项目" id="getProject" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.code as id,tl.name as text FROM t_project tl where @CONDITION  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@code ">
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code = ':code' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>    
+        
+        <xhandle desc="查找当前用户管理的项目" id="getuserProject" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select pid from t_user where @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id = ':id' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>  
+        
+        <xhandle desc="查找所有拥有该项目管理权的用户" id="getpidUser" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_user where @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid like '%:pid%' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        
+        <xhandle desc="修改用户权限" id="upduserpid" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="pid" tpe="DDL" tpl="update t_user set pid = ':pid' where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=':id'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+                                                                                                 
+    </xform>
+    
+    <xform desc="灯具管理" id="lampmanage">
+        <xhandle desc="查看网关所属项目" id="getpid" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select comaddr from t_baseinfo where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr AND  @pid ">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=':comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid=  ':pid' ">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle> 
+        <xhandle desc="查看灯具编码是否唯一" id="getfactorycode" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select l_factorycode from t_lamp where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_factorycode">
+                    <xfltpara id="l_factorycode" nrp="1=1" para="l_factorycode" sql="l_factorycode=':l_factorycode'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>  
+        
+        <xhandle desc="添加灯具" id="addlamp" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="l_name,l_worktype,l_comaddr,l_deplayment,l_factorycode,l_groupe,lng,lat,wname" tpe="DDL" tpl="insert into t_lamp(l_name,l_worktype,l_comaddr,l_deplayment,l_factorycode,l_groupe,Longitude,latitude,name) values(':l_name',':l_worktype',':l_comaddr',':l_deplayment',':l_factorycode',':l_groupe',':lng',':lat',':wname') " var="rs">
+            </xsql>
+        </xhandle>    
+    </xform>
+    
+    <xform desc="网关管理" id="gateway">
+        <xhandle desc="判断网关地址是否已存在" id="iscomaddr" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select comaddr from t_baseinfo where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=':comaddr'">
+                    </xfltpara>
+                   
+                </xflt>
+            </xsql> 
+        </xhandle> 
+            
+        <xhandle desc="添加网关" id="addbase" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="model,comaddr,name,Longitude,latitude,area,pid,multpower,presence,connecttype" tpe="DDL" tpl="insert into t_baseinfo(model,comaddr,name,Longitude,latitude,area,pid,multpower,presence,connecttype) values(':model',':comaddr',':name',':Longitude',':latitude',':area',':pid',':multpower',':presence',':connecttype') " var="rs">
+            </xsql>
+        </xhandle>    
+    </xform>
+    
+    
+    <xform desc="回路管理" id="loop">
+        <xhandle desc="判断该网关是否属于该项目" id="isporject" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select comaddr from t_baseinfo where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr AND  @pid ">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=':comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid=  ':pid' ">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>  
+        
+        <xhandle desc="查看回路编码是否唯一" id="getl_code" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select l_code from t_loop where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_code">
+                    <xfltpara id="l_code" nrp="1=1" para="l_code" sql="l_code=':l_code'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle> 
+            
+        <xhandle desc="添加网关" id="addloop" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="l_name,l_code,l_worktype,l_comaddr,l_deplayment,l_groupe,name" tpe="DDL" tpl="insert into t_loop(l_name,l_code,l_worktype,l_comaddr,l_deplayment,l_groupe,name) values(':l_name',':l_code',':l_worktype',':l_comaddr',':l_deplayment',':l_groupe',':name') " var="rs">
+            </xsql>
+        </xhandle>    
+    </xform>
+    
+    <xform desc="按经纬度查看日出日落" id="rc">
+        
+      
+        <xhandle desc="" id="r"  rtnype="SUNOUTDOWN">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select 20  " var="rs">
+            </xsql> 
+        </xhandle>    
+          
+    </xform>
+    
+    <xform desc="查看集中器数灯具数" id="mainsub">
+        <xhandle desc="查询集中器数" id="number" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select count(id) as num from t_baseinfo  where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid=':pid'">
+                    </xfltpara>
+                   
+                </xflt>
+            </xsql> 
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select count(id) as num from t_baseinfo  where online=1 and  @CONDITION " var="onlineNumber">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="pid=':pid'">
+                    </xfltpara>
+                   
+                </xflt>
+            </xsql> 
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select count(id) as num from t_lamp where @CONDITION" var="lampNumber">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr in(select comaddr from t_baseinfo where  pid = ':pid' )">
+                    </xfltpara>
+                   
+                </xflt>
+            </xsql>
+        </xhandle> 
+    </xform>
+    
+</xforms>

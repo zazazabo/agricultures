@@ -1,0 +1,296 @@
+*{margin:0;padding:0;}
+body,html{
+    width:100%;height:100%;
+    font-family: "microsoft yahei";
+    overflow:hidden;
+    min-width:1100px;
+}
+.wraper{width:100%;height:100%;}
+.bodyLeft{
+    background:#333744;
+    width:140px;height:100%;
+    position:absolute;
+    z-index:2017;
+    transition:all 0.5s;
+}
+.bodyRight{
+    width:100%;height:100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    transition: all 0.2s; 
+}
+.bodyLeftTop {	
+    height:60px;
+    width:140px;
+}
+.bodyLeftTop img {
+    float: left;
+    display: inline;
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+}
+.bodyLeftTop span {
+    float: left;
+    display: block;
+    /* overflow: hidden; */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 70px;
+    line-height:60px;
+    font-size:18px;
+    color:white;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+.MenuBox{
+    width:100%;
+    height:auto;
+}
+.eachMenu{
+    width:100%;
+    height:auto;
+    position:relative;
+    background: #0e62c7;
+}
+.eachMenu .list{
+    width: 100%;
+    height:40px;
+    line-height: 40px;
+    cursor:pointer;
+    padding-left: 20px;
+    box-sizing: border-box;
+}
+.eachMenu .list span{
+    color: #fff;	
+}
+/* .eachMenu .list:hover{
+        background: -ms-linear-gradient(left,rgba(86,218,255,.9) -200%,#1c2c38 100%);
+    background: -webkit-linear-gradient(left,rgba(86,218,255,.9) -200%,#1c2c38 100%);
+    background: -mos-linear-gradient(left,rgba(86,218,255,.9) -200%,#1c2c38 100%);
+} */
+.eachMenu .list img{
+    float:left;
+    margin:2px 14px 0 14px;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    height: 70%;
+}
+.secondMenu{
+    width:100%;
+    height:auto;
+    background:#333744!important;
+    display:none;
+    text-align: left;
+}
+.secondMenu .secondMenuList{
+    width: 100%;
+    cursor: pointer;
+    font-size: 13px;
+}
+.secondMenu .secondMenuList:hover{
+    background: #4a5064;
+}
+
+.eachMenuSmaller > .secondMenu{
+    position:absolute;
+    left:56px;
+    top:10px;
+}
+#iframe{
+    box-sizing:border-box;
+    padding-left:2px;
+}
+/* ///////////////////////////////////////////// */
+#changeSize {
+    float: left;
+    display: inline;
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border: 1px solid #eee;
+    margin: 15px 0 0 20px;
+}
+.controlMessage {
+    width: auto;
+    position: absolute;
+    top: 0;
+    right: 0;
+    list-style: none;
+    height: 60px;
+    color: #666666;
+}
+.controlMessage .one {
+    height: 40px;
+    padding-top: 20px;
+    float: left;
+    display: inline;
+    position: relative;
+}
+.controlMessage .one:hover .two {
+    display: block;
+}
+.controlMessage .one:hover {
+}
+.controlMessage .one:hover .Till {
+    z-index: 10;
+}
+.controlMessage .one .alarmNub {
+    min-width: 20px;
+    width: auto;
+    height: 20px;
+    padding: 3px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    right: 1px;
+    background: #92c742;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    z-index: 100;
+}
+.controlMessage .imgM {
+    padding: 20px 15px 0 8px;
+}
+.controlMessage img {
+    float: left;
+    display: inline;
+    width: 25px;
+    height: 25px;
+}
+.controlMessage span {
+    line-height: 30px;
+    float: left;
+    display: inline;
+    z-index: 5;
+    height: 40px;
+    padding: 0 8px 0 8px;
+}
+.controlMessage .Till {
+    display: block;
+    position: relative;
+    left: 0;
+    top: 0;
+    z-index: 5;
+}
+.controlMessage .two {
+    z-index: 9;
+    width: 100%;
+    position: absolute;
+    right: 0;
+    top: 60px;
+    background-color: #333744;
+    color: #fff;
+    list-style: none;
+    display: none;
+}
+.controlMessage .two li {
+    display: block;
+    text-align: center;
+    padding: 7px;
+    font-size: 14px;
+}
+.controlMessage .two li:hover {
+    background: #02bfcc;
+    color: white;
+}
+
+ul li{cursor: pointer;}
+.glyphicon-change:before{content:url(imgs/bootstrapicon/change.png)}
+#alarmTable{
+    width:800px;
+    height:544px;
+    position:absolute;
+    right:252px;
+    top:61px;
+    display:none;
+    border:1px solid #ccc;
+    background:white;
+    index:9;
+    padding:10px;
+    -webkit-box-shadow: 2px 2px 5px #333333;
+    box-shadow: 2px 2px 5px #777;
+    border-radius: 5px;
+}
+.controlMessage span{
+    padding:0;
+    color: #fff;
+}
+.Home{
+    float:left;
+}
+#iframe {
+    padding-left: 0px; /*����������أ�����*/
+}
+ul.navTop{
+    list-style:none;
+    width:540px;
+    height:52px;
+    padding-top:7px;
+    float: left;
+}
+ul.navTop li{
+    width:30px;
+    height: 32px;
+    float: left;
+    margin-left: 15px;
+    margin-top:10px;
+    cursor: pointer;
+    position: relative;
+}
+ul.navTop li span{
+    position: absolute;
+    top: 40px;
+    left: 5px;	
+    color: #fff;			
+}
+.controlMessage .one:hover {
+    border-style: none;
+}
+.eachMenu .list .navIcon{
+    width:100%;
+    height:100%;
+    margin: 0;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+.layui-nav-tree {
+    width: 140px!important;
+    padding: 0!important;
+}
+.layui-nav-side{
+    position: initial;
+}
+#navTop{
+    background: #071519;
+}
+.indexIcon{
+    position: absolute;
+    top: 26px;
+    left: 0;
+    color: #fff;
+    font-size: 16px;
+}
+
+
+
+
+
+

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="5">
+        <file>
+            <url>src/java/com/mylib/ControlServlet.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>263</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/gateway.jsp</url>
+            <bookmark id="5">
+                <name/>
+                <line>390</line>
+                <line>438</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/newjsp.jsp</url>
+            <bookmark id="2">
+                <name/>
+                <line>207</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/mylib/ControlServlet.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>264</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/three/web/main.jsp</file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/Documents/NetBeansProjects/three/web/WEB-INF/config/login.xml</file>
+            <file>file:/D:/Documents/NetBeansProjects/three/web/usermanage.jsp</file>
+            <file>file:/D:/Documents/NetBeansProjects/three/web/login.jsp</file>
+            <file>file:/D:/Documents/NetBeansProjects/three/web/static.jsp</file>
+            <file>file:/D:/Documents/NetBeansProjects/three/web/gateway.jsp</file>
+            <file>file:/D:/Documents/NetBeansProjects/three/web/main.jsp</file>
+            <file>file:/D:/Documents/NetBeansProjects/three/web/oplog.jsp</file>
+            <file>file:/D:/Documents/NetBeansProjects/three/web/reportmanage.jsp</file>
+        </group>
+    </open-files>
+</project-private>

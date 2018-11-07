@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xforms>
+    <xform desc="参数模块" id="param">
+        <xhandle desc="查询站点信息" id="updatesite" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="domain,apn,dnsip,dnsport,dnsip_,dnsport_,siteip,siteport,siteip_,siteport_" tpe="DDL" tpl="update t_baseinfo set domain=':domain',apn=':apn',dnsip=':dnsip',dnsport=:dnsport,dnsip_=':dnsip_',dnsport_=:dnsport_, siteip=':siteip',siteport=:siteport,siteip_=':siteip_',siteport_=:siteport_ where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id AND @comaddr  ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=':comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="查询换日时间" id="updatetime" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="chgdaytime,flozetime" tpe="DDL" tpl="update t_baseinfo set chgdaytime=':chgdaytime',flozetime=':flozetime' where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id AND @comaddr  ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=':comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    <xform desc="能耗参数设置" id="power">
+        <xhand id="home" rtn="" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_planpower where @CONDITION  " var="rs1">
+            </xsql>
+        </xhand>
+        <xhandle desc="" id="anylize" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT MONTH(DAY) AS m,* FROM t_planpower AS tp where  @CONDITION  ORDER BY day asc " var="now">
+                <xflt id="CONDITION" nrp="" tpl="@day AND @pid">
+                    <xfltpara id="day" nrp="1=2" para="day" sql="YEAR(DAY)=:day">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid=':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="SELECT MONTH(DAY) AS m,* FROM t_planpower AS tp where  @CONDITION  ORDER BY day asc " var="befor">
+                <xflt id="CONDITION" nrp="" tpl="@day AND @pid">
+                    <xfltpara id="day" nrp="1=2" para="day" sql="YEAR(DAY)=:day-1">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid=':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="anylize1" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT MONTH(DAY) AS m,* FROM t_planpower AS tp where  @CONDITION  ORDER BY day asc " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@day AND @m AND @pid">
+                    <xfltpara id="day" nrp="1=2" para="day" sql="YEAR(DAY)=:day">
+                    </xfltpara>
+                    <xfltpara id="m" nrp="1=2" para="m" sql="month(DAY)=:m">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid=':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="insert" rtnype="JSON">
+            <xsql id="a1" para="day,power,warnpower,pid" tpe="DDL" tpl="insert into t_planpower(day,power,warnpower,pid) values(':day',':power',':warnpower',':pid') " var="rs">
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="update" rtnype="JSON">
+            <xsql id="a1" para="power,warnpower" tpe="DDL" tpl="update t_planpower set power=':power',warnpower=':warnpower' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@year AND @month AND @pid ">
+                    <xfltpara id="year" nrp="1=2" para="year" sql="year(day)=:year">
+                    </xfltpara>
+                    <xfltpara id="month" nrp="1=2" para="month" sql="month(day)=:month">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid=':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    <xform desc="报表模块" id="report">
+        <xhandle desc="查询历史数据报表" id="queryRecord" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select  CONVERT(Nvarchar, day, 23) as dayalis,day,voltage,electric,activepower,powerfactor,powerfactor,power from t_records where @CONDITION group by day,voltage,electric,activepower,powerfactor,power  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@day AND @comaddr">
+                    <xfltpara id="day" nrp="1=2" para="day" sql="day = ':day'"> 
+                    </xfltpara>
+                    <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>  
+
+    </xform>
+
+
+</xforms>  

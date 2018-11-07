@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xForms>
+    <xForm  id="a2" desc="abc1" list="res.load">
+        <xHand id="b1" rtnype="PGE" rtn="/WEB-INF/tpl/form/yqhmshlb.jsp" >
+            <xSql id="yzhqqfz"  tpe="SQL" inst="sysuser"   tpl="select * from admin test2"  var="rs">   
+            </xSql>  
+
+        </xHand>
+    </xForm>
+  
+</xForms>

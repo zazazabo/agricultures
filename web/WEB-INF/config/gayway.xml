@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xforms>
+    <xform desc="网关" id="GaywayForm">
+        <xhandle desc="" id="getProject" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.code as id,tl.name as text FROM t_project tl where @CONDITION  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@code ">
+                    <xfltpara id="code" nrp="1=2" para="code" sql="code = ':code' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="List" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@id AND @comaddr AND @pid">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id = ':id'">
+                    </xfltpara>
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+
+            <xhandle desc="" id="getComaddrList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@id AND @comaddr AND @pid">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id = ':id'">
+                    </xfltpara>
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>      
+        <xhandle desc="回路和灯具是否存在网关" id="existcomaddr" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM (SELECT l_comaddr FROM t_lamp t1 UNION SELECT l_comaddr FROM t_loop t2) AS v WHERE @CONDITION  " var="list">
+                <xflt id="CONDITION" tpl="@l_comaddr ">
+                    <xfltpara id="l_comaddr" nrp="1=0" para="l_comaddr" sql="l_comaddr =  ':l_comaddr' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="modifyGateway" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="model,name,longitude,latitude" tpe="DDL" tpl="update t_baseinfo set model=':model',name=':name',longitude=':longitude',latitude=':latitude' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="deleteGateway" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_baseinfo where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@ID ">
+                    <xfltpara id="ID" nrp="1=1" para="id" sql="id =  :id ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="queryGateway" rtn="rs" rtnype="JSON">
+            <xsql id="a1" inst="sysuser" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION" var="rs">
+                <xflt id="CONDITION" nrp="1=1" tpl="@COMADDR  ">
+                    <xfltpara id="COMADDR" para="comaddr" sql="comaddr = ':comaddr' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="addGateway" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="model,comaddr,name,longitude,latitude,pid" tpe="DDL" tpl="insert into t_baseinfo(model,comaddr,name,longitude,latitude,pid) values(':model',':comaddr',':name',':longitude',':latitude',':pid')" var="rs">
+            </xsql>
+        </xhandle>
+        <xhandle desc="网关" id="getComaddr" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.comaddr as id,tl.comaddr as text,name,online FROM t_baseinfo tl where @CONDITION 
+             " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr  AND @pid ">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="comaddr = ':l_comaddr' ">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql=" pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+</xforms>

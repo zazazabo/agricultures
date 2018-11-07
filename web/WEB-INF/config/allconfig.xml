@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xfiles> 
+    <xfile desc="path" id="/WEB-INF/config/test1.xml">
+    </xfile>
+    <xfile desc="path" id="/WEB-INF/config/test2.xml">
+    </xfile>
+    <xfile desc="path" id="/WEB-INF/config/formuser.xml">
+    </xfile>
+    <xfile desc="path" id="/WEB-INF/config/login.xml">
+    </xfile>
+    <xfile desc="参数设置" id="/WEB-INF/config/param.xml">
+    </xfile>
+    <xfile desc="灯具模块" id="/WEB-INF/config/lamp.xml">
+    </xfile>
+      <xfile desc="网关模块" id="/WEB-INF/config/loop.xml">
+    </xfile>  
+          <xfile desc="网关模块" id="/WEB-INF/config/gayway.xml">
+    </xfile> 
+</xfiles> 

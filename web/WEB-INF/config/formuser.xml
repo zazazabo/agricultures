@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xforms>
+    <xform desc="主页" id="project">
+        <xhandle desc="项目列表" id="queryProject" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_project    WHERE   @CONDITION   " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@name AND @unit ">
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'">
+                    </xfltpara>
+                    <xfltpara id="unit" nrp="1=1" para="unit" sql="unit = ':unit'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="项目列表" id="addProject" rtnype="JSON">
+            <xsql id="a1" para="name,unit,area" tpe="DDL" tpl="insert into t_project(name,unit,area) values(':name',':unit',':area') " var="rs">
+            </xsql>
+        </xhandle>
+        <xhandle desc="删除项目表" id="delete" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_project where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id =  :id ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="getProject" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.code as id,tl.name as text FROM t_project tl where @CONDITION  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@code ">
+                    <xfltpara id="code" nrp="1=1" para="code" sql="code = ':code' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    <xform desc="主页" id="mainsub">
+        <xhand id="home" rtn="newjsp2.jsp" rtnype="PGE">
+
+        </xhand>
+    </xform>
+    <xform desc="告警模块" id="warn">
+        <xhandle desc="告警列表" id="queryData" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_people WHERE   @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@u_phone AND @u_name ">
+                    <xfltpara id="u_phone" nrp="1=1" para="u_phone" sql="u_phone = ':u_phone'">
+                    </xfltpara>
+                    <xfltpara id="u_name" nrp="1=1" para="u_name" sql="u_name = ':u_name'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    <xform desc="菜单模块" id="mainmenu">
+        <xhandle desc="获取菜单列表" id="query" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_menu tm WHERE   tm.m_code IN   (SELECT code AS m_code FROM t_role tr WHERE enable=1 and   @CONDITION ) ORDER BY m_code ASC  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@type ">
+                    <xfltpara id="type" nrp="1!=1" para="type" sql="roletype = :type">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="获取二菜单列表" id="querysub" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM   t_menu tm,t_role tr WHERE tm.m_code=tr.code AND tr.enable=1 AND  @CONDITION   ORDER BY m_code ASC" var="list">
+                <xflt id="CONDITION" nrp="" tpl="@role AND @m_parent  ">
+                    <xfltpara id="role" nrp="1=1" para="role" sql="roletype = :role">
+                    </xfltpara>
+                    <xfltpara id="m_parent" nrp="1=1" para="m_parent" sql="tm.m_parent = :m_parent">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="" id="rolemenu" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT DISTINCT roletype as id,name as text FROM t_role " var="list">
+            </xsql>
+        </xhandle>
+        <!--{id: 1, pId: 0, name: "[core] 基本功能 演示", open: true},-->
+        <xhandle desc="获取菜单列表" id="queryZtree" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select m_code AS id,m_parent as pId,m_title as name,m_icon as icon  from  t_menu   WHERE m_type=0 and   @CONDITION  ORDER BY m_code ASC  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@u_phone AND @u_name ">
+                    <xfltpara id="u_phone" nrp="1=1" para="u_phone" sql="u_phone = ':u_phone'">
+                    </xfltpara>
+                    <xfltpara id="u_name" nrp="1=1" para="u_name" sql="u_name = ':u_name'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    <xform desc="人员表" id="user">
+        <xhandle desc="获取人员列表" id="query" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_user    WHERE   @CONDITION   " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@u_phone AND @u_name ">
+                    <xfltpara id="u_phone" nrp="1=1" para="u_phone" sql="u_phone = ':u_phone'">
+                    </xfltpara>
+                    <xfltpara id="u_name" nrp="1=1" para="u_name" sql="u_name = ':u_name'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="删除用户表" id="deleteUser" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_user where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id =  :id ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="添加用户" id="addUser" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="name,sex,phone,department,email,password,pid" tpe="DDL" tpl="insert into t_user(name,sex,phone,department,email,password,pid) values(':name',':sex',':phone',':department',':email',':password',':pid') " var="rs">
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改用户" id="editUser" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="department,sex,email,phone,pid" tpe="DDL" tpl="update t_user set department=':department',sex=':sex',email=':email',phone=':phone',pid=':pid' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="修改用户权限" id="editUserAuthor" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="author" tpe="DDL" tpl="update t_user set author=':author' where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+    <xform desc="角色表" id="role">
+        <xhandle desc="获取角色" id="getrole" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM t_role AS tr where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@roletype">
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype = :roletype">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM t_role AS tr where @CONDITION " var="rsname">
+                <xflt id="CONDITION" nrp="" tpl="@name">
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM t_role AS tr where @CONDITION " var="rsname">
+                <xflt id="CONDITION" nrp="" tpl="@name">
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="  SELECT MAX(roletype) AS maxtype FROM t_role AS tr " var="rsmax">
+            </xsql>
+        </xhandle>
+        <xhandle desc="添加角色" id="addrole" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="name,roletype,code,enable" tpe="DDL" tpl="insert into t_role(name,roletype,code,enable) values(':name',:roletype,':code',:enable) " var="rs">
+            </xsql>
+        </xhandle>
+        <xhandle desc="更新角色权限" id="updaterole" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="enable" tpe="DDL" tpl="update t_role set enable=:enable where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@roletype AND  @name ">
+                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype=:roletype">
+                    </xfltpara>
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name=':name'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+    </xform>
+</xforms>

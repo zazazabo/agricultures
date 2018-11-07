@@ -1,0 +1,8 @@
+<%@include  file="js.jspf" %>
+<script language="javascript" type="text/javascript" src="js/datepicker/WdatePicker.js"></script>
+<style>body{visibility:hidden;}</style>
+<script>
+    $().ready(function(){
+        $("body").css("visibility", "visible").show();
+    });    
+</script>

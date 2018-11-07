@@ -1,0 +1,445 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"p",
+				"p_time6"
+			],
+			[
+				"pt",
+				"p_time5"
+			],
+			[
+				"p_",
+				"p_type"
+			],
+			[
+				"op",
+				"option\tTag"
+			],
+			[
+				"baseinf",
+				"BaseInfo"
+			],
+			[
+				"baseinfo",
+				"baseinfo"
+			],
+			[
+				"va",
+				"value"
+			],
+			[
+				"ob",
+				"obj"
+			],
+			[
+				"for",
+				"for\tfor (…) {…}"
+			],
+			[
+				"js",
+				"jsonval"
+			],
+			[
+				"obj",
+				"Object"
+			],
+			[
+				"l",
+				"length"
+			],
+			[
+				"basein",
+				"baseinfo"
+			],
+			[
+				"in",
+				"input\tTag"
+			],
+			[
+				"db",
+				"DB"
+			],
+			[
+				"prin",
+				"print_r"
+			],
+			[
+				"qu",
+				"query"
+			],
+			[
+				"ech",
+				"echo\techo \"…\""
+			],
+			[
+				"co",
+				"conn"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"fun",
+				"function"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<xforms>\n    <xform desc=\"test\" id=\"f3\">\n        <xhand id=\"h1\" rtn=\"page/first/test.jsp\" rtnype=\"PGE\">\n        </xhand>\n        <xhand id=\"h2\" rtnype=\"JSON\">\n        </xhand>\n    </xform>\n    <xform desc=\"test\" id=\"f4\">\n        <xhand id=\"h1\" rtn=\"page/first/test.jsp\" rtnype=\"PGE\">\n            <xsql id=\"a\" outpara=\"a1:12,a2:12\" para=\"aid,apassword\" tpe=\"PROC\" tpl=\"CALL proAdmin(':aid',':apassword',?,?)\" var=\"data\">\n            </xsql>\n        </xhand>\n    </xform>\n    <xform desc=\"方案管理界面\" id=\"plan\">\n        <xhandle desc=\"修改回路部署方案\" id=\"getLoopPlan\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT * FROM t_plan tp where  @CONDITION  \" var=\"bootstrap\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@p_attr AND @p_type AND @p_code\">\n                    <xfltpara id=\"p_attr\" nrp=\"1=1\" para=\"p_attr\" sql=\"p_attr = :p_attr\">\n                    </xfltpara>\n                    <xfltpara id=\"p_type\" nrp=\"1=1\" para=\"p_type\" sql=\"p_type = :p_type\">\n                    </xfltpara>\n                    <xfltpara id=\"p_code\" nrp=\"1=1\" para=\"p_code\" sql=\"p_code = :p_code\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"添加回路方案\" id=\"addloop\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"p_outtime,p_intime,p_name,p_type\" tpe=\"DDL\" tpl=\"insert into t_plan(p_attr,p_outtime,p_intime,p_name,p_type) values(0,':p_outtime',':p_intime',':p_name',:p_type) \" var=\"rs\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"添加灯具方案\" id=\"addlamp\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"p_name,p_type,p_time1,p_time2,p_time3,p_time4,p_time5,p_time6\" tpe=\"DDL\" tpl=\"insert into t_plan(p_attr,p_type,p_name,p_time1,p_time2,p_time3,p_time4,p_time5,p_time6) values(1,':p_name',':p_type',':p_time1',':p_time2',':p_time3',':p_time3',':p_time4',':p_time5',':p_time6') \" var=\"rs\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"添加回路方案\" id=\"deleteloop\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" tpe=\"DDL\" tpl=\"delete from t_plan where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" tpl=\"@ID \">\n                    <xfltpara id=\"ID\" nrp=\"1=1\" para=\"id\" sql=\"id =  :id \">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"修改回路方案\" id=\"editloop\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"p_outtime,p_intime,p_name\" tpe=\"DDL\" tpl=\"update t_plan set p_outtime=':p_outtime',p_intime=':p_intime',p_name=':p_name' where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@id \">\n                    <xfltpara id=\"id\" nrp=\"1=1\" para=\"id\" sql=\"id=:id\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n    </xform>\n    <xform desc=\"灯具管理界面\" id=\"lamp\">\n        <xhandle desc=\"修改回路部署方案\" id=\"modifyDepayment\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"l_deplayment\" tpe=\"DDL\" tpl=\"update t_lamp set l_deplayment=:l_deplayment where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@id \">\n                    <xfltpara id=\"id\" nrp=\"1=1\" para=\"id\" sql=\"id=:id\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"删除回路\" id=\"deleteLamp\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" tpe=\"DDL\" tpl=\"delete from t_lamp where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" tpl=\"@ID \">\n                    <xfltpara id=\"ID\" nrp=\"1=1\" para=\"id\" sql=\"id =  :id \">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"h1\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT tl.id as uid,* FROM  t_lamp tl  \" var=\"bootstrap\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"添加灯具\" id=\"addlamp\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"l_worktype,l_groupe,l_name,l_factorycode,l_comaddr\" tpe=\"DDL\" tpl=\"insert into t_lamp(l_worktype,l_groupe,l_name,l_factorycode,l_comaddr,l_deplayment) values(:l_worktype,:l_groupe,':l_name',':l_factorycode',':l_comaddr',0) \" var=\"rs\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"查询灯具表\" id=\"getlamp1\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT tl.id as uid, * FROM  t_lamp tl,t_baseinfo tb WHERE tl.l_comaddr = tb.comaddr AND  @CONDITION  \" var=\"bootstrap\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@l_comaddr AND @l_factorycode\">\n                    <xfltpara id=\"l_comaddr\" nrp=\"1=1\" para=\"l_comaddr\" sql=\"l_comaddr = ':l_comaddr'\">\n                    </xfltpara>\n                    <xfltpara id=\"l_factorycode\" nrp=\"1=1\" para=\"l_factorycode\" sql=\"l_factorycode = :l_factorycode\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"查询灯具表\" id=\"getlamp\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT * FROM  t_lamp  WHERE @CONDITION  \" var=\"bootstrap\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@l_comaddr AND @l_factorycode\">\n                    <xfltpara id=\"l_comaddr\" nrp=\"1=1\" para=\"l_comaddr\" sql=\"l_comaddr = ':l_comaddr'\">\n                    </xfltpara>\n                    <xfltpara id=\"l_factorycode\" nrp=\"1=1\" para=\"l_factorycode\" sql=\"l_factorycode = :l_factorycode\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"comaddr\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT DISTINCT  tl.l_comaddr as comaddr FROM t_lamp tl\" var=\"rs\">\n            </xsql>\n        </xhandle>\n    </xform>\n    <xform desc=\"网关模块\" id=\"gayway\">\n        <xhandle desc=\"\" id=\"modifyGateway\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"model_,comaddr_,name_,longitude,latitude\" tpe=\"DDL\" tpl=\"update t_baseinfo set model=':model_',comaddr=':comaddr_',name=':name_',longitude=':longitude',latitude=':latitude' where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@id_ \">\n                    <xfltpara id=\"id_\" nrp=\"1=1\" para=\"id_\" sql=\"id=:id_\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"获取网关列表\" id=\"comaddr\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT DISTINCT comaddr,name FROM t_baseinfo tl \" var=\"rs\">\n            </xsql>\n            <xsql id=\"a2\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT DISTINCT  p_code ,p_name,* FROM t_plan tp where p_attr=0  and @CONDITION \" var=\"pl\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@p_type\">\n                    <xfltpara id=\"p_type\" nrp=\"1=1\" para=\"p_type\" sql=\"p_type = :p_type\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n    </xform>\n    <xform desc=\"回路模块\" id=\"loop\">\n        <xhandle desc=\"从回路信息取网关列表\" id=\"getGayway\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" tpe=\"SQL\" tpl=\"SELECT DISTINCT tl.l_comaddr FROM t_loop tl \" var=\"rs\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"删除回路\" id=\"deleteLoop\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" tpe=\"DDL\" tpl=\"delete from t_loop where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" tpl=\"@ID \">\n                    <xfltpara id=\"ID\" nrp=\"1=1\" para=\"id\" sql=\"id =  :id \">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"取回路控制方案\" id=\"getPlan\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT * FROM  t_plan  WHERE @CONDITION  \" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@p_code AND @p_attr AND @p_type\">\n                    <xfltpara id=\"p_code\" nrp=\"1=1\" para=\"p_code\" sql=\"p_code = ':p_code'\">\n                    </xfltpara>\n                    <xfltpara id=\"p_attr\" nrp=\"1=1\" para=\"p_attr\" sql=\"p_attr = :p_attr\">\n                    </xfltpara>\n                    <xfltpara id=\"p_type\" nrp=\"1=1\" para=\"p_type\" sql=\"p_type = :p_type\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"查询回路表\" id=\"getloop\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT * FROM  t_loop  WHERE @CONDITION  \" var=\"bootstrap\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@l_comaddr AND @l_code\">\n                    <xfltpara id=\"l_comaddr\" nrp=\"1=1\" para=\"l_comaddr\" sql=\"l_comaddr = ':l_comaddr'\">\n                    </xfltpara>\n                    <xfltpara id=\"l_code\" nrp=\"1=1\" para=\"l_code\" sql=\"l_code = :l_code\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"修改回路方案\" id=\"modifyplan\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"l_plan\" tpe=\"DDL\" tpl=\"update t_loop set l_plan=':l_plan' where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@id_ \">\n                    <xfltpara id=\"id_\" nrp=\"1=1\" para=\"id_\" sql=\"id=:id_\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"修改回路方案\" id=\"modifyname\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"l_name,l_groupe\" tpe=\"DDL\" tpl=\"update t_loop set l_name=':l_name',l_groupe=:l_groupe where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@id_ \">\n                    <xfltpara id=\"id_\" nrp=\"1=1\" para=\"id_\" sql=\"id=:id_\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"修改回路部署方案\" id=\"modifyDepayment\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"l_deplayment\" tpe=\"DDL\" tpl=\"update t_loop set l_deplayment=:l_deplayment where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@id \">\n                    <xfltpara id=\"id\" nrp=\"1=1\" para=\"id\" sql=\"id=:id\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"添加回路\" id=\"addloop\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"l_worktype,l_groupe,l_name,l_code,l_comaddr\" tpe=\"DDL\" tpl=\"insert into t_loop(l_worktype,l_groupe,l_name,l_code,l_comaddr,l_deplayment) values(:l_worktype,:l_groupe,':l_name',':l_code',':l_comaddr',0) \" var=\"rs\">\n            </xsql>\n        </xhandle>\n    </xform>\n    <xform dese=\"bootstrattable\" id=\"f5\">\n        <xhandle desc=\"\" id=\"h1\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"select * from t_baseinfo\" var=\"bootstrap\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"h2\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT DISTINCT model as id,model as text FROM t_baseinfo \" var=\"list\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"loop\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"SELECT tl.id as uid,* FROM t_baseinfo tb,t_loop tl WHERE tb.comaddr = tl.l_comaddr \" var=\"bootstrap\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"查询回路是否已存\" id=\"loopquery\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" page=\"true\" tpe=\"SQL\" tpl=\"select *  from t_loop tl where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"\" tpl=\"@l_code AND @l_comaddr\">\n                    <xfltpara id=\"l_code\" nrp=\"1=1\" para=\"l_code\" sql=\"l_code = ':l_code'\">\n                    </xfltpara>\n                    <xfltpara id=\"l_comaddr\" nrp=\"1=1\" para=\"l_comaddr\" sql=\"l_comaddr = ':l_comaddr'\">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"deleteGateway\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" tpe=\"DDL\" tpl=\"delete from t_baseinfo where @CONDITION \" var=\"rs\">\n                <xflt id=\"CONDITION\" tpl=\"@ID \">\n                    <xfltpara id=\"ID\" nrp=\"1=1\" para=\"id\" sql=\"id =  :id \">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"addGateway\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" para=\"model,comaddr,name,longitude,latitude\" tpe=\"DDL\" tpl=\"insert into t_baseinfo(model,comaddr,name,longitude,latitude) values(':model',':comaddr',':name',':longitude',':latitude')\" var=\"rs\">\n                <!--                <xFlt id=\"CONDITION\" tpl=\"@MODEL AND @COMADDR AND @NAME  \"   nrp=\"\" >\n                    <xFltPara id=\"MODEL\" para=\"model\" sql=\"(':model'\" nrp=\"(''\" />\n                    <xFltPara id=\"COMADDR\" para=\"comaddr\" sql=\"':comaddr'\" nrp=\"''\" />\n                    <xFltPara id=\"NAME\" para=\"name\" sql=\"':name') \" nrp=\"''\" />\n                </xFlt>-->\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"queryGateway\" rtn=\"rs\" rtnype=\"JSON\">\n            <xsql id=\"a1\" inst=\"sysuser\" tpe=\"SQL\" tpl=\"select * from t_baseinfo where @CONDITION\" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"1=1\" tpl=\"@MODEL AND @COMADDR  \">\n                    <xfltpara id=\"MODEL\" para=\"model\" sql=\"model= ':model' \">\n                    </xfltpara>\n                    <xfltpara id=\"COMADDR\" para=\"comaddr\" sql=\"comaddr = ':comaddr' \">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n    </xform>\n    <xform dese=\"(第一次用框架\" id=\"f4\">\n        <xhandle desc=\"\" id=\"h1\" rtn=\"/WEB-INF/page/first/table.jsp\" rtnype=\"PGE\">\n        </xhandle>\n        <xhandle desc=\"\" id=\"h4\" rtn=\"/WEB-INF/page/first/formtojson.jsp\" rtnype=\"PGE\">\n        </xhandle>\n        <xhandle desc=\"\" id=\"h2\" rtn=\"/WEB-INF/page/first/formtojson.jsp\" rtnype=\"PGE\">\n            <xsql id=\"a1\" inst=\"sysuser\" tpe=\"SQL\" tpl=\"select * from t_info where @CONDITION\" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"1=1\" tpl=\"@SNAME AND @SNUM AND @SBEGIN1 \">\n                    <xfltpara id=\"SNAME\" para=\"SNAME\" sql=\"SNAME= ':SNAME' \">\n                    </xfltpara>\n                    <xfltpara id=\"SNUM\" para=\"SNUM\" sql=\"SNUM= ':SNUM' \">\n                    </xfltpara>\n                    <xfltpara id=\"SBEGIN1\" para=\"SBEGIN1\" sql=\"SBEGINTIM= ':SBEGINTIM' \">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"h3\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" tpe=\"SQL\" tpl=\"select t.*,to_char(t.sbegin,'YYYY-MM-DD') as BEGINTIME  from ABC t where @CONDITION\" var=\"rs\">\n                <xflt id=\"CONDITION\" nrp=\"1=1\" tpl=\"@SNAME AND @SAGE AND @SBEGIN1 AND @SBEGIN2  \">\n                    <xfltpara id=\"SNAME\" para=\"SNAME\" sql=\"SNAME= ':SNAME' \">\n                    </xfltpara>\n                    <xfltpara id=\"SAGE\" para=\"SAGE\" sql=\"SAGE= ':SAGE' \">\n                    </xfltpara>\n                    <xfltpara id=\"SBEGIN1\" para=\"SBEGIN1\" sql=\" sbegin >= to_date(':SBEGIN1','YYYY-MM-DD')  \">\n                    </xfltpara>\n                    <xfltpara id=\"SBEGIN2\" para=\"SBEGIN2\" sql=\" sbegin < to_date(':SBEGIN2','YYYY-MM-DD')  \">\n                    </xfltpara>\n                </xflt>\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"nameList\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" tpe=\"SQL\" tpl=\"select distinct t.sname as ID,t.sname as TEXT from ABC t\" var=\"rs\">\n            </xsql>\n        </xhandle>\n        <xhandle desc=\"\" id=\"tree\" rtnype=\"JSON\">\n            <xsql id=\"a1\" list=\"true\" tpe=\"SQL\" tpl='   select t.menuid as \"id\",t.menutext as \"text\"  from t_menu t where  t.menupid=0 ' var=\"rs\">\n            </xsql>\n        </xhandle>\n    </xform>\n    <xform desc=\"重载配置\" id=\"reset\">\n        <xhand id=\"xml\" rtnype=\"RELOAD\">\n        </xhand>\n    </xform>\n</xforms>\n",
+			"file": "WEB-INF/config/test1.xml",
+			"file_size": 16400,
+			"file_write_time": 131765422375894401,
+			"settings":
+			{
+				"buffer_size": 15814,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/Python/Python.sublime-build",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control:ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"Snippet:  ",
+				"Snippet: CDATA"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: r",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control:in",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Add Channel"
+			],
+			[
+				"Package Control: re",
+				"Package Control: Remove Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: s",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Bookmarks: Clear All"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 56.0,
+		"history":
+		[
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.",
+			"quest,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/SideBarEnhancements/Side Bar.sublime-settings",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/SideBarEnhancements/Default (Windows).sublime-keymap",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/strategy.jsp",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/paramconfig.htm",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/newjsp1.jsp",
+		"/C/Users/admin/Downloads/jquery-ui-bootstrap-jquery-ui-bootstrap-v0.5pre-1-g57bfc05/jquery-ui-bootstrap-jquery-ui-bootstrap-57bfc05/index.html",
+		"/C/Users/admin/Downloads/bootstrap-tab-master/bootstrap-tab-master/sample/demo.html",
+		"/C/Users/admin/Downloads/bootstrap-pager-master/bootstrap-pager-master/sample/demo.html",
+		"/C/Users/admin/Downloads/bootstrap-pager-master/bootstrap-pager-master/js/bootstrap-pager.js",
+		"/D/phpStudy/WWW/AdminEAP-php-master/web/config.php",
+		"/C/Users/admin/Downloads/easy-tree-master/easy-tree-master/index.html",
+		"/C/Users/admin/Desktop/editable-table-master/editable-table-master/demo/index.html",
+		"/C/Users/admin/Downloads/jquery.gridform-master/jquery.gridform-master/index.html",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/main.action_files/index2.css",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/main.action_files/ajaxUtils.js",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/main.action_files/home.htm",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/config.htm",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/1.html",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/paramconfig.htm",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/json.json",
+		"/C/Users/admin/Downloads/bootstrap-table-master/bootstrap-table-master/bootstrap-table.jquery.json",
+		"/C/Users/admin/Downloads/bootstrap-table-master/bootstrap-table-master/src/extensions/accent-neutralise/bootstrap-table-accent-neutralise.js",
+		"/C/Users/admin/Downloads/bootstrap-table-master/bootstrap-table-master/index.d.ts",
+		"/C/Users/admin/Downloads/format.1530322680454.json",
+		"/C/Users/admin/Downloads/bootstrapTable-master/bootstrapTable-master/page/userManagement.html",
+		"/C/Users/admin/Downloads/bootstrapTable-master/bootstrapTable-master/page/sss.sql",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/WEB-INF/config/test1.xml",
+		"/C/Users/admin/Downloads/jquery.editable-select/jquery.editable-select/index.html",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/select2-develop/docs/index.html",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/select2-develop/docs/options.html",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/select2-develop/docs/examples.html",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/newjsp.jsp",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/js/genel.js",
+		"/C/Users/admin/Documents/script.sql",
+		"/D/apache-tomcat-7.0.88/conf/server.xml",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/123/index.jsp",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/gatewayconfig.htm",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/main.action.htm",
+		"/C/Users/admin/Downloads/jquery-ui-bootstrap-jquery-ui-bootstrap-v0.5pre-1-g57bfc05/jquery-ui-bootstrap-jquery-ui-bootstrap-57bfc05/22..html",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/newjsp3.jsp",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/table.jsp",
+		"/C/Users/admin/Documents/NetBeansProjects/three/web/select2-develop/docs/community.html",
+		"/C/Users/admin/Downloads/format.1530322637800.json",
+		"/C/Users/admin/Documents/NetBeansProjects/WebApplication1/web/111.html",
+		"/D/phpStudy/WWW/index.php",
+		"/D/phpStudy/WWW/light/2.php",
+		"/C/Users/admin/Desktop/11.txt",
+		"/C/Users/admin/Desktop/3.txt",
+		"/C/Users/admin/Desktop/华铭-路灯控制系统/集中器协议测试软件20171020/集中器协议测试软件/国网规约/rule/00.xml",
+		"/C/Users/admin/Desktop/华铭-路灯控制系统/集中器协议测试软件20171020/集中器协议测试软件/国网规约/rule/FF.xml",
+		"/C/Users/admin/Desktop/华铭-路灯控制系统/集中器协议测试软件20171020/集中器协议测试软件/国网规约/rule/3333",
+		"/E/code/factory/skin/setting.xml",
+		"/C/Users/admin/Desktop/localhost-1529565632664.log",
+		"/D/apache-tomcat-7.0.88/conf/tomcat-users.xml",
+		"/D/phpStudy/WWW/light/config_db.php",
+		"/D/phpStudy/WWW/test.html",
+		"/D/phpStudy/WWW/light/test.html",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/CodeFormatter/CodeFormatter.sublime-settings",
+		"/C/Program Files/NetBeans 8.2/etc/netbeans.conf",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/User/CodeFormatter.sublime-settings",
+		"/D/phpStudy/WWW/light/Db.php",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/CodeFormatter/Default (Windows).sublime-keymap",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/phpfmt/Default.sublime-keymap",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/phpfmt/phpfmt.sublime-settings",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/HTMLBeautify/HTMLBeautify.sublime-settings",
+		"/D/phpStudy/WWW/getUserInfo.php",
+		"/C/Users/admin/Desktop/华铭-路灯控制系统/集中器协议测试软件20171020/集中器协议测试软件/国网规约/rule/01.xml",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/User/Package Control.sublime-settings",
+		"/D/phpStudy/WWW/requstinfo.php",
+		"/D/phpStudy/WWW/3.html",
+		"/D/phpStudy/WWW/11.php",
+		"/D/phpStudy/WWW/2.php",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/User/SublimeCodeIntel.sublime-settings",
+		"/D/phpStudy/WWW/l.php",
+		"/D/phpStudy/WWW/js.php",
+		"/C/Users/admin/AppData/Roaming/Sublime Text 3/Packages/User/SublimePHPIntel.sublime-settings",
+		"/D/phpStudy/WWW/aa.php",
+		"/C/Windows/System32/drivers/etc/hosts",
+		"/D/phpStudy/WWW/wsServer.js",
+		"/D/phpStudy/WWW/websocket_transfer_tcp.go",
+		"/E/code/pycode/1.py",
+		"/E/code/pycode/22.sql",
+		"/D/phpStudy/WWW/nodejswebsock/chat.html",
+		"/D/phpStudy/WWW/c.js",
+		"/D/phpStudy/WWW/s.js",
+		"/D/phpStudy/WWW/server.js",
+		"/D/phpStudy/WWW/nodejswebsock/index2.html",
+		"/D/phpStudy/WWW/WebSocket-Node-master/src/bufferutil.cc",
+		"/D/phpStudy/WWW/nodejswebsock/wsServer.js"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"    ",
+			"        ",
+			"content-main",
+			"Simple tabs",
+			" ",
+			"\\",
+			"params",
+			"user",
+			"sendBtn"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"",
+			"/"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "WEB-INF/config/test1.xml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15814,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3652,
+								3652
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 930.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 41.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "index.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

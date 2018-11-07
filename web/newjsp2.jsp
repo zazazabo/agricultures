@@ -17,10 +17,17 @@
 
 
         <style type="text/css">
-
+            body{
+                height: 800px;
+            }
+            .top{
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
         </style>
         <script type="text/javascript" src="js/genel.js"></script>
-
+        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css" type="text/css">
         <script>
             var websocket = null;
             var conectstr = "ws://119.28.130.53:16181/";
@@ -140,34 +147,24 @@
 
 
     </head>
-    <body id="activity_pane">
-
-
-<!--        <div id="tooltip">
-            <input id="age" title="dsfsdfsd" />
-        </div>-->
-
-
-                <h1>Hello World!</h1>
-                <form id="form1">
-                    <input value="回" name="l_comaddr" />
-                    <input type="button" onclick="hit()" value="搜索" />
-                </form>
-        
-        
-        
-                <div class="link_category">     
-                    <div class="link">
-                        <a class="loading-ajax">simulate 1-second Ajax load</a>
-                    </div>
-                </div>
-                <input name="aa" id="aaa" style="width:300px;height: 100px;" type="textarea" value=""/>
-                <input type="button" onclick="sendmsg();" value="发送hex" id="aaa" value=""/>
-        
-                <input name="aa" id="bbb" style="width:300px;height: 100px;" type="textarea" value=""/>
-                <input type="button" onclick="sendmsgascill();" value="发送ascill" id="aaa" value=""/>    
-        
-           <input type="button" onclick="connect1();" value="连接" id="aaa" value=""/>    
-           <input type="button" onclick="close1();" value="断开" id="aaa" value=""/>    
+    <body id="activity_pane" >
+        <div style=" width: 100%; height: 40%;" class='top'>
+            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; ">
+                <div style="text-align: center; padding-top: 10%; font-size: 2em;">湿度传感器1</div>
+                <div style=" text-align: center;padding-top: 10%; font-size: 2em;">数值：32.5%</div>
+            </div>
+            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; ">
+                <div style="text-align: center; padding-top: 10%; font-size: 2em;">温度传感器1</div>
+                <div style=" text-align: center;padding-top: 10%; font-size: 2em;">数值：28.2.5</div>
+            </div>
+            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; ">
+                <div style="text-align: center; padding-top: 10%; font-size: 2em;">湿度传感2</div>
+                <div style=" text-align: center;padding-top: 10%; font-size: 2em;">数值：32.5%</div>
+            </div>
+            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; ">
+                <div style="text-align: center; padding-top: 10%; font-size: 2em;">温度传感器2</div>
+                <div style=" text-align: center;padding-top: 10%; font-size: 2em;">数值：32.5%</div>
+            </div>
+        </div>
     </body>
 </html>

@@ -160,7 +160,7 @@
                 }
             };
             var websocket = null;
-            var conectstr = "ws://103.46.128.47:18414/";
+            var conectstr = "ws://free.idcfengye.com:16181/";
             var timestamp = 0;
             function sendData(obj) {
 
@@ -168,11 +168,9 @@
                 if (websocket.readyState == 3) {
 
                     layer.confirm("通迅已断开,重连吗?", {//确认要删除吗？
-                        btn: [o[146][lang], o[147][lang]] //确定、取消按钮
+                        btn: ['确定', '取消'] //确定、取消按钮
                     }, function (index) {
                         websocket = new WebSocket(conectstr);
-                        // 连接成功建立的回调方法
-
                         // 连接成功建立的回调方法
                         websocket.onopen = onopen;
                         //接收到消息的回调方法
@@ -517,7 +515,7 @@
         <div class="wraper"> 
             <div class="bodyLeft" style="background: rgb(14, 98, 199) none repeat scroll 0% 0%;">
                 <div class="bodyLeftTop listdisplayNone" style="background:#5cb75c ">
-                    <span  style="width:80px;margin-left:30px;"><label name="xxx" id="275">农业管理系统</label></span>
+                    <span  style="width:80px;margin-left:30px;"><label name="xxx" id="275">智慧农业生产管理控制系统</label></span>
                 </div>
 
                 <ul class="layui-nav layui-nav-tree  MenuBox " >

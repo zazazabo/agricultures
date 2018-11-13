@@ -31,6 +31,7 @@
                     layerAler(langs1[350][lang]);  //请选择您要保存的数据
                     return;
                 }
+                addlogon(u_name, "添加", o_pid, "灯具管理", "导入Excel");
                 var pid = parent.parent.getpojectId();
                 for (var i = 0; i <= selects.length - 1; i++) {
                     var comaddr = selects[i].网关地址;
@@ -108,26 +109,29 @@
                     offset: 'center'
                 });
             }
-            function deleteLamp() {
+            function deleteSensor() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var num = selects.length;
                 if (num == 0) {
-                    layerAler("请勾选您要删除的数据");  //请勾选您要删除的数据
+                    layerAler('请勾选您要删除的数据');  //请勾选您要删除的数据
                     return;
                 }
                 var select = selects[0];
-                if (select.deplayment == "1") {
-                    layerAler("已部署的不能删除");  //已部署的不能删除
+                if (select.l_eplayment == "1") {
+                    layerAler('已部署的不能删除');  //已部署的不能删除
                     return;
                 }
-                layer.confirm("确认要删除吗？", {//确认要删除吗？
-                    btn: ["确定","取消"] //确定、取消按钮
+                layer.confirm(langs1[145][lang], {//确认要删除吗？
+                    btn: ['确定', '取消'] //确定、取消按钮
                 }, function (index) {
-                    $.ajax({url: "sensor.sensormanage.deletesensor.action", type: "POST", datatype: "JSON", data: {id: select.id},
+                    addlogon(u_name, "删除", o_pid, "灯具管理", "删除灯具");
+                    $.ajax({url: "sensor.sensorform.deleteSensor.action", type: "POST", datatype: "JSON", data: {id: select.id},
                         success: function (data) {
                             var arrlist = data.rs;
                             if (arrlist.length == 1) {
-                                $("#gravidaTable").bootstrapTable('refresh');
+                                search();
+                                // $("#gravidaTable").bootstrapTable('refresh');
+                                layerAler('删除成功');   //删除成功
                                 layer.close(index);
                             }
                         },
@@ -141,14 +145,13 @@
             }
 
             function  editlamp() {
-                //addlogon(u_name, "修改", o_pid, "灯具管理", "修改灯具");
-                var o = $("#formedi").serializeObject();
-                $.ajax({async: false, url: "sensor.sensormanage.updsensor.action", type: "get", datatype: "JSON", data: o,
+                addlogon(u_name, "修改", o_pid, "传感器管理", "修改传感器");
+                var o = $("#form2").serializeObject();
+                $.ajax({async: false, url: "sensor.sensorform.modifySensor.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
                         var a = data.rs;
                         if (a.length == 1) {
-                             layerAler("修改成功");
-                             $("#gravidaTable").bootstrapTable('refresh');
+                            search();
                         }
                     },
                     error: function () {
@@ -157,88 +160,77 @@
                 });
             }
 
-            function editsensorInfo() {
+            function editlampInfo() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 if (selects.length <= 0) {
-                    layerAler("请勾选您要编辑的数据");  //请勾选您要编辑的数据
+                    layerAler('请勾选您要编辑的数据');  //请勾选您要编辑的数据
                     return;
                 }
                 var s = selects[0];
-                $("#dreg1").val(s.dreg);  //位置
-                $("#informationnum1").val(s.informationnum);//信息点号
-                $("#sitenum1").val(s.sitenum);  //站号
-                $("#name1").val(s.name);  //名称
-                $("#l_worktype1").combobox('setValue', s.l_worktype);
-                $("#unit1").combobox('setValue', s.unit);
-
-                if (s.deplayment == "1") {    //判断是否部署
-                    $("#informationnum1").attr("readOnly",true);//信息点号
-                    $("#sitenum1").attr("readOnly",true);  //站号
-//                    $("#l_groupe1").combobox("readonly", true);
-//                    $("#l_worktype1").combobox("readonly", true);
-                }
+                $("#name1").val(s.name);
                 $("#hide_id").val(s.id);
+                $("#worktype1").val(s.worktype);
+                $("#dreg1").val(s.dreg);
+                $("#sitenum1").val(s.sitenum);
+                $("#model1").val(s.model);
                 $('#dialog-edit').dialog('open');
                 return false;
 
 
             }
 
-            function checkLampAdd() {
+            function checkSensorAdd() {
 
                 var o = $("#formadd").serializeObject();
-                console.log("o:" + o);
+
+                addlogon(u_name, "添加", o_pid, "传感器管理", "添加传感器");
                 var isflesh = false;
-                $.ajax({url: "sensor.sensormanage.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+
+
+                $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
                     success: function (data) {
                         var arrlist = data.rs;
                         if (arrlist.length == 1) {
                             isflesh = true;
-                            $("#gravidaTable").bootstrapTable('refresh');
+
                         }
                     },
                     error: function () {
                         alert("提交添加失败！");
                     }
                 });
-                return  isflesh;
 
+
+
+
+
+
+
+
+
+//                $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
+//                    success: function (data) {
+//                        console.log(data);
+//                        if (data.total > 0) {
+//                            layerAler('传感器站点已存在');  //灯具编号已存在
+//                        } else if (data.total == 0) {
+//
+//
+//                        }
+//                    },
+//                    error: function () {
+//                        alert("提交查询失败！");
+//                    }
+//                });
+                return  isflesh;
             }
-            
-            //添加首页显示
-            function  addshow(){
-                var selects = $('#gravidaTable').bootstrapTable('getSelections');
-                if (selects.length <= 0) {
-                    layerAler("请勾选您要添加的数据");  //请勾选您要编辑的数据
-                    return;
-                }
-                var s = selects[0];
-                if(s.deplayment !=1){
-                     layerAler("未部署的传感器无法添加");  
-                    return;
-                } 
-                $.ajax({url: "sensor.sensormanage.showsensor.action", type: "POST", datatype: "JSON", data: {id: s.id},
-                        success: function (data) {
-                            var arrlist = data.rs;
-                            if (arrlist.length == 1) {
-                               layerAler("添加成功");
-                            }else{
-                               layerAler("添加失败"); 
-                            }
-                        },
-                        error: function () {
-                            layerAler("提交失败");
-                        }
-                    });
-                
-            }
-            
+
             //搜索
             function  search() {
                 var obj = $("#formsearch").serializeObject();
                 console.log(obj);
                 var opt = {
-                    url: "lamp.lampform.getlampList.action",
+                    url: "sensor.sensorform.getSensorList.action",
                     silent: false,
                     query: obj
                 };
@@ -247,7 +239,6 @@
 
 
             $(function () {
-
 
                 $('#gravidaTable').bootstrapTable({
                     // url: 'lamp.lampform.getlampList.action',
@@ -264,19 +255,19 @@
                             valign: 'middle'
                         }, {
                             field: 'name',
-                            title: '传感器名称',
+                            title: '传感器名称', //灯具名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'model',
-                            title: '型号',
+                            title: '型号', //灯具名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'sitenum',
-                            title: '站号',
+                            title: '站号', //组号
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -288,7 +279,7 @@
                             }
                         }, {
                             field: 'dreg',
-                            title: '数据位置',
+                            title: '数据位置', //控制方案
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -308,48 +299,20 @@
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'numvalue',
-                            title: '数值',
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: 'unit',
-                            title: '单位',
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        },{
                             field: 'deplayment',
-                            title: '部署状态',
+                            title: '部署情况', //部署情况
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
                                 if (value == "1") {
-                                    var str = "<span class='label label-success'>已部署</span>";  //已部署
+                                    var str = "<span class='label label-success'>" + "已部署" + "</span>"; //已部署
                                     return  str;
-                                }else{
-                                    var str = "<span class='label label-warning'>未部署</span>";  //未部署
+                                } else {
+                                    var str = "<span class='label label-warning'>" + "未部署" + "</span>"; //未部署
                                     return  str;
                                 }
                             }
-                        }, 
-                        {
-                            field: 'online',
-                            title: '在线状态', //在线状态
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle',
-                            formatter: function (value, row, index) {
-                                if (value == 1) {
-                                    return "<img  src='img/online1.png'/>";  //onclick='hello()'
-
-                                } else {
-                                    return "<img  src='img/off.png'/>";  //onclick='hello()'
-                                }
-
-                            },
                         }],
                     clickToSelect: true,
                     singleSelect: true,
@@ -368,7 +331,6 @@
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },
-
                     //服务器url
                     queryParams: function (params)  {   //配置参数     
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
@@ -415,21 +377,12 @@
                         obj.l_comaddr = record.id;
                         obj.pid = "${param.pid}";
                         var opt = {
-                            url: "lamp.lampform.getlampList.action",
+                            url: "sensor.sensorform.getSensorList.action",
                             query: obj,
                             silent: false
                         };
                         $("#gravidaTable").bootstrapTable('refresh', opt);
                     }
-
-
-
-
-//                    url: "login.map.getallcomaddr.action?pid=" + o_pid,
-//                    onLoadSuccess: function (data) {
-////                        $(this).combobox("select", data[0].id);
-////                        $(this).val(data[0].text);
-//                    }
                 });
 
                 $('#excel-file').change(function (e) {
@@ -499,6 +452,7 @@
                     buttons: {
                         修改: function () {
                             editlamp();
+
                         }, 关闭: function () {
                             $(this).dialog("close");
                         }
@@ -619,10 +573,9 @@
                                         &nbsp;</span>
                                 </td>
                                 <td>
-                                    <select class="easyui-combobox" name="l_deplayment"  id="busu" style="width:150px; height: 30px">
+                                    <select class="easyui-combobox" name="deplayment"  id="busu" style="width:150px; height: 30px">
                                         <option value="0">未部署</option>
                                         <option value="1">已部署</option>           
-
                                     </select>
                                 </td>
                                 <td>
@@ -641,14 +594,11 @@
             <button class="btn btn-success ctrol"  onclick="showDialog();" data-toggle="modal" data-target="#pjj33" id="add">
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;添加
             </button>
-            <button class="btn btn-primary ctrol" onclick="editsensorInfo()"   id="xiugai1">
+            <button class="btn btn-primary ctrol" onclick="editlampInfo()"   id="xiugai1">
                 <span class="glyphicon glyphicon-pencil"></span>&nbsp;编辑
             </button>
-            <button class="btn btn-danger ctrol" onclick="deleteLamp();" id="shanchu">
+            <button class="btn btn-danger ctrol" onclick="deleteSensor();" id="shanchu">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;删除
-            </button>
-            <button type="button" id="btn_download" class="btn btn-primary" onClick ="addshow()">
-                添加到首页显示
             </button>
             <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
@@ -664,9 +614,14 @@
 
 
         <!-- 添加 -->
+
+        <!--        <div id="dialog_simple" title="Dialog Simple Title">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>-->
+
         <div id="dialog-add"  class="bodycenter"  style=" display: none" title="传感器添加">
 
-            <form action="" method="POST" id="formadd" onsubmit="return checkLampAdd()">      
+            <form action="" method="POST" id="formadd" onsubmit="return checkSensorAdd()">      
                 <table>
                     <tbody>
                         <tr>
@@ -676,27 +631,15 @@
 
                                     <input id="l_comaddr"  class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 
                                            data-options='editable:false,valueField:"id", textField:"text"' />
-                                </span> 
-                            </td>
+                                </span>  
+
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" >寄存器位置</span>&nbsp;
-                                <input id="dreg"  name="dreg" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
+                                <span style="margin-left:10px;" >网关名称</span>&nbsp;
+                                <input id="comaddrname" readonly="true"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text">
+
                             </td>
                         </tr>
-
-                        <tr>
-                            <td>
-                                <span style="margin-left:20px;" >信息点号</span>&nbsp;
-                                <input id="informationnum" name="informationnum" style="width:150px;display: inline;" placeholder="信息点号" type="text">
-                            </td>
-                            <td></td>
-                            <td>
-                                <span style="margin-left:10px;" >传感器名</span>&nbsp;
-                                <input id="name" class="form-control"  name="name" style="width:150px;display: inline;" placeholder="请输入传感器名称" type="text">
-
-                            </td>
-                        </tr>   
 
                         <tr>
                             <td>
@@ -705,100 +648,82 @@
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                <span class="menuBox">
-                                    <select class="easyui-combobox"  id="worktype" name="worktype" data-options='editable:false' style="width:150px; height: 30px">
-                                        <option value="0">时间</option>
-                                        <option value="1">场景</option>
-                                        <option value="2">信息点</option>
-                                    </select>
-                                </span>
+                                <span style="margin-left:10px;" >传感器名</span>&nbsp;
+                                <input id="name" class="form-control"  name="name" style="width:150px;display: inline;" placeholder="传感器名" type="text">
+
                             </td>
-                        </tr>                  
+
+                        </tr>    
+
+
                         <tr>
                             <td>
-                                <span style="margin-left:20px;" >&#8195;&#8195;单位</span>&nbsp;
-                                <span class="menuBox">
-                                    <select class="easyui-combobox" id="unit" name="unit" data-options='editable:false' style="width:150px; height: 30px">
-                                        <option value="m/s">m/s</option>
-                                        <option value="㎜">㎜</option>
-                                        <option value="℃">℃</option>
-                                        <option value="%">%</option>
-                                    </select>
-                                </span>
-                            </td> 
+                                <span style="margin-left:20px;" >数据位置</span>&nbsp;
+                                <input id="dreg" class="form-control" name="dreg" style="width:150px;display: inline;" placeholder="数据位置" type="text">
+                            </td>
+                            <td></td>
+                            <td>
+                                <span style="margin-left:10px;" >工作模式</span>&nbsp;
+                                <input id="worktype" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
+
+                            </td>
+
+                        </tr>                  
+                        <tr>
+
+                            <td>
+                                <span style="margin-left:20px;" >&#8195;&#8195;型号</span>&nbsp;
+                                <input id="model" value="JD-SENSOR-001" class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">
+                            </td>
 
                         </tr> 
                     </tbody>
                 </table>
             </form>                        
         </div>
-        <!--编辑-->
+
         <div id="dialog-edit"  class="bodycenter" style=" display: none"  title="传感器编辑">
-            <form action="" method="POST" id="formedi" onsubmit="return editlamp()">  
+            <form action="" method="POST" id="form2" onsubmit="return editlamp()">  
                 <input type="hidden" id="hide_id" name="id" />
+                <input type="hidden" id="deployment" name="deployment" />
                 <table>
                     <tbody>
-                        <tr>
-                            <td>
-                                <span style="margin-left:20px;" >网关编号</span>&nbsp;
-                                <span class="menuBox">
-                                    <input  readonly="true"  id="l_comaddr1" readonly="true"  class="form-control"  name="l_comaddr" style="width:150px;display: inline;" placeholder="网关地址" type="text">     
-                                </span>  
-                            </td>
-                            <td></td>
-                            <td>
-                                <span style="margin-left:10px;" >寄存器位置</span>&nbsp;
-                                <input id="dreg1"  name="dreg" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span style="margin-left:20px;" >信息点号</span>&nbsp;
-                                <input id="informationnum1" name="informationnum" style="width:150px;display: inline;" placeholder="信息点号" type="text">
-                            </td>
-                            <td></td>
-                            <td>
-                                <span style="margin-left:10px;" >传感器名</span>&nbsp;
-                                <input id="name1" class="form-control"  name="name" style="width:150px;display: inline;" placeholder="请输入传感器名称" type="text">
-
-                            </td>
-                        </tr>   
 
                         <tr>
                             <td>
                                 <span style="margin-left:20px;" >&#8195;&#8195;站号</span>&nbsp;
-                                <input id="sitenum1"  name="sitenum" style="width:150px;display: inline;" placeholder="站号" type="text">
+                                <input id="sitenum1" readonly="true" class="form-control" name="sitenum" style="width:150px;display: inline;" placeholder="站号" type="text">
+                            </td>
+                            <td></td>
+                            <td>
+                                <span style="margin-left:10px;" >传感器名</span>&nbsp;
+                                <input id="name1" class="form-control"  name="name" style="width:150px;display: inline;" placeholder="传感器名" type="text">
+
+                            </td>
+                        </tr>    
+                        <tr>
+                            <td>
+                                <span style="margin-left:20px;" >数据位置</span>&nbsp;
+                                <input id="dreg1" class="form-control" name="dreg" style="width:150px;display: inline;" placeholder="数据位置" type="text">
                             </td>
                             <td></td>
                             <td>
                                 <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                <span class="menuBox">
-                                    <select class="easyui-combobox"  id="worktype1" name="worktype" data-options='editable:false' style="width:150px; height: 30px">
-                                        <option value="0">时间</option>
-                                        <option value="1">场景</option>
-                                        <option value="2">信息点</option>
-                                    </select>
-                                </span>
+                                <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
+
                             </td>
+
                         </tr>                  
                         <tr>
+
                             <td>
-                                <span style="margin-left:20px;" >&#8195;&#8195;单位</span>&nbsp;
-                                <span class="menuBox">
-                                    <select class="easyui-combobox" id="unit1" name="unit" data-options='editable:false' style="width:150px; height: 30px">
-                                        <option value="m/s">m/s</option>
-                                        <option value="㎜">㎜</option>
-                                        <option value="℃">℃</option>
-                                        <option value="%">%</option>
-                                    </select>
-                                </span>
-                            </td> 
+                                <span style="margin-left:20px;" >&#8195;&#8195;型号</span>&nbsp;
+                                <input id="model1" value="JD-SENSOR-001" class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">
+                            </td>
 
                         </tr> 
-
                     </tbody>
-                </table>   
+                </table>
             </form>
         </div>  
 

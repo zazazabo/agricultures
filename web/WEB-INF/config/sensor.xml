@@ -1,48 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xforms>
-    <xform desc="传感器管理" id="sensormanage">
-        <xhandle desc="首页显示的传感器" id="sensorshowlist" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_sensor  WHERE show=1 and @CONDITION" var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@pid">
-                    <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr in (select comaddr from t_baseinfo where pid=':pid')"> 
-                    </xfltpara>         
-                </xflt>        
-            </xsql>   
-        </xhandle> 
-         
-        <xhandle desc="添加传感器" id="addsensor" rtnype="JSON">
-            <xsql id="a1" para="l_comaddr,name,dreg,informationnum,sitenum,worktype,unit" tpe="DDL" tpl="insert into t_sensor(l_comaddr,name,dreg,informationnum,sitenum,worktype,unit) values(':l_comaddr',':name',':dreg',':informationnum',':sitenum',':worktype',':unit') " var="rs">
+    <xform desc="灯具" id="sensorform">
+        <xhandle desc="查询传感表" id="getSensorList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name AS commname,*FROM  t_sensor tl,t_baseinfo AS tb WHERE tl.l_comaddr = tb.comaddr AND    @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr  AND @deplayment AND @pid">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>
+                    <xfltpara id="deplayment" nrp="1=1" para="deplayment" sql="deplayment = :deplayment"></xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
+                </xflt>
             </xsql>
-        </xhandle>    
-         
-        <xhandle desc="删除项目表" id="deletesensor" rtn="rs" rtnype="JSON">
-            <xsql id="a1" tpe="DDL" tpl="delete from t_sensor where @CONDITION " var="rs">
-                <xflt id="CONDITION" tpl="@id ">
-                    <xfltpara id="id" nrp="1=1" para="id" sql="id =  :id ">
+        </xhandle>
+        <xhandle desc="" id="getComaddrList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@id AND @comaddr AND @pid">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id = ':id'">
                     </xfltpara>
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>     
+        
+        <xhandle desc="查询传感器站号是否存在" id="existsite" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM  t_sensor tl WHERE    @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@sitenum AND @l_comaddr">
+                    <xfltpara id="sitenum" nrp="1=2" para="sitenum" sql="sitenum = :sitenum"></xfltpara>
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>
                 </xflt>
             </xsql>
         </xhandle>
         
+
+
+
+
         
-        <xhandle desc="修改传感器" id="updsensor" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="dreg,informationnum,name,sitenum,worktype,unit" tpe="DDL" tpl="update t_sensor set dreg = ':dreg',informationnum=':informationnum',name=':name',sitenum=':sitenum',worktype=':worktype',unit=':unit' where  @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
-                    </xfltpara>
+        <xhandle desc="查询所有传感器" id="getAllSensor" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM  t_sensor where deplayment=1" var="rs">
+   
+            </xsql> 
+        </xhandle>
+
+        <xhandle desc="删除传感器" id="deleteSensor" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_sensor where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@ID ">
+                    <xfltpara id="ID" nrp="1=2" para="id" sql="id =  :id "></xfltpara>
                 </xflt>
             </xsql>
-        </xhandle> 
-        
-        <xhandle desc="首页显示传感器" id="showsensor" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="" tpe="DDL" tpl="update t_sensor set show =1 where  @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
-                    </xfltpara>
+        </xhandle>
+        <xhandle desc="修改传感器基本信息" id="modifySensor" rtnype="JSON">
+            <xsql id="a1" para="name,model,worktype,dreg" tpe="DDL" tpl="update t_sensor set name=':name',model=':model',worktype=:worktype,dreg=:dreg where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
                 </xflt>
             </xsql>
-        </xhandle> 
-                                                                                                    
+        </xhandle>
+        <xhandle desc="修改灯具部署状态" id="modifyDepayment" rtnype="JSON">
+            <xsql id="a1" para="deplayment" tpe="DDL" tpl="update t_sensor set deplayment=:deplayment where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="添加传感器" id="addsensor" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
+        </xhandle>
     </xform>
-    
 </xforms>

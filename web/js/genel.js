@@ -201,6 +201,23 @@ function randnum(n, m) {
 }
 
 
+
+
+
+
+function buicode2(paraArr) {
+    var ByteToSend = "";
+    for (var i = 0; i < paraArr.length; i++) {
+        // console.log(hexData[i]);
+        ByteToSend = ByteToSend + b2s(paraArr[i]) + " ";
+        //console.log(hexData[i].toString(16));
+    }
+    return  ByteToSend;
+}
+
+
+
+
 //地址域 字符串  控制域:整数   AFN:功能码 整数   SEQ:帧序列 整数 0x72    DA 整数  DT 整数  参数数组:
 function buicode(comaddr, C, AFN, SEQ, DA, DT, paraArr) {
 
@@ -394,13 +411,12 @@ function dealsend2(msg, data, fn, func, comaddr, type, param, val) {
 
 
 
-function dealsend2(msg, data, fn, func, comaddr, type, param, val,res=1) {
+function dealsend2(msg, data, func, comaddr, type, param, val, res = 1) {
     var user = new Object();
     user.begin = '6A';
     user.res = 1;
     user.status = "";
     user.comaddr = comaddr;
-    user.fn = fn;
     user.function = func;
     user.param = param;
     user.page = 2;

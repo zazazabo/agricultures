@@ -52,7 +52,7 @@
             });
 
         </script>
-
+   
 
     </head>
     <body id="activity_pane" >

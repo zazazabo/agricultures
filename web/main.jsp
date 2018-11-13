@@ -664,12 +664,12 @@
                                 &nbsp;</span>
                             <input id="comaddrlist" data-options='editable:false,valueField:"id", textField:"text"' class="easyui-combobox"/>
                         </td>
-                        <td>
+<!--                        <td>
                             <span style="margin-left:20px;" id="292" name="xxx">
                                 灯具编号
                             </span>&nbsp;
                             <input type="text" id ="l_factorycode" style="width:150px; height: 30px;">
-                        </td>
+                        </td>-->
                         <td>
                             <button class="btn btn-sm btn-success" onclick="select()" style="margin-left:10px;"><span id="34" name="xxx">搜索</span></button>
                         </td>
@@ -817,7 +817,7 @@
                             valign: 'middle'
                         }, {
                             field: 'l_factorycode',
-                            title: '灯具编号', //灯具编号  o[292][lang]
+                            title: '设备编号', //  o[292][lang]
                             width: 25,
                             align: 'center',
                             valign: 'middle'

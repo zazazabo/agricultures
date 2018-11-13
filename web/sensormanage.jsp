@@ -299,17 +299,17 @@
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'deployment',
-                            title: langs1[317][lang], //部署情况
+                            field: 'deplayment',
+                            title: '部署情况', //部署情况
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
                                 if (value == "1") {
-                                    var str = "<span class='label label-success'>" + langs1[319][lang] + "</span>";  //已部署
+                                    var str = "<span class='label label-success'>" + "已部署" + "</span>"; //已部署
                                     return  str;
                                 } else {
-                                    var str = "<span class='label label-warning'>" + langs1[318][lang] + "</span>";  //未部署
+                                    var str = "<span class='label label-warning'>" + "未部署" + "</span>"; //未部署
                                     return  str;
                                 }
                             }
@@ -331,7 +331,6 @@
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },
-
                     //服务器url
                     queryParams: function (params)  {   //配置参数     
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
@@ -384,15 +383,6 @@
                         };
                         $("#gravidaTable").bootstrapTable('refresh', opt);
                     }
-
-
-
-
-//                    url: "login.map.getallcomaddr.action?pid=" + o_pid,
-//                    onLoadSuccess: function (data) {
-////                        $(this).combobox("select", data[0].id);
-////                        $(this).val(data[0].text);
-//                    }
                 });
 
                 $('#excel-file').change(function (e) {

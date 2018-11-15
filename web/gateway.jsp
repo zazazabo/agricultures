@@ -485,34 +485,71 @@
                     success: function (data) {
                         var arrlist = data.rs;
                         if (arrlist.length == 1) {
-                            //此网关已存在
-                            layer.alert(langs1[352][lang], {
+                            layer.alert('此网关已存在', {
                                 icon: 6,
                                 offset: 'center'
                             });
                             namesss = false;
                             return;
                         } else if (arrlist.length == 0) {
-                            var latitudemstr = obj.latitudem26d + "." + obj.latitudem26m + "." + obj.latitudem26s;
-                            obj.latitude = latitudemstr;
-                            var longitudemstr = obj.longitudem26d + "." + obj.longitudem26m + "." + obj.longitudem26s;
-                            obj.longitude = longitudemstr;
-                            obj.latitude = obj.latitude == ".." ? "" : obj.latitude;
-                            obj.longitude = obj.longitude == ".." ? "" : obj.longitude;
-                            obj.multpower = obj.multpower == "" ? 0 : obj.multpower;
                             console.log(obj);
-                            $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
-                                success: function (data) {
-                                    namesss = true;
-                                    $("#gravidaTable").bootstrapTable('refresh');
-                                },
-                                error: function () {
-                                    layer.alert('系统错误，刷新后重试', {
-                                        icon: 6,
-                                        offset: 'center'
+                            if (obj.model == "L-30MT-ES2") {
+                                for (var i = 0; i < 16; i++) {
+                                    var z = i >= 8 ? 10 + (i - 8) : i;
+                                    var ooo = {};
+                                    ooo.sitenum = 1;
+                                    ooo.name = obj.model + "自带传感器";
+                                    ooo.worktype = 0;
+                                    ooo.dreg = z;
+                                    ooo.model = obj.model;
+                                    ooo.l_comaddr = obj.comaddr;
+                                    ooo.pos = 4100;
+                                    $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: ooo,
+                                        success: function (data) {
+                                            var arrlist = data.rs;
+                                            if (arrlist.length == 1) {
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("提交添加失败！");
+                                        }
                                     });
                                 }
-                            })
+                                $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
+                                    success: function (data) {
+                                        namesss = true;
+                                        $("#gravidaTable").bootstrapTable('refresh');
+                                    },
+                                    error: function () {
+                                        layer.alert('系统错误，刷新后重试', {
+                                            icon: 6,
+                                            offset: 'center'
+                                        });
+                                    }
+                                })
+                            }
+                            return  false;
+
+//                            var latitudemstr = obj.latitudem26d + "." + obj.latitudem26m + "." + obj.latitudem26s;
+//                            obj.latitude = latitudemstr;
+//                            var longitudemstr = obj.longitudem26d + "." + obj.longitudem26m + "." + obj.longitudem26s;
+//                            obj.longitude = longitudemstr;
+//                            obj.latitude = obj.latitude == ".." ? "" : obj.latitude;
+//                            obj.longitude = obj.longitude == ".." ? "" : obj.longitude;
+//                            obj.multpower = obj.multpower == "" ? 0 : obj.multpower;
+//                            console.log(obj);
+//                            $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
+//                                success: function (data) {
+//                                    namesss = true;
+//                                    $("#gravidaTable").bootstrapTable('refresh');
+//                                },
+//                                error: function () {
+//                                    layer.alert('系统错误，刷新后重试', {
+//                                        icon: 6,
+//                                        offset: 'center'
+//                                    });
+//                                }
+//                            })
                         }
 
                     },
@@ -598,21 +635,30 @@
                         </tr>
 
 
+
+
                         <tr>
                             <td>
-                                <span style="margin-left:20px;">经度</span>&nbsp;
-                                <input id="longitudem26d" class="form-control" name="longitudem26d" style="width:51px;display: inline;" type="text">&nbsp;°
-                                <input id="longitudem26m" class="form-control" name="longitudem26m" style="width:45px;display: inline;" type="text">&nbsp;'
-                                <input id="longitudem26s" class="form-control" name="longitudem26s" style="width:45px;display: inline;" type="text">&nbsp;"</td>
+                                <span style="margin-left:20px;">&#8195;&#8195;经度</span>&nbsp;
+                                <input id="Longitude" class="form-control" name="Longitude" style="width:150px;display: inline;" placeholder="经度" type="text">
+                            </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" >纬度</span>&nbsp;
-                                <input id="latitudem26d" class="form-control" name="latitudem26d" style="width:51px;display: inline;" type="text">&nbsp;°
-                                <input id="latitudem26m" class="form-control" name="latitudem26m" style="width:45px;display: inline;" type="text">&nbsp;'
-                                <input id="latitudem26s" class="form-control" name="latitudem26s" style="width:45px;display: inline;" type="text">&nbsp;"
+                                <span style="margin-left:10px;" >&#8195;&#8195;纬度</span>&nbsp;
+                                <input id="latitude" class="form-control" name="latitude" style="width:150px;display: inline;" placeholder="纬度" type="text">
                             </td>
                         </tr>
-
+                        <tr>
+                            <td>
+                                <span style="margin-left:20px;">&#8195;&#8195;站号</span>&nbsp;
+                                <input id="sitenum" value="1" readonly="true" class="form-control" name="sitenum" style="width:150px;display: inline;" placeholder="站号" type="text">
+                            </td>
+                            <td></td>
+                            <td>
+                                <!--                                <span style="margin-left:10px;" >网关编号</span>&nbsp;
+                                                                <input id="comaddr" class="form-control" name="comaddr" style="width:150px;display: inline;" placeholder="请输入网关地址" type="text">-->
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </form>                        

@@ -65,7 +65,7 @@
             </xsql>
         </xhandle>
         <xhandle desc="添加传感器" id="addsensor" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
+            <xsql id="a1" para="pos,model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(pos,model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(:pos,':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
         </xhandle>
     </xform>
 </xforms>

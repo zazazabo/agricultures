@@ -116,29 +116,34 @@
                     layerAler('请勾选您要删除的数据');  //请勾选您要删除的数据
                     return;
                 }
-                var select = selects[0];
-                if (select.l_eplayment == "1") {
-                    layerAler('已部署的不能删除');  //已部署的不能删除
-                    return;
-                }
+//                var select = selects[0];
+//                if (select.l_eplayment == "1") {
+//                    layerAler('已部署的不能删除');  //已部署的不能删除
+//                    return;
+//                }
                 layer.confirm(langs1[145][lang], {//确认要删除吗？
                     btn: ['确定', '取消'] //确定、取消按钮
                 }, function (index) {
-                    addlogon(u_name, "删除", o_pid, "灯具管理", "删除灯具");
-                    $.ajax({url: "sensor.sensorform.deleteSensor.action", type: "POST", datatype: "JSON", data: {id: select.id},
-                        success: function (data) {
-                            var arrlist = data.rs;
-                            if (arrlist.length == 1) {
-                                search();
-                                // $("#gravidaTable").bootstrapTable('refresh');
-                                layerAler('删除成功');   //删除成功
-                                layer.close(index);
+                    addlogon(u_name, "删除", o_pid, "传感器管理", "删除传感器");
+
+                    for (var i = 0; i < selects.length; i++) {
+                        var ele = selects[i];
+                        $.ajax({url: "sensor.sensorform.deleteSensor.action", type: "POST", datatype: "JSON", data: {id: ele.id},
+                            success: function (data) {
+                                var arrlist = data.rs;
+                                if (arrlist.length == 1) {
+                                    search();
+                                    // $("#gravidaTable").bootstrapTable('refresh');
+                                    //layerAler('删除成功');   //删除成功
+                                    layer.close(index);
+                                }
+                            },
+                            error: function () {
+                                layerAler("提交失败");
                             }
-                        },
-                        error: function () {
-                            layerAler("提交失败");
-                        }
-                    });
+                        });
+                    }
+                    search();
                     layer.close(index);
                     //此处请求后台程序，下方是成功后的前台处理……
                 });
@@ -180,48 +185,38 @@
             }
 
             function checkSensorAdd() {
-
                 var o = $("#formadd").serializeObject();
 
                 addlogon(u_name, "添加", o_pid, "传感器管理", "添加传感器");
                 var isflesh = false;
-
-
-                $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
-                    success: function (data) {
-                        var arrlist = data.rs;
-                        if (arrlist.length == 1) {
-                            isflesh = true;
-
-                        }
-                    },
-                    error: function () {
-                        alert("提交添加失败！");
+                if (o.model == "JXBS-3001-TH") {
+                    o.pos = 2000;
+                    console.log(o);
+                    for (var i = 0; i < 2; i++) {
+                        o.dreg = i;
+                        $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                            success: function (data) {
+                            },
+                            error: function () {
+                                alert("提交添加失败！");
+                            }
+                        });
                     }
-                });
+                } else if (o.model == "JXBS-3001-TR") {
+                    o.pos = 2000;
+                    console.log(o);
+                    for (var i = 0; i < 2; i++) {
+                        o.dreg = i + 2;
 
-
-
-
-
-
-
-
-
-//                $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
-//                    success: function (data) {
-//                        console.log(data);
-//                        if (data.total > 0) {
-//                            layerAler('传感器站点已存在');  //灯具编号已存在
-//                        } else if (data.total == 0) {
-//
-//
-//                        }
-//                    },
-//                    error: function () {
-//                        alert("提交查询失败！");
-//                    }
-//                });
+                        $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                            success: function (data) {
+                            },
+                            error: function () {
+                                alert("提交添加失败！");
+                            }
+                        });
+                    }
+                }
                 return  isflesh;
             }
 
@@ -315,7 +310,7 @@
                             }
                         }],
                     clickToSelect: true,
-                    singleSelect: true,
+                    singleSelect: false,
                     sortName: 'id',
                     locale: 'zh-CN', //中文支持,
                     showColumns: true,
@@ -672,8 +667,16 @@
                         <tr>
 
                             <td>
+
+
                                 <span style="margin-left:20px;" >&#8195;&#8195;型号</span>&nbsp;
-                                <input id="model" value="JD-SENSOR-001" class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">
+                                <!--<input id="model" value="JD-SENSOR-001" class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">-->
+                                <select class="easyui-combobox" id="model" name="model" style="width:150px; height: 30px">
+                                    <option value="JXBS-3001-TH" >JXBS-3001-TH</option>
+                                    <option value="JXBS-3001-TR" >JXBS-3001-TR</option>                                          
+                                </select>
+
+
                             </td>
 
                         </tr> 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xforms>
+    <xform desc="首页" id="homePage">
+        <xhandle desc="首页显示传感" id="getSensorList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where show=1 AND    @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+         
+    </xform>
+</xforms>

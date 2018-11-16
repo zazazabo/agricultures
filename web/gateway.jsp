@@ -51,36 +51,37 @@
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var num = selects.length;
                 if (num == 0) {
-                    layerAler(langs1[263][lang]);//请选择您要删除的数据
+                    layerAler("请选择您要删除的数据");//请选择您要删除的数据
                 } else {
-                    layer.confirm(langs1[145][lang], {//确定要删除吗？
-                        btn: [langs1[146][lang], langs1[147][lang]], //按钮、取消按钮
-                        icon: 3,
-                        offset: 'center',
-                        title: langs1[174][lang]  //提示
+                    layer.confirm('确认要删除吗？', {//确认要删除吗？
+                        btn: ['确定', '取消'] //确定、取消按钮
                     }, function (index) {
                         var o = {l_comaddr: selects[0].comaddr, id: selects[0].id};
-                        $.ajax({url: "gayway.GaywayForm.deleteGateway.action", type: "POST", datatype: "JSON", data: o,
+                         $.ajax({url: "homePage.gayway.gaywayinfo.action", type: "POST", datatype: "JSON", data: o,
                             success: function (data) {
                                 var arrlist = data.rs;
-                                if (arrlist.length == 1) {
-                                    //删除成功
-                                    layer.open({content: '删除成功', icon: 1,
-                                        yes: function (index, layero) {
-                                            $("#gravidaTable").bootstrapTable('refresh');
-                                            layer.close(index);
+                                if (arrlist.length > 0) {
+                                    layerAler("该网关下存在回路不能删除");
+                                } else {
+                                    $.ajax({url: "gayway.GaywayForm.deleteGateway.action", type: "POST", datatype: "JSON", data: o,
+                                        success: function (data) {
+                                            var arrlist = data.rs;
+                                            if (arrlist.length == 1) {
+                                                //删除成功
+                                                layerAler("删除成功");
+                                                $("#gravidaTable").bootstrapTable('refresh');
+                                            }
+
+                                            //                                    
+                                        },
+                                        error: function () {
+                                            alert("提交失败！");
                                         }
                                     });
                                 }
-
-                                //                                    
-                            },
-                            error: function () {
-                                alert("提交失败！");
                             }
                         });
                         layer.close(index);
-
                     });
                 }
             }
@@ -495,7 +496,7 @@
                             console.log(obj);
                             if (obj.model == "L-30MT-ES2") {
                                 for (var i = 0; i < 16; i++) {
-                                    var z = i >= 8 ? 10 + (i - 8) : i;
+                                    var z = i >= 8 ? 10 + (i - 8) + 4100 : i + 4100;
                                     var ooo = {};
                                     ooo.sitenum = 1;
                                     ooo.name = obj.model + "自带传感器";
@@ -503,7 +504,6 @@
                                     ooo.dreg = z;
                                     ooo.model = obj.model;
                                     ooo.l_comaddr = obj.comaddr;
-                                    ooo.pos = 4100;
                                     $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: ooo,
                                         success: function (data) {
                                             var arrlist = data.rs;

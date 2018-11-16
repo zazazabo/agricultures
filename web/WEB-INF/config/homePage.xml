@@ -2,12 +2,38 @@
 <xforms>
     <xform desc="首页" id="homePage">
         <xhandle desc="首页显示传感" id="getSensorList" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where show=1 AND    @CONDITION  " var="rs">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where show=1 AND deplayment=1 AND @CONDITION  " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@pid">
                     <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
                 </xflt>
             </xsql>
         </xhandle>
          
+    </xform>
+    <xform desc="传感器管理" id="sensormanage">
+        <xhandle desc="添加首页显示传感" id="addshow" rtnype="JSON">
+            <xsql id="a1" para="" tpe="DDL" tpl="update t_sensor set show=1 where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=':id'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>    
+        <xhandle desc="添加首页显示传感" id="removeshow" rtnype="JSON">
+            <xsql id="a1" para="" tpe="DDL" tpl="update t_sensor set show=0 where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=':id'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>    
+    </xform>
+    <xform desc="网关管理" id="gayway">
+        <xhandle desc="查看网关下是否存在回路" id="gaywayinfo" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor WHERE   @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>  
     </xform>
 </xforms>

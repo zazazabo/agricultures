@@ -150,8 +150,11 @@
             }
 
             function  editlamp() {
-                addlogon(u_name, "修改", o_pid, "传感器管理", "修改传感器");
+
                 var o = $("#form2").serializeObject();
+                console.log(o);
+
+                addlogon(u_name, "修改", o_pid, "传感器管理", "修改传感器");
                 $.ajax({async: false, url: "sensor.sensorform.modifySensor.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
                         var a = data.rs;
@@ -177,8 +180,10 @@
                 $("#worktype1").val(s.worktype);
                 $("#dreg1").val(s.dreg);
                 $("#sitenum1").val(s.sitenum);
+                $("#type").combobox('setValue', s.type);
                 $("#model1").val(s.model);
                 $('#dialog-edit').dialog('open');
+
                 return false;
 
 
@@ -186,16 +191,24 @@
 
             function checkSensorAdd() {
                 var o = $("#formadd").serializeObject();
-
                 addlogon(u_name, "添加", o_pid, "传感器管理", "添加传感器");
                 var isflesh = false;
                 if (o.model == "JXBS-3001-TH") {
-                    o.pos = 2000;
-                    console.log(o);
                     for (var i = 0; i < 2; i++) {
                         o.dreg = i;
-                        $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                        $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
                             success: function (data) {
+                                console.log(data);
+                                var rs = data;
+                                if (rs.total == 0) {
+                                    $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                                        success: function (data) {
+                                        },
+                                        error: function () {
+                                            alert("提交添加失败！");
+                                        }
+                                    });
+                                }
                             },
                             error: function () {
                                 alert("提交添加失败！");
@@ -203,19 +216,50 @@
                         });
                     }
                 } else if (o.model == "JXBS-3001-TR") {
-                    o.pos = 2000;
-                    console.log(o);
                     for (var i = 0; i < 2; i++) {
                         o.dreg = i + 2;
-
-                        $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                        $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
                             success: function (data) {
+                                var rs = data;
+                                if (rs.total == 0) {
+                                    $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                                        success: function (data) {
+                                        },
+                                        error: function () {
+                                            alert("提交添加失败！");
+                                        }
+                                    });
+
+
+
+                                }
                             },
                             error: function () {
                                 alert("提交添加失败！");
                             }
                         });
                     }
+                } else {
+
+                    $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
+                        success: function (data) {
+                            var rs = data;
+
+                            if (rs.total == 0) {
+                                o.pos = 2000;
+                                $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                                    success: function (data) {
+                                    },
+                                    error: function () {
+                                        alert("提交添加失败！");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("提交添加失败！");
+                        }
+                    });
                 }
                 return  isflesh;
             }
@@ -231,6 +275,198 @@
                 };
                 $("#gravidaTable").bootstrapTable('refresh', opt);
             }
+
+
+
+            function  readSensorCB(obj) {
+                $('#panemask').hideLoading();
+                if (obj.status == "success") {
+                    var data = Str2BytesH(obj.data);
+                    var v = "";
+                    for (var i = 0; i < data.length; i++) {
+                        v = v + sprintf("%02x", data[i]) + " ";
+                    }
+                    console.log(v);
+                    if (data[1] == 0x03) {
+                        layerAler("读取成功");
+                        var len = data[2];
+                        var info = data[3] * 256 + data[4];
+                        var site = data[5] * 256 + data[6];
+                        var regpos = data[7] * 256 + data[8];
+                        var w1 = data[9];
+                        var w2 = data[10];
+                        var strw1 = w1 & 0x01 == 0x01 ? "开关量" : "模拟量";
+                        var strw2 = w2 & 0x01 == 0x01 ? "打开" : "关闭";
+                        ; //                        var worktype = data[9] * 256 + data[10];
+                        var dataval = data[11] * 256 + data[12];
+                        var f1 = data[13];
+                        var strw3 = f1 & 0x01 == 0x01 ? "有" : "无";
+                        var faultnum = data[15] * 256 + data[16];
+
+                        layerAler("信息点:" + info + "<br>" + "站号" + site + "<br>" + "数据位置"
+                                + regpos + "<br>" + "工作模式:" + strw1 + "<br>" + "通信故障参数:"
+                                + strw2 + "<br>" + "探测值：" + dataval + "<br>" + "故障:" + strw3 + "<br>"
+                                + "通信出错次数:" + faultnum);
+                    }
+
+                }
+                console.log(obj);
+            }
+            function readSensor() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                var o = $("#form1").serializeObject();
+                
+                var vv = new Array();
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+                var ele = selects[0];
+                o.l_comaddr=ele.l_comaddr;
+                var vv = [];
+                vv.push(1);
+                vv.push(3);
+                var info = parseInt(ele.infonum);
+                var infonum = (2000 + info * 10) | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+                vv.push(0);
+                vv.push(7); //寄存器数目 2字节                         
+                var data = buicode2(vv);
+                dealsend2("03", data, "readSensorCB", o.l_comaddr, 0, ele.id, info);
+            }
+
+            function deploySensorCB(obj) {
+                $('#panemask').hideLoading();
+                if (obj.status == "success") {
+                    var data = Str2BytesH(obj.data);
+                    var v = "";
+                    for (var i = 0; i < data.length; i++) {
+                        v = v + sprintf("%02x", data[i]) + " ";
+                    }
+                    console.log(v);
+                    if (data[1] == 0x10) {
+                        var infonum = (2000 + obj.val * 10) | 0x1000;
+                        var high = infonum >> 8 & 0xff;
+                        var low = infonum & 0xff;
+                        if (data[2] == high && data[3] == low) {
+                            var str = obj.type == 0 ? "移除成功" : "部署成功";
+                            layerAler(str);
+                            var obj1 = {id: obj.param, deplayment: obj.type};
+                            console.log(obj1);
+                            $.ajax({async: false, url: "sensor.sensorform.modifyDepayment.action", type: "get", datatype: "JSON", data: obj1,
+                                success: function (data) {
+                                    var arrlist = data.rs;
+                                    if (arrlist.length == 1) {
+
+                                        $("#gravidaTable").bootstrapTable('refresh');
+                                    }
+                                },
+                                error: function () {
+                                    alert("提交失败！");
+                                }
+                            });
+                        }
+
+                    }
+
+                }
+            }
+            function deploySensor() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                var o = $("#form1").serializeObject();
+                var vv = new Array();
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+                var ele = selects[0];
+                o.l_comaddr = ele.l_comaddr;
+                console.log(ele);
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+                var info = parseInt(ele.infonum);
+                console.log(info);
+                var infonum = (2000 + info * 10) | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+                vv.push(0);
+                vv.push(4); //寄存器数目 2字节
+                vv.push(8); //寄存器数目长度  1字节
+
+
+                vv.push(info >> 8 & 0xff);
+                vv.push(info & 0xff); //信息点
+
+                var site = parseInt(ele.sitenum);
+                vv.push(site >> 8 & 0xff); //站点
+                vv.push(site & 0xff);
+                var reg = parseInt(ele.dreg);
+                vv.push(reg >> 8 & 0xff)   //寄存器变量值
+                vv.push(reg & 0xff);
+                var worktype = parseInt(ele.worktype);
+                vv.push(worktype >> 8 & 0xff)   //寄存器变量值
+                vv.push(worktype & 0xff);
+                var data = buicode2(vv);
+                dealsend2("10", data, "deploySensorCB", o.l_comaddr, 1, ele.id, info);
+                $('#panemask').showLoading({
+                    'afterShow': function () {
+                        setTimeout("$('#panemask').hideLoading()", 10000);
+                    }
+                }
+                );
+            }
+            function removeSensor() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                var o = $("#form1").serializeObject();
+                var vv = new Array();
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+                var ele = selects[0];
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+                var info = parseInt(ele.infonum);
+                var infonum = (2000 + info * 10) | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+                vv.push(0);
+                vv.push(4); //寄存器数目 2字节
+                vv.push(8); //寄存器数目长度  1字节
+
+
+                vv.push(info >> 8 & 0xff); //信息点
+                vv.push(info & 0xff);
+//                var site = parseInt(ele.sitenum);
+//                vv.push(site >> 8 & 0xff);   //站点
+//                vv.push(site & 0xff);
+                vv.push(0); //站点
+                vv.push(0);
+                vv.push(0); //寄存器变量值
+                vv.push(0);
+                vv.push(0); //工作方式
+                vv.push(0);
+//                var reg = parseInt(ele.dreg);
+//                vv.push(reg >> 8 & 0xff)   //寄存器变量值
+//                vv.push(reg & 0xff);
+
+//                var worktype = parseInt(ele.worktype);
+//                vv.push(worktype >> 8 & 0xff)   //寄存器变量值
+//                vv.push(worktype & 0xff);
+
+                var data = buicode2(vv);
+                dealsend2("10", data, "deploySensorCB", o.l_comaddr, 0, ele.id, info);
+                $('#panemask').showLoading({
+                    'afterShow': function () {
+                        setTimeout("$('#panemask').hideLoading()", 10000);
+                    }
+                }
+                );
+            }
+
 
 
             $(function () {
@@ -272,7 +508,8 @@
                                 }
 
                             }
-                        }, {
+                        }
+                        , {
                             field: 'dreg',
                             title: '数据位置', //控制方案
                             width: 25,
@@ -281,7 +518,8 @@
                             formatter: function (value, row, index, field) {
                                 return  value.toString();
                             }
-                        }, {
+                        }
+                        , {
                             field: 'Longitude',
                             title: '经度',
                             width: 25,
@@ -293,6 +531,28 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle'
+                        }, {
+                            field: 'type',
+                            title: '类型', //部署情况
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                if (value == "1") {
+                                    return  "温度";
+                                } else if (value == "2") {
+                                    return  '湿度';
+                                }
+                            }
+                        }, {
+                            field: 'infonum',
+                            title: '信息点', //部署情况
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                return  value.toString();
+                            }
                         }, {
                             field: 'deplayment',
                             title: '部署情况', //部署情况
@@ -543,7 +803,7 @@
 
     </head>
 
-    <body>
+    <body id="panemask">
         <div class="row" >
             <form id="formsearch">
                 <div class="col-xs-12">
@@ -578,6 +838,17 @@
                                         搜索
                                     </button>&nbsp;
                                 </td>
+
+                                <td>
+                                    <button style="margin-left:10px;" id="btndeploySensor" onclick="deploySensor()" type="button" class="btn btn-success btn-sm">部署传感器</button>
+                                </td>
+                                <td>
+                                    <button style="margin-left:10px;" id="btnremoveSensor" type="button" onclick="removeSensor()" class="btn btn-success btn-sm">移除传感器</button>
+                                </td>
+                                <td>
+                                    <button style="margin-left:10px;"  type="button" onclick="readSensor()" class="btn btn-success btn-sm">读取传感器信息</button>
+                                </td>                           
+
                             </tr>
                         </tbody>
                     </table> 
@@ -659,7 +930,7 @@
                             <td></td>
                             <td>
                                 <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                <input id="worktype" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
+                                <input id="worktype" class="form-control" value="0"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
 
                             </td>
 
@@ -695,7 +966,7 @@
                         <tr>
                             <td>
                                 <span style="margin-left:20px;" >&#8195;&#8195;站号</span>&nbsp;
-                                <input id="sitenum1" readonly="true" class="form-control" name="sitenum" style="width:150px;display: inline;" placeholder="站号" type="text">
+                                <input id="sitenum1"  class="form-control" name="sitenum" style="width:150px;display: inline;" placeholder="站号" type="text">
                             </td>
                             <td></td>
                             <td>
@@ -721,8 +992,19 @@
 
                             <td>
                                 <span style="margin-left:20px;" >&#8195;&#8195;型号</span>&nbsp;
-                                <input id="model1" value="JD-SENSOR-001" class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">
+                                <input id="model1" readonly="true" class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">
                             </td>
+                            <td></td>
+                            <td>
+                                <span style="margin-left:10px;" >&#8195;&#8195;类型</span>&nbsp;
+                                <select class="easyui-combobox" id="type" name="type" style="width:150px; height: 30px">
+                                    <option value="" ></option>
+                                    <option value="1" >温度</option>
+                                    <option value="2" >湿度</option>                                          
+                                </select>
+
+                            </td>                           
+
 
                         </tr> 
                     </tbody>

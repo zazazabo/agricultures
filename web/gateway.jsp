@@ -495,7 +495,7 @@
                             console.log(obj);
                             if (obj.model == "L-30MT-ES2") {
                                 for (var i = 0; i < 16; i++) {
-                                    var z = i >= 8 ? 10 + (i - 8) : i;
+                                    var z = i >= 8 ? 10 + (i - 8) + 4100 : i + 4100;
                                     var ooo = {};
                                     ooo.sitenum = 1;
                                     ooo.name = obj.model + "自带传感器";
@@ -503,7 +503,6 @@
                                     ooo.dreg = z;
                                     ooo.model = obj.model;
                                     ooo.l_comaddr = obj.comaddr;
-                                    ooo.pos = 4100;
                                     $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: ooo,
                                         success: function (data) {
                                             var arrlist = data.rs;

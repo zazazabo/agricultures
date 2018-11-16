@@ -25,9 +25,12 @@
         
         <xhandle desc="查询传感器站号是否存在" id="existsite" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM  t_sensor tl WHERE    @CONDITION  " var="bootstrap">
-                <xflt id="CONDITION" nrp="" tpl="@sitenum AND @l_comaddr">
+                <xflt id="CONDITION" nrp="" tpl="@sitenum AND @l_comaddr AND @dreg AND @pos">
                     <xfltpara id="sitenum" nrp="1=2" para="sitenum" sql="sitenum = :sitenum"></xfltpara>
+
                     <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>
+                    <xfltpara id="dreg" nrp="1=2" para="dreg" sql="dreg = :dreg"></xfltpara>
+                    <xfltpara id="pos" nrp="1=2" para="pos" sql="pos = :pos"></xfltpara>
                 </xflt>
             </xsql>
         </xhandle>
@@ -51,7 +54,7 @@
             </xsql>
         </xhandle>
         <xhandle desc="修改传感器基本信息" id="modifySensor" rtnype="JSON">
-            <xsql id="a1" para="name,model,worktype,dreg" tpe="DDL" tpl="update t_sensor set name=':name',model=':model',worktype=:worktype,dreg=:dreg where @CONDITION " var="rs">
+            <xsql id="a1" para="name,worktype,dreg,sitenum,type" tpe="DDL" tpl="update t_sensor set name=':name',worktype=:worktype,dreg=:dreg,sitenum=':sitenum',type=:type where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@id ">
                     <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
                 </xflt>
@@ -65,7 +68,7 @@
             </xsql>
         </xhandle>
         <xhandle desc="添加传感器" id="addsensor" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="pos,model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(pos,model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(:pos,':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
+            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
         </xhandle>
     </xform>
 </xforms>

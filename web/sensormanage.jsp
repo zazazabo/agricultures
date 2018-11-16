@@ -250,19 +250,19 @@
                             valign: 'middle'
                         }, {
                             field: 'name',
-                            title: '传感器名称', //灯具名称
+                            title: '传感器名称', 
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'model',
-                            title: '型号', //灯具名称
+                            title: '型号', 
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'sitenum',
-                            title: '站号', //组号
+                            title: '站号',
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -274,7 +274,7 @@
                             }
                         }, {
                             field: 'dreg',
-                            title: '数据位置', //控制方案
+                            title: '数据位置', 
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -293,7 +293,22 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle'
-                        }, {
+                        },{
+                            field: 'show',
+                            title: '是否首页显示',
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                if (value == "1") {
+                                    var str = "<span class='label label-success'>" + "是" + "</span>"; //已部署
+                                    return  str;
+                                } else {
+                                    var str = "<span class='label label-warning'>" + "否" + "</span>"; //未部署
+                                    return  str;
+                                }
+                            }
+                        },{
                             field: 'deplayment',
                             title: '部署情况', //部署情况
                             width: 25,

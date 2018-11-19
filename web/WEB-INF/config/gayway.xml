@@ -23,7 +23,7 @@
         </xhandle>
 
             <xhandle desc="" id="getComaddrList" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION " var="list">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION ORDER BY online desc" var="list">
                 <xflt id="CONDITION" nrp="" tpl="@id AND @comaddr AND @pid">
                     <xfltpara id="id" nrp="1=1" para="id" sql="id = ':id'">
                     </xfltpara>

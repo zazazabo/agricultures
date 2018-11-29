@@ -201,7 +201,7 @@
                                             var rs = data.rs;
                                             if (rs.length > 0) {
                                                 $("#dialog-add").dialog("close");
-                                                layerAler("添加成功");                                               
+                                                layerAler("添加成功");
                                                 $("#gravidaTable").bootstrapTable('refresh');
                                             }
                                         },
@@ -226,7 +226,7 @@
                                     $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
                                         success: function (data) {
                                             if (rs.length > 0) {
-                                               $("#dialog-add").dialog("close");
+                                                $("#dialog-add").dialog("close");
                                                 layerAler("添加成功");
                                                 $("#gravidaTable").bootstrapTable('refresh');
                                             }
@@ -256,7 +256,7 @@
                                 $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
                                     success: function (data) {
                                         if (rs.length > 0) {
-                                           $("#dialog-add").dialog("close");
+                                            $("#dialog-add").dialog("close");
                                             layerAler("添加成功");
                                             $("#gravidaTable").bootstrapTable('refresh');
                                         }

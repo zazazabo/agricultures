@@ -18,4 +18,6 @@
     </xfile> 
     <xfile desc="传感器模块" id="/WEB-INF/config/sensor.xml">
     </xfile>
+    <xfile desc="首页" id="/WEB-INF/config/homePage.xml">
+    </xfile>
 </xfiles> 

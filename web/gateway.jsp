@@ -51,36 +51,37 @@
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var num = selects.length;
                 if (num == 0) {
-                    layerAler(langs1[263][lang]);//请选择您要删除的数据
+                    layerAler("请选择您要删除的数据");//请选择您要删除的数据
                 } else {
-                    layer.confirm(langs1[145][lang], {//确定要删除吗？
-                        btn: [langs1[146][lang], langs1[147][lang]], //按钮、取消按钮
-                        icon: 3,
-                        offset: 'center',
-                        title: langs1[174][lang]  //提示
+                    layer.confirm('确认要删除吗？', {//确认要删除吗？
+                        btn: ['确定', '取消'] //确定、取消按钮
                     }, function (index) {
                         var o = {l_comaddr: selects[0].comaddr, id: selects[0].id};
-                        $.ajax({url: "gayway.GaywayForm.deleteGateway.action", type: "POST", datatype: "JSON", data: o,
+                        $.ajax({url: "homePage.gayway.gaywayinfo.action", type: "POST", datatype: "JSON", data: o,
                             success: function (data) {
                                 var arrlist = data.rs;
-                                if (arrlist.length == 1) {
-                                    //删除成功
-                                    layer.open({content: '删除成功', icon: 1,
-                                        yes: function (index, layero) {
-                                            $("#gravidaTable").bootstrapTable('refresh');
-                                            layer.close(index);
+                                if (arrlist.length > 0) {
+                                    layerAler("该网关下存在回路不能删除");
+                                } else {
+                                    $.ajax({url: "gayway.GaywayForm.deleteGateway.action", type: "POST", datatype: "JSON", data: o,
+                                        success: function (data) {
+                                            var arrlist = data.rs;
+                                            if (arrlist.length == 1) {
+                                                //删除成功
+                                                layerAler("删除成功");
+                                                $("#gravidaTable").bootstrapTable('refresh');
+                                            }
+
+                                            //                                    
+                                        },
+                                        error: function () {
+                                            alert("提交失败！");
                                         }
                                     });
                                 }
-
-                                //                                    
-                            },
-                            error: function () {
-                                alert("提交失败！");
                             }
                         });
                         layer.close(index);
-
                     });
                 }
             }
@@ -495,12 +496,14 @@
                             console.log(obj);
                             if (obj.model == "L-30MT-ES2") {
                                 for (var i = 0; i < 16; i++) {
-                                    var z = i >= 8 ? 10 + (i - 8) + 4100 : i + 4100;
+                                    var z = i + 4100;
+                                    var j = i >= 8 ? 10 + (i - 8) : i;
                                     var ooo = {};
                                     ooo.sitenum = 1;
-                                    ooo.name = obj.model + "自带传感器";
+                                    ooo.name = "X" + j.toString();
                                     ooo.worktype = 0;
                                     ooo.dreg = z;
+                                    ooo.type=3;
                                     ooo.model = obj.model;
                                     ooo.l_comaddr = obj.comaddr;
                                     $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: ooo,
@@ -528,27 +531,6 @@
                                 })
                             }
                             return  false;
-
-//                            var latitudemstr = obj.latitudem26d + "." + obj.latitudem26m + "." + obj.latitudem26s;
-//                            obj.latitude = latitudemstr;
-//                            var longitudemstr = obj.longitudem26d + "." + obj.longitudem26m + "." + obj.longitudem26s;
-//                            obj.longitude = longitudemstr;
-//                            obj.latitude = obj.latitude == ".." ? "" : obj.latitude;
-//                            obj.longitude = obj.longitude == ".." ? "" : obj.longitude;
-//                            obj.multpower = obj.multpower == "" ? 0 : obj.multpower;
-//                            console.log(obj);
-//                            $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
-//                                success: function (data) {
-//                                    namesss = true;
-//                                    $("#gravidaTable").bootstrapTable('refresh');
-//                                },
-//                                error: function () {
-//                                    layer.alert('系统错误，刷新后重试', {
-//                                        icon: 6,
-//                                        offset: 'center'
-//                                    });
-//                                }
-//                            })
                         }
 
                     },

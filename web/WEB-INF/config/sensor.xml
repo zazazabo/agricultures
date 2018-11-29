@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xforms>
-    <xform desc="灯具" id="sensorform">
+    <xform desc="" id="sensorform">
         <xhandle desc="查询传感表" id="getSensorList" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name AS commname,*FROM  t_sensor tl,t_baseinfo AS tb WHERE tl.l_comaddr = tb.comaddr AND    @CONDITION  " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr  AND @deplayment AND @pid">
@@ -49,7 +49,7 @@
         <xhandle desc="删除传感器" id="deleteSensor" rtn="rs" rtnype="JSON">
             <xsql id="a1" tpe="DDL" tpl="delete from t_sensor where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@ID ">
-                    <xfltpara id="ID" nrp="1=2" para="id" sql="id =  :id "></xfltpara>
+                    <xfltpara id="ID" nrp="1=1" para="id" sql="id =  :id "></xfltpara>
                 </xflt>
             </xsql>
         </xhandle>
@@ -60,7 +60,7 @@
                 </xflt>
             </xsql>
         </xhandle>
-        <xhandle desc="修改灯具部署状态" id="modifyDepayment" rtnype="JSON">
+        <xhandle desc="修改传感器部署状态" id="modifyDepayment" rtnype="JSON">
             <xsql id="a1" para="deplayment" tpe="DDL" tpl="update t_sensor set deplayment=:deplayment where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@id ">
                     <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
@@ -68,7 +68,11 @@
             </xsql>
         </xhandle>
         <xhandle desc="添加传感器" id="addsensor" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
+            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr,type" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,type,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',:type,0) " var="rs"></xsql> 
         </xhandle>
+          <xhandle desc="添加传感器不带类型" id="addsensor1" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
+        </xhandle>      
+        
     </xform>
 </xforms>

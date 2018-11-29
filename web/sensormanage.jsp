@@ -116,44 +116,31 @@
                     layerAler('请勾选您要删除的数据');  //请勾选您要删除的数据
                     return;
                 }
-//                var select = selects[0];
-//                if (select.l_eplayment == "1") {
-//                    layerAler('已部署的不能删除');  //已部署的不能删除
-//                    return;
-//                }
-                layer.confirm(langs1[145][lang], {//确认要删除吗？
+                layer.confirm('确认要删除吗？', {//确认要删除吗？
                     btn: ['确定', '取消'] //确定、取消按钮
                 }, function (index) {
-                    addlogon(u_name, "删除", o_pid, "传感器管理", "删除传感器");
-
                     for (var i = 0; i < selects.length; i++) {
                         var ele = selects[i];
-                        $.ajax({url: "sensor.sensorform.deleteSensor.action", type: "POST", datatype: "JSON", data: {id: ele.id},
-                            success: function (data) {
-                                var arrlist = data.rs;
-                                if (arrlist.length == 1) {
-                                    search();
-                                    // $("#gravidaTable").bootstrapTable('refresh');
-                                    //layerAler('删除成功');   //删除成功
-                                    layer.close(index);
+                        if (ele.deplayment == 1) {
+                            continue;
+                        } else {
+                            $.ajax({url: "sensor.sensorform.deleteSensor.action", type: "POST", datatype: "JSON", data: {id: ele.id},
+                                success: function (data) {
+                                },
+                                error: function () {
+                                    layerAler("提交失败");
                                 }
-                            },
-                            error: function () {
-                                layerAler("提交失败");
-                            }
-                        });
+                            });
+                        }
                     }
-                    search();
                     layer.close(index);
+                    $("#gravidaTable").bootstrapTable('refresh');
                     //此处请求后台程序，下方是成功后的前台处理……
                 });
             }
 
             function  editlamp() {
-
                 var o = $("#form2").serializeObject();
-                console.log(o);
-
                 addlogon(u_name, "修改", o_pid, "传感器管理", "修改传感器");
                 $.ajax({async: false, url: "sensor.sensorform.modifySensor.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
@@ -182,6 +169,15 @@
                 $("#sitenum1").val(s.sitenum);
                 $("#type").combobox('setValue', s.type);
                 $("#model1").val(s.model);
+                if (s.deplayment == 1) {
+                    $("#sitenum1").attr("readOnly", true);
+                    $("#dreg1").attr("readOnly", true);
+                    $("#worktype1").attr("readOnly", true);
+                } else {
+                    $("#sitenum1").attr("readOnly", false);
+                    $("#dreg1").attr("readOnly", false);
+                    $("#worktype1").attr("readOnly", false);
+                }
                 $('#dialog-edit').dialog('open');
 
                 return false;
@@ -198,11 +194,17 @@
                         o.dreg = i;
                         $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
                             success: function (data) {
-                                console.log(data);
                                 var rs = data;
                                 if (rs.total == 0) {
-                                    $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                                    $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
                                         success: function (data) {
+                                            console.log(data)
+                                            var rs = data.rs;
+                                            if (rs.length > 0) {
+                                                $("#dialog-add").dialog("close");
+                                                layerAler("添加成功");
+                                                $("#gravidaTable").bootstrapTable('refresh');
+                                            }
                                         },
                                         error: function () {
                                             alert("提交添加失败！");
@@ -222,8 +224,13 @@
                             success: function (data) {
                                 var rs = data;
                                 if (rs.total == 0) {
-                                    $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                                    $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
                                         success: function (data) {
+                                            if (rs.length > 0) {
+                                                $("#dialog-add").dialog("close");
+                                                layerAler("添加成功");
+                                                $("#gravidaTable").bootstrapTable('refresh');
+                                            }
                                         },
                                         error: function () {
                                             alert("提交添加失败！");
@@ -244,11 +251,16 @@
                     $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
                         success: function (data) {
                             var rs = data;
-
                             if (rs.total == 0) {
                                 o.pos = 2000;
-                                $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: o,
+                                $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
                                     success: function (data) {
+                                        var rs=data.rs;
+                                        if (rs.length > 0) {
+                                            $("#dialog-add").dialog("close");
+                                            layerAler("添加成功");
+                                            $("#gravidaTable").bootstrapTable('refresh');
+                                        }
                                     },
                                     error: function () {
                                         alert("提交添加失败！");
@@ -315,14 +327,14 @@
             function readSensor() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var o = $("#form1").serializeObject();
-                
+
                 var vv = new Array();
                 if (selects.length == 0) {
                     layerAler('请勾选表格数据'); //请勾选表格数据
                     return;
                 }
                 var ele = selects[0];
-                o.l_comaddr=ele.l_comaddr;
+                o.l_comaddr = ele.l_comaddr;
                 var vv = [];
                 vv.push(1);
                 vv.push(3);
@@ -466,6 +478,61 @@
                 }
                 );
             }
+            //添加到首页显示
+            function addshow() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    if (selects[i].deplayment == 0) {
+                        layerAler('设备未部署不能添加到首页'); //请勾选表格数据
+                        return;
+                    }
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    var id = selects[i].id;
+                    $.ajax({async: false, url: "homePage.sensormanage.addshow.action", type: "get", datatype: "JSON", data: {id: id},
+                        success: function (data) {
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                    layerAler("添加成功！");
+                    $("#gravidaTable").bootstrapTable('refresh');
+                }
+
+
+            }
+
+            function removeshow() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    var id = selects[i].id;
+                    $.ajax({async: false, url: "homePage.sensormanage.removeshow.action", type: "get", datatype: "JSON", data: {id: id},
+                        success: function (data) {
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                    layerAler("移除成功！");
+                    $("#gravidaTable").bootstrapTable('refresh');
+                }
+
+
+            }
 
 
 
@@ -542,11 +609,13 @@
                                     return  "温度";
                                 } else if (value == "2") {
                                     return  '湿度';
+                                } else if (value == "3") {
+                                    return  '开关';
                                 }
                             }
                         }, {
                             field: 'infonum',
-                            title: '信息点', //部署情况
+                            title: '信息点',
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -554,6 +623,22 @@
                                 return  value.toString();
                             }
                         }, {
+                            field: 'show',
+                            title: '是否首页显示', //部署情况
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                if (value == "1") {
+                                    var str = "<span class='label label-success'>" + "是" + "</span>"; //已部署
+                                    return  str;
+                                } else {
+                                    var str = "<span class='label label-warning'>" + "否" + "</span>"; //未部署
+                                    return  str;
+                                }
+                            }
+                        },
+                        {
                             field: 'deplayment',
                             title: '部署情况', //部署情况
                             width: 25,
@@ -582,7 +667,7 @@
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [50, 100, 200, 300, 400],
+                    pageList: [50, 100],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },
@@ -776,11 +861,11 @@
                         $(this).combobox("select", data[0].id);
                     }, });
 
-
-                $('#gravidaTable').on('click-cell.bs.table', function (field, value, row, element)
-                {
-
-                });
+//
+//                $('#gravidaTable').on('click-cell.bs.table', function (field, value, row, element)
+//                {
+//
+//                });
 
 
 
@@ -847,7 +932,7 @@
                                 </td>
                                 <td>
                                     <button style="margin-left:10px;"  type="button" onclick="readSensor()" class="btn btn-success btn-sm">读取传感器信息</button>
-                                </td>                           
+                                </td> 
 
                             </tr>
                         </tbody>
@@ -873,6 +958,8 @@
             <button type="button" id="btn_download" class="btn btn-primary" onClick ="$('#gravidaTable').tableExport({type: 'excel', escape: 'false'})">
                 导出Excel
             </button>
+            <button   type="button" onclick="addshow()" class="btn btn-success ctrol">添加到首页显示</button>
+            <button  type="button" onclick="removeshow()" class="btn btn-success ctrol">移除首页显示</button>
         </div>
 
         <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped">

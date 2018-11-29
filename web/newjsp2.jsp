@@ -43,6 +43,8 @@
                 border: 1px solid black; width: 21%; float: left; height: 80%; background-color: powderblue;  margin-left: 3%; margin-top: 2%; 
             }
 
+            .kg{ border: 1px solid black; width: 21%; float: left; height: 80%; background-color: lightcyan;  margin-left: 3%; margin-top: 2%; }
+
             img{ width:100%;height:100%;}
 
         </style>
@@ -64,17 +66,35 @@
                             var strid = "infonum" + v1.infonum;
                             // var str = v1.type == "1" ? "℃" : "%";
                             var str = "";
+                            var str2 = "";
+                            var pd = 0;
                             if (v1.type == "1") {
                                 str = "℃";
+                                str2 = "温度值";
                             } else if (v1.type == "2") {
                                 str = "%RH";
+                                str2 = "湿度值";
+                            } else if (v1.type == 3) {
+                                if (v1.numvalue != null && v1.numvalue != "") {
+                                    str = "开";
+                                } else {
+                                    str = "关";
+                                }
+                                pd = 1;
+                                str2 = "开关状态";
                             }
-                            var numvalue = parseInt(v1.numvalue);
-                            if (numvalue != 0) {
-                                numvalue = numvalue / 10;
+                            var val = "";
+                            if (pd == 1) {
+                                val = str;
+                            } else {
+                                var numvalue = parseInt(v1.numvalue);
+                                if (numvalue != 0) {
+                                    numvalue = numvalue / 10;
+                                }
+                                val = numvalue + str;
                             }
-                            var val = numvalue + str;
-                            $("#" + strid).html(val);
+                            $("#" + strid).html(str2 + "<br/>" + val);
+                            ;
                         }
                     },
                     error: function () {
@@ -93,14 +113,29 @@
                                 var bodydiv = document.createElement("div");
                                 var img = document.createElement("img");
                                 var str = "";
+                                var str2 = "";  //湿度温度描述
+                                var pd = 0;
                                 if (sensor.type == 1) {   //温度
                                     $(bodydiv).addClass("wd");
                                     img.src = "./img/wd.png";
                                     str = "℃";
+                                    str2 = "温度值";
                                 } else if (sensor.type == 2) {  //湿度
                                     $(bodydiv).addClass("sd");
                                     img.src = "./img/sd.png";
                                     str = "%RH";
+                                    str2 = "湿度值";
+                                } else if (sensor.type == 3) {
+                                    $(bodydiv).addClass("kg");
+                                    if (sensor.numvalue != null && sensor.numvalue != "") {
+                                        str = "开";
+                                        img.src = "./img/k.png";
+                                    } else {
+                                        str = "关";
+                                        img.src = "./img/wd.png";
+                                    }
+                                    pd = 1;
+                                    str2 = "开关状态";
                                 }
                                 var div1 = document.createElement("div");
 
@@ -116,8 +151,13 @@
                                 if (numvalue != 0) {
                                     numvalue = numvalue / 10;
                                 }
-                                var val = numvalue + str;
-                                $(div3).append(val);
+                                var val = "";
+                                if (pd == 1) {
+                                    val = str;
+                                } else {
+                                    val = numvalue + str;
+                                }
+                                $(div3).html(str2 + "<br/>" + val);
                                 $(bodydiv).append(div1);
                                 $(bodydiv).append(div2);
                                 $(bodydiv).append(div3);
@@ -139,38 +179,38 @@
     </head>
     <body id="activity_pane" >
         <div style=" width: 100%; height: 40%;" class='top' id="parentdiv">
-<!--            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
-                <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
-                <div style=" width: 50%; height: 50%; float: left; ">
-                    <img src="./img/wd.png" style="width:100%;height:100%;">
-                </div>
-                <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
-            </div>
-
-            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: powderblue;  margin-left: 4%; margin-top: 2%;  ">
-                <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">湿度传感器1</div>
-                <div style=" width: 50%; height: 50%; float: left; ">
-                    <img src="./img/sd.png" style="width:100%;height:100%;">
-                </div>
-                <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38%</div>
-            </div>
-
-
-            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
-                <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
-                <div style=" width: 50%; height: 50%; float: left; ">
-                    <img src="./img/wd.png" style="width:100%;height:100%;">
-                </div>
-                <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
-            </div>
-
-            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
-                <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
-                <div style=" width: 50%; height: 50%; float: left; ">
-                    <img src="./img/wd.png" style="width:100%;height:100%;">
-                </div>
-                <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
-            </div>-->
+            <!--            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
+                            <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
+                            <div style=" width: 50%; height: 50%; float: left; ">
+                                <img src="./img/wd.png" style="width:100%;height:100%;">
+                            </div>
+                            <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
+                        </div>
+            
+                        <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: powderblue;  margin-left: 4%; margin-top: 2%;  ">
+                            <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">湿度传感器1</div>
+                            <div style=" width: 50%; height: 50%; float: left; ">
+                                <img src="./img/sd.png" style="width:100%;height:100%;">
+                            </div>
+                            <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38%</div>
+                        </div>
+            
+            
+                        <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
+                            <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
+                            <div style=" width: 50%; height: 50%; float: left; ">
+                                <img src="./img/wd.png" style="width:100%;height:100%;">
+                            </div>
+                            <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
+                        </div>
+            
+                        <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
+                            <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
+                            <div style=" width: 50%; height: 50%; float: left; ">
+                                <img src="./img/wd.png" style="width:100%;height:100%;">
+                            </div>
+                            <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
+                        </div>-->
         </div>
     </body>
 </html>

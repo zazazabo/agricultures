@@ -15,7 +15,23 @@
         <script type="text/javascript"  src="js/getdate.js"></script>
         <title>JSP Page</title>
 
-        <style>* { margin: 0; padding: 0; } body, html { width: 100%; height: 100%; } .zuheanniu { margin-top: 2px; margin-left: 10px; } table { font-size: 14px; } .modal-body input[type="text"], .modal-body select, .modal-body input[type="radio"] { height: 30px; } .modal-body table td { line-height: 40px; } .menuBox { position: relative; background: skyblue; } .getMenu { z-index: 1000; display: none; background: white; list-style: none; border: 1px solid skyblue; width: 150px; height: auto; max-height: 200px; position: absolute; left: 0; top: 25px; overflow: auto; } .getMenu li { width: 148px; padding-left: 10px; line-height: 22px; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } .getMenu li:hover { background: #eee; cursor: pointer; } .a-upload { padding: 4px 10px; height: 30px; line-height: 20px; position: relative; cursor: pointer; color: #888; background: #fafafa; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; display: inline-block; *display: inline; *zoom: 1 } .a-upload input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; filter: alpha(opacity = 0); cursor: pointer } .a-upload:hover { color: #444; background: #eee; border-color: #ccc; text-decoration: none } .pagination-info { float: left; margin-top: -4px; } .modal-body { text-align: -webkit-center; text-align: -moz-center; width: 600px; margin: auto; } .btn-primary { color: #fff; background-color: #0099CC; border-color: #0099CC; }</style>
+        <style>
+            * { margin: 0; padding: 0; } 
+            body, html { width: 100%; height: 100%; }
+            .zuheanniu { margin-top: 2px; margin-left: 10px; }
+            table { font-size: 14px; } .modal-body input[type="text"], 
+            .modal-body select, .modal-body input[type="radio"] { height: 30px; } 
+            .modal-body table td { line-height: 40px; } 
+            .menuBox { position: relative; background: skyblue; } 
+            .getMenu { z-index: 1000; display: none; background: white; list-style: none; border: 1px solid skyblue; width: 150px; height: auto; max-height: 200px; position: absolute; left: 0; top: 25px; overflow: auto; }
+            .getMenu li { width: 148px; padding-left: 10px; line-height: 22px; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+            .getMenu li:hover { background: #eee; cursor: pointer; }
+            .a-upload { padding: 4px 10px; height: 30px; line-height: 20px; position: relative; cursor: pointer; color: #888; background: #fafafa; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; display: inline-block; *display: inline; *zoom: 1 }
+            .a-upload input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; filter: alpha(opacity = 0); cursor: pointer }
+            .a-upload:hover { color: #444; background: #eee; border-color: #ccc; text-decoration: none } 
+            .pagination-info { float: left; margin-top: -4px; } .modal-body { text-align: -webkit-center; text-align: -moz-center; width: 600px; margin: auto; }
+            .btn-primary { color: #fff; background-color: #0099CC; border-color: #0099CC; }
+        </style>
 
 
         <script>
@@ -397,9 +413,6 @@
         </div>
 
         <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped"></table>  
-
-
-    </div>
 
 
 

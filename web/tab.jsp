@@ -49,7 +49,7 @@
                 </ul>
             </div>
 
-            <div  id="content-main" style="height: 878px;">
+            <div  id="content-main" style="height: 700px;">
                 <iframe class="J_iframe" name="iframe0" src="#"  seamless="" width="100%" height="100%" frameborder="0"></iframe>
             </div>
         </div>

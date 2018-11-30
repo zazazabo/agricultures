@@ -103,33 +103,191 @@
                 return false;
             }
 
+            function deployLoopCB(obj) {
+                console.log(obj);
+
+                $('#panemask').hideLoading();
+                if (obj.status == "success") {
+                    var data = Str2BytesH(obj.data);
+                    var v = "";
+                    for (var i = 0; i < data.length; i++) {
+                        v = v + sprintf("%02x", data[i]) + " ";
+                    }
+                    console.log(v);
+                    if (data[1] == 0x10) {
+                        var infonum = (3000 + obj.val * 10) | 0x1000;
+                        console.log(infonum);
+                        var high = infonum >> 8 & 0xff;
+                        var low = infonum & 0xff;
+                        if (data[2] == high && data[3] == low) {
+                            var str = obj.type == 0 ? "移除成功" : "部署成功";
+                            layerAler(str);
+                            var obj1 = {id: obj.param, l_deplayment: obj.type};
+                            console.log(obj1);
+                            $.ajax({async: false, url: "loop.loopForm.modifyDepayment.action", type: "get", datatype: "JSON", data: obj1,
+                                success: function (data) {
+                                    var arrlist = data.rs;
+                                    if (arrlist.length == 1) {
+                                        $("#gravidaTable").bootstrapTable('refresh');
+                                    }
+                                },
+                                error: function () {
+                                    alert("提交失败！");
+                                }
+                            });
+                        }
+
+                    }
+
+                }
+
+
+
+
+
+
+
+
+            }
+
+            function deployLoop() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                var o = $("#form1").serializeObject();
+                var vv = new Array();
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+                var ele = selects[0];
+                o.l_comaddr = ele.l_comaddr;
+                console.log(ele);
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+                var info = parseInt(ele.l_info);
+                console.log(info);
+                var infonum = (3000 + info * 20) | 0x1000;
+                vv.push(infonum >> 8 & 0xff); //起始地址
+                vv.push(infonum & 0xff);
+
+                vv.push(0);           //寄存器数目 2字节  
+                vv.push(15);   //5
+                vv.push(30);           //字节数目长度  1字节 10
+
+
+                vv.push(info >> 8 & 0xff);  //信息点
+                vv.push(info & 0xff);
+
+
+                var site = parseInt(ele.sitenum); //站点
+                vv.push(site >> 8 & 0xff);
+                vv.push(site & 0xff);
+
+                var reg = parseInt(ele.l_pos);
+                vv.push(reg >> 8 & 0xff)   //寄存器变量值
+                vv.push(reg & 0xff);
+
+                var worktype = parseInt(ele.worktype);
+                vv.push(worktype >> 8 & 0xff)   //寄存器变量值
+                vv.push(worktype & 0xff);
+
+                vv.push(0);
+                vv.push(0);
+
+                for (var i = 0; i < 5; i++) {
+                    vv.push(0);
+                    vv.push(0);
+                }
+
+
+
+                var data = buicode2(vv);
+                console.log(data);
+                dealsend2("10", data, "deployLoopCB", o.l_comaddr, 1, ele.lid, info);
+                $('#panemask').showLoading({
+                    'afterShow': function () {
+                        setTimeout("$('#panemask').hideLoading()", 10000);
+                    }
+                }
+                );
+            }
+
+            function removeLoop() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                var o = $("#form1").serializeObject();
+                var vv = new Array();
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+                var ele = selects[0];
+                o.l_comaddr = ele.l_comaddr;
+                console.log(ele);
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+                var info = parseInt(ele.l_info);
+                console.log(info);
+                var infonum = (3000 + info * 20) | 0x1000;
+                vv.push(infonum >> 8 & 0xff); //起始地址
+                vv.push(infonum & 0xff);
+
+                vv.push(0);           //寄存器数目 2字节  
+                vv.push(5);
+                vv.push(10);           //字节数目长度  1字节
+
+
+                vv.push(0);  //信息点
+                vv.push(0);
+
+
+
+                vv.push(0);//站点
+                vv.push(0);
+
+                //寄存器变量值
+                vv.push(0)   //寄存器变量值
+                vv.push(0);
+
+
+                vv.push(0)   //工作模式
+                vv.push(0);
+
+                vv.push(0); //控制值
+                vv.push(0);
+
+
+                var data = buicode2(vv);
+                dealsend2("10", data, "deploySensorCB", o.l_comaddr, 0, ele.id, info);
+                $('#panemask').showLoading({
+                    'afterShow': function () {
+                        setTimeout("$('#panemask').hideLoading()", 10000);
+                    }
+                }
+                );
+            }
+
+
+
+
             function checkLoopAdd() {
                 var o = $("#formadd").serializeObject();
+                console.log(o);
                 if (o.l_comaddr == "") {
-                    layerAler(langs1[172][lang]);  //网关不能为空
+                    layerAler("网关不能为空");  //网关不能为空
                     return  false;
                 }
-                if (isNumber(o.l_factorycode) == false) {
-                    layerAler(langs1[358][lang]);  //回路编号必须数字
-                    return false;
-                }
-                if (parseInt(o.l_factorycode) > 54 && parseInt(o.l_factorycode) >= 1) {
-                    layerAler(langs1[359][lang]);  //回路编号1字节必须在1-54
-                    return false;
-                }
-                o.name = o.comaddrname;
-
                 var namesss = false;
-
                 addlogon(u_name, "添加", o_pid, "回路管理", "添加回路");
-                $.ajax({async: false, cache: false, url: "loop.loopForm.getLoopList.action", type: "GET", data: o,
+                $.ajax({async: false, cache: false, url: "loop.loopForm.ExistLoop.action", type: "GET", data: o,
                     success: function (data) {
+                        console.log(data);
                         if (data.total > 0) {
-                            layerAler(langs1[360][lang]); //此回路已存在
+                            layerAler("此回路已存在"); //此回路已存在
                             return false;
                         }
                         if (data.total == 0) {
-                            $.ajax({async: false, cache: false, url: "loop.loopForm.addloop.action", type: "GET", data: o,
+                            $.ajax({async: false, cache: false, url: "loop.loopForm.addLoop.action", type: "GET", data: o,
                                 success: function (data) {
                                     $("#gravidaTable").bootstrapTable('refresh');
                                     namesss = true;
@@ -157,20 +315,16 @@
             function modifyLoopName() {
                 var o = $("#form2").serializeObject();
                 o.id = o.hide_id;
+                console.log(o);
                 addlogon(u_name, "修改", o_pid, "回路管理", "修改回路");
-                $.ajax({async: false, url: "loop.loopForm.modifyname.action", type: "get", datatype: "JSON", data: o,
+                $.ajax({async: false, url: "loop.loopForm.modifyloop.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
-                        var arrlist = data.rs;
-                        if (arrlist.length == 1) {
-                            //修改成功
-                            layer.open({content: langs1[143][lang], icon: 1,
-                                yes: function (index, layero) {
-                                    search();
-                                    //$("#gravidaTable").bootstrapTable('refresh');
-                                    layer.close(index);
-                                }
-                            });
-                        }
+                        console.log(data);
+//                        var arrlist = data.rs;
+//                        if (arrlist.length == 1) {
+//                            //修改成功
+                        $("#gravidaTable").bootstrapTable('refresh');
+//                        }
                     },
                     error: function () {
                         alert("提交失败！");
@@ -194,25 +348,17 @@
                 var select = selects[0];
                 console.log(select);
 
-                $("#l_factorycode1").val(select.l_factorycode);
                 $("#l_comaddr1").combobox('setValue', select.l_comaddr);
                 $("#l_deployment").val(select.l_deplayment);
                 $("#comaddrname1").val(select.commname);
                 $("#l_name1").val(select.l_name);
-                $("#l_code").val(select.l_code);
-                $("#hide_id").val(select.id);
-                $('#l_worktype1').combobox('setValue', select.l_worktype);
-                $("#l_groupe1").combobox('setValue', select.l_groupe);
-                if (select.l_deplayment == "1") {
-                    $("#trworktype").show();
-                    $('#l_worktype1').combobox('readonly', true);
-                    // $("#l_groupe1").combobox('readonly', true);
-                } else if (select.l_deplayment == "0") {
-                    $("#trworktype").hide();
-                    $('#l_worktype1').combobox('readonly', false);
-                    //$("#l_groupe1").combobox('readonly', false);
-                }
 
+                $("#hide_id").val(select.lid);
+                $("#l_site1").val(select.l_site);
+                $("#l_info1").val(select.l_info);
+                $("#l_pos1").val(select.l_pos);
+                console.log(select.l_worktype);
+                $('#l_worktype1').combobox('setValue', "0");
                 $('#dialog-edit').dialog('open');
 
             }
@@ -246,7 +392,7 @@
                             valign: 'middle'
                         }, {
                             field: 'commname',
-                            title:'网关名称', //网关名称
+                            title: '网关名称', //网关名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
@@ -263,42 +409,31 @@
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'l_code',
-                            title: '回路装置号', //回路装置号
+                            field: 'l_site',
+                            title: '站号', //站号
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'l_factorycode',
-                            title:'回路编号', //回路编号
+                            field: 'l_info',
+                            title: '控制点号', //信息点号
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'l_groupe',
-                            title: '回路组号', //回路组号
+                            field: 'l_pos',
+                            title: '寄存器位置', //信息点号
                             width: 25,
                             align: 'center',
-                            valign: 'middle',
-                            formatter: function (value, row, index, field) {
-                                if (value != null) {
-                                    return value.toString();
-                                }
-                            }
+                            valign: 'middle'
                         }, {
                             field: 'l_worktype',
-                            title: '控制方式', //控制方式
+                            title: '工作模式', //控制方式
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                                if (value == 0) {
-                                    value = "时间表";
-                                    return value;
-                                } else if (value == 1) {
-                                    value = "经纬度";
-                                    return value;
-                                }
+                                return value;
                             }
                         }, {
                             field: 'l_deployment',
@@ -308,10 +443,10 @@
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
                                 if (row.l_deplayment == "0") {
-                                    var str = "<span class='label label-warning'>" + langs1[318][lang] + "</span>";  //未部署
+                                    var str = "<span class='label label-warning'>未部署</span>";  //未部署
                                     return  str;
                                 } else if (row.l_deplayment == "1") {
-                                    var str = "<span class='label label-success'>" + langs1[319][lang] + "</span>";  //已部署
+                                    var str = "<span class='label label-success'>已部署</span>";  //已部署
                                     return  str;
                                 }
                             }
@@ -346,10 +481,6 @@
                         return temp;  
                     },
                 });
-
-
-
-
 
 
                 var aaa = $("span[name=xxx]");
@@ -564,56 +695,37 @@
                 });
 
 
-                var d = [];
-                for (var i = 0; i < 19; i++) {
-                    var o = {"id": i + 1, "text": i + 1};
-                    d.push(o);
-                }
-
-                $("#l_groupe").combobox({data: d, onLoadSuccess: function (data) {
-                        $(this).combobox("select", data[0].id);
-                    }, });
-
-                $("#l_groupe1").combobox({data: d, onLoadSuccess: function (data) {
-                        $(this).combobox("select", data[0].id);
-                    }, });
-
-
-                $("#add").attr("disabled", true);
-                $("#update").attr("disabled", true);
-                $("#shanchu").attr("disabled", true);
-                $("#addexcel").attr("disabled", true);
-                var obj = {};
-                obj.code = ${param.m_parent};
-                obj.roletype = ${param.role};
-                $.ajax({async: false, url: "login.usermanage.power.action", type: "get", datatype: "JSON", data: obj,
-                    success: function (data) {
-                        var rs = data.rs;
-                        if (rs.length > 0) {
-                            for (var i = 0; i < rs.length; i++) {
-
-                                if (rs[i].code == "600201" && rs[i].enable != 0) {
-                                    $("#add").attr("disabled", false);
-                                    $("#addexcel").attr("disabled", false);
-                                    continue;
-                                }
-                                if (rs[i].code == "600202" && rs[i].enable != 0) {
-                                    $("#update").attr("disabled", false);
-                                    continue;
-                                }
-                                if (rs[i].code == "600203" && rs[i].enable != 0) {
-                                    $("#shanchu").attr("disabled", false);
-                                    continue;
-                                }
-                            }
-                        }
-
-                    },
-                    error: function () {
-                        alert("提交失败！");
-                    }
-                });
-
+//                var obj = {};
+//                obj.code = ${param.m_parent};
+//                obj.roletype = ${param.role};
+//                $.ajax({async: false, url: "login.usermanage.power.action", type: "get", datatype: "JSON", data: obj,
+//                    success: function (data) {
+//                        var rs = data.rs;
+//                        if (rs.length > 0) {
+//                            for (var i = 0; i < rs.length; i++) {
+//
+//                                if (rs[i].code == "600201" && rs[i].enable != 0) {
+//                                    $("#add").attr("disabled", false);
+//                                    $("#addexcel").attr("disabled", false);
+//                                    continue;
+//                                }
+//                                if (rs[i].code == "600202" && rs[i].enable != 0) {
+//                                    $("#update").attr("disabled", false);
+//                                    continue;
+//                                }
+//                                if (rs[i].code == "600203" && rs[i].enable != 0) {
+//                                    $("#shanchu").attr("disabled", false);
+//                                    continue;
+//                                }
+//                            }
+//                        }
+//
+//                    },
+//                    error: function () {
+//                        alert("提交失败！");
+//                    }
+//                });
+//
 
 
 
@@ -657,10 +769,6 @@
                                     }
                                 });
                             }
-
-
-
-
                         }
 
                         layer.close(index);
@@ -690,7 +798,7 @@
 
 
 
-    <body>
+    <body id="panemask">
 
 
         <!--        <a data-toggle="modal" href="lamp.jsp" data-target="#modal">Click me</a>-->
@@ -707,7 +815,7 @@
                             <tr>
                                 <td>
                                     <span style="margin-left:10px;">
-                                        <span id="25" name="xxxx">网关地址</span>
+                                        网关地址
                                         &nbsp;</span>
                                 </td>
                                 <td>
@@ -730,10 +838,32 @@
                                 </td>
                                 <td>
                                     <button  type="button" style="margin-left:20px;" onclick="search()" class="btn btn-success btn-xm">
-                                        <!-- 搜索-->
-                                        <span id="34" name="xxxx">搜索</span>
+                                        搜索
+                                    </button>&nbsp;
+
+                                    <button  type="button" style="margin-left:20px;" onclick="deployLoop()" class="btn btn-success btn-xm">
+                                        部署
                                     </button>&nbsp;
                                 </td>
+                            </tr>
+                            <tr>
+                                <td style=" float: right">
+
+                                    信1:
+                                    <span class="menuBox">
+                                        <input id="info1"    class="form-control"  name="info1" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
+                                    值1:
+                                    <span class="menuBox">
+                                        <input id="val1"    class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+                                    
+
+                                </td>
+
+
+
                             </tr>
                         </tbody>
                     </table> 
@@ -749,14 +879,14 @@
         <!-- 页面中的弹层代码 -->
         <div class="btn-group zuheanniu" id="zuheanniu" style="float:left;position:relative;z-index:100;margin:12px 0 0 10px;">
             <button class="btn btn-success ctrol" onclick="showDialog();" data-toggle="modal" data-target="#pjj5" id="add" >  
-                <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;<span name="xxxx" id="65">添加</span>
+                <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;添加
             </button>
 
             <button class="btn btn-primary ctrol"  onclick="modifyModal();" id="update" >
-                <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span name="xxxx" id="66">编辑</span>
+                <span class="glyphicon glyphicon-pencil"></span>&nbsp;编辑
             </button>
             <button class="btn btn-danger ctrol" id="shanchu">
-                <span class="glyphicon glyphicon-trash"></span>&nbsp;<span name="xxxx" id="67">删除</span>
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;删除
             </button>
             <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
@@ -782,7 +912,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <span style="margin-left:20px;" name="xxxx" id="25">网关地址</span>&nbsp;
+                                <span style="margin-left:20px;" >网关地址</span>&nbsp;
                                 <span class="menuBox">
 
                                     <input id="comaddr" class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 
@@ -800,13 +930,14 @@
 
                         <tr>
                             <td>
-                                <span style="margin-left:20px;" name="xxxx" id="364">回路编号</span>&nbsp;
-                                <input id="l_factorycode" class="form-control" name="l_factorycode" style="width:150px;display: inline;" placeholder="请输入回路编号" type="text">
+                                <span style="margin-left:20px;" name="xxxx" id="364">&emsp;&emsp;站号</span>&nbsp;
+                                <input id="l_site" class="form-control" name="l_site" style="width:150px;display: inline;" placeholder="站号" type="text">
 
                             <td></td>
                             <td>
                                 <span style="margin-left:10px;" name="xxxx" id="331">回路名称</span>&nbsp;
-                                <input id="l_name" class="form-control"  name="l_name" style="width:150px;display: inline;" placeholder="请输入回路名称" type="text"></td>
+                                <input id="l_name" class="form-control"  name="l_name" style="width:150px;display: inline;" placeholder="请输入回路名称" type="text">
+                            </td>
                             </td>
                             </td>
                         </tr> 
@@ -814,12 +945,9 @@
                         <tr>
                             <td>
 
-                                <span style="margin-left:20px;" name="xxxx" id="316">控制方式</span>&nbsp;
+                                <span style="margin-left:20px;" >控制点号</span>&nbsp;
                                 <span class="menuBox">
-                                    <select class="easyui-combobox" id="switch" name="l_worktype" data-options='editable:false' style="width:150px; height: 30px">
-                                        <option value="0" selected="true">走时间</option>
-                                        <option value="1">走经纬度</option>           
-                                    </select>
+                                    <input id="l_info" class="form-control"  name="l_info" style="width:150px;display: inline;" placeholder="控制点号" type="text">
                                 </span>
 
 
@@ -827,13 +955,28 @@
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" name="xxxx" id="369">所属组号</span>&nbsp;
+                                <span style="margin-left:10px;" >工作方式</span>&nbsp;
                                 <span class="menuBox">
-                                    <select class="easyui-combobox" id="l_groupe" name="l_groupe"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
+                                    <select class="easyui-combobox" id="l_worktype" name="l_worktype"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
+                                        <option value="0">0</option>
+
                                     </select>
                                 </span>
                             </td>
                         </tr>                 
+
+                        <tr>
+                            <td>
+                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
+                                <span class="menuBox">
+                                    <input id="l_pos" class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
+                                </span>
+                            </td>
+                            <td></td>
+                            <td>
+
+                            </td>
+                        </tr>    
 
 
                     </tbody>
@@ -843,16 +986,15 @@
 
         <div id="dialog-edit"  class="bodycenter" style=" display: none"  title="回路修改">
             <form action="" method="POST" id="form2" onsubmit="return modifyLoopName()">  
-                <input type="hidden" id="hide_id" name="id" />
+                <input type="hidden" id="hide_id" name="hide_id" />
                 <input type="hidden" name="pid" value="${param.pid}"/>
-                <input type="hidden" name="l_code" id="l_code" value=""/>
                 <input type="hidden" id="l_deployment" name="l_deployment" />
                 <table >
                     <tbody>
                         <tr>
                             <td>
 
-                                <span style="margin-left:20px;" name="xxxx" id="25">网关地址</span>&nbsp;
+                                <span style="margin-left:20px;" >网关地址</span>&nbsp;
                                 <span class="menuBox">
 
                                     <input id="l_comaddr1" readonly="true" class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 
@@ -861,66 +1003,60 @@
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" name="xxxx" id="314">网关名称</span>&nbsp;
-                                <input id="comaddrname1" readonly="true"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text">
+                                <span style="margin-left:10px;" >网关名称</span>&nbsp;
+                                <input id="comaddrname1" readonly="false"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text">
 
                             </td>
                         </tr>
 
                         <tr>
                             <td>
-                                <span style="margin-left:20px;" name="xxxx" id="364">回路编号</span>&nbsp;
-                                <input id="l_factorycode1" readonly="true"  class="form-control" name="l_factorycode"  style="width:150px;display: inline;" placeholder="回路编号" type="text">
+                                <span style="margin-left:20px;" >&emsp;&emsp;站号</span>&nbsp;
+                                <input id="l_site1"  class="form-control" name="l_site" style="width:150px;display: inline;" placeholder="站号" type="text">
 
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" name="xxxx" id="331">回路名称</span>&nbsp;
-                                <input id="l_name1" class="form-control"   name="l_name" style="width:150px;display: inline;" placeholder="请输入回路名称" type="text"></td>
+                                <span style="margin-left:10px;" >回路名称</span>&nbsp;
+                                <input id="l_name1" class="form-control"  name="l_name" style="width:150px;display: inline;" placeholder="请输入回路名称" type="text">
                             </td>
                             </td>
-                        </tr>                                   
+                            </td>
+                        </tr> 
+
                         <tr>
                             <td>
 
-                                <span style="margin-left:20px;" name="xxxx" id="316">控制方式</span>&nbsp;
+                                <span style="margin-left:20px;" >控制点号</span>&nbsp;
                                 <span class="menuBox">
-                                    <select class="easyui-combobox" readonly="true" id="l_worktype1" name="l_worktype" data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">
-                                        <option value="0" selected="true">走时间</option>
-                                        <option value="1">走经纬度</option>           
-                                    </select>
+                                    <input id="l_info1"  class="form-control"  name="l_info" style="width:150px;display: inline;" placeholder="控制点号" type="text">
                                 </span>
 
+
+
                             </td>
+                            <td></td>
                             <td>
-
-                            </td>
-                            <td>
-
-
-                                <span style="margin-left:10px;" name="xxxx" id="369">所属组号</span>&nbsp;
+                                <span style="margin-left:10px;" >工作方式</span>&nbsp;
                                 <span class="menuBox">
-                                    <select class="easyui-combobox" readonly="true" id="l_groupe1" name="l_groupe"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
+                                    <select class="easyui-combobox" id="l_worktype1" name="l_worktype"  data-options='valueField:"id", textField:"text"' style="width:150px; height: 30px">          
+                                        <option value="0">0</option>
                                     </select>
                                 </span>
                             </td>
                         </tr>                 
-                        <!--                        <tr id="trworktype">
-                                                    <td>
-                        
-                                                        <span style="margin-left:20px;" name="xxxx" id="316">控制方式</span>&nbsp;
-                                                        <span class="menuBox">
-                                                            <select class="easyui-combobox"  id="l_worktype2" name="l_worktype2" data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">
-                                                                <option value="0" selected="true">走时间</option>
-                                                                <option value="1">走经纬度</option>           
-                                                            </select>
-                                                        </span>
-                        
-                                                    </td>
-                                                    <td>
-                                                        <span name="xxxx" id="375" style=" margin-left: 10px;" class="label label-success" onclick="switchWorkType()" >在线修改</span>
-                                                    </td>
-                        
-                                                </tr> -->
+
+                        <tr>
+                            <td>
+                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
+                                <span class="menuBox">
+                                    <input id="l_pos1"  class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
+                                </span>
+                            </td>
+                            <td></td>
+                            <td>
+
+                            </td>
+                        </tr>    
 
                     </tbody>
                 </table>

@@ -63,7 +63,7 @@
                                 if (row.type == null) {
                                     return value;
                                 }
-            
+
                                 if (row.type == "1") {
                                     return  "℃";
                                 } else if (row.type == "2") {
@@ -99,22 +99,35 @@
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 5,
+                    pageSize: 50,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [5, 10, 15, 20, 25],
+                    pageList: [50, 100, 150, 200, 250],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },
                     //服务器url
-                    queryParams: function (params)  {   //配置参数     
+                    queryParams: function (params)  {   //配置参数 
+                        var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                        var comaddr = "";
+                        if (selects.length > 0) {
+                            comaddr = selects[0];
+                        }
+                        console.log(comaddr);
+//                     var selects= $("#gravidaTable").bootstrapTable('getSelects');
+//                        var comaddr="";
+//                        if(selects.length>0){
+//                            comaddr=selects[0].comaddr;
+//                        }
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
                             search: params.search,
                             skip: params.offset,
                             limit: params.limit,
                             type_id: "1",
-                            pid: "${param.pid}"  
+                            pid: "${param.pid}",
+                            comaddr: comaddr
+
                         };      
                         return temp;  
                     },
@@ -154,7 +167,7 @@
                     return {disabled: false, //设置是否可用
                         checked: true//设置选中
                     };
-                    
+
                 } else {
                     return {checked: false//设置选中
                     };

@@ -2,7 +2,7 @@
 <xforms>
     <xform desc="回路" id="loopForm">
         <xhandle desc="查询回路表" id="getLoopList" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name as commname,*  FROM  t_loop tl,t_baseinfo tb WHERE tl.l_comaddr = tb.comaddr  AND @CONDITION  " var="bootstrap">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name as commname,tl.id as lid,*  FROM  t_loop tl,t_baseinfo tb WHERE tl.l_comaddr = tb.comaddr  AND @CONDITION  " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_code AND @l_deplayment  AND @pid">
                     <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>
@@ -15,99 +15,50 @@
                 </xflt>
             </xsql>
         </xhandle> 
-        <xhandle desc="回路的网关" id="getComaddr" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT DISTINCT  tl.l_comaddr as id,tl.l_comaddr as text FROM t_loop tl where @CONDITION 
-             " var="list">
-                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_deplayment AND @pid ">
-                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr' ">
+
+
+        <xhandle desc="是否存在回路" id="ExistLoop" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name as commname,*  FROM  t_loop tl,t_baseinfo tb WHERE tl.l_comaddr = tb.comaddr  AND @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_info AND @l_pos AND @pid">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>
-                    <xfltpara id="l_deplayment" nrp="1=1" para="l_deplayment" sql="l_deplayment = :l_deplayment ">
+                    <xfltpara id="l_info" nrp="1=1" para="l_info" sql="tl.l_info = :l_info">
                     </xfltpara>
-                    <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE online=1 AND  pid = ':pid')">
-                    </xfltpara>  
+                   <xfltpara id="l_pos" nrp="1=1" para="l_pos" sql="tl.l_pos = :l_pos">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE   pid = ':pid')">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+
+
+        <xhandle desc="添加回路" id="addLoop" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="l_comaddr,l_name,l_site,l_pos,l_info" tpe="DDL" tpl="insert into t_loop(l_comaddr,l_name,l_site,l_pos,l_info,l_deplayment) values(':l_comaddr',':l_name',:l_site,:l_pos,:l_info,0) " var="rs"></xsql>
+        </xhandle>
+
+
+        <xhandle desc="修改回路" id="modifyloop" rtnype="JSON">
+            <xsql id="a1" para="l_name,l_worktype,l_pos,l_site,l_info" tpe="DDL" tpl="update t_loop set l_name=':l_name',l_worktype=:l_worktype,l_pos=:l_pos,l_site=:l_site,l_info=:l_info where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
                 </xflt>
             </xsql>
         </xhandle>
-        <xhandle desc="修改回路方案" id="modifyname" rtnype="JSON">
-            <xsql id="a1" para="l_name,l_worktype,l_groupe" tpe="DDL" tpl="update t_loop set l_name=':l_name',l_worktype=:l_worktype,l_groupe=:l_groupe where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
-                    </xfltpara>
-                </xflt> 
-            </xsql>
-        </xhandle>
 
-        <xhandle desc="修改回路工作方式" id="modifyWorkType" rtnype="JSON">
-            <xsql id="a1" para="l_worktype" tpe="DDL" tpl="update t_loop set l_worktype=:l_worktype where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
-                    </xfltpara>
-                </xflt> 
-            </xsql>
-        </xhandle>
-
-        <xhandle desc="修改回路部署状态" id="modifyDepayment" rtnype="JSON">
+        <xhandle desc="修改传感器部署状态" id="modifyDepayment" rtnype="JSON">
             <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_loop set l_deplayment=:l_deplayment where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=2" para="id" sql="id=:id">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>
-        <xhandle desc="修改回路部署状态" id="modifyDepaymentByCode" rtnype="JSON">
-            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_loop set l_deplayment=:l_deplayment where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@l_code AND @l_comaddr ">
-                    <xfltpara id="l_code" nrp="1=2" para="l_code" sql="l_code=:l_code">
-                    </xfltpara>
-                        <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'">
-                    </xfltpara>
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
                 </xflt>
             </xsql>
         </xhandle>
 
-             <xhandle desc="修改所有回路部署状态" id="modifyAllDepayment" rtnype="JSON">
-            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_loop set l_deplayment=:l_deplayment where l_deplayment=1 AND @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@l_comaddr ">
-                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'">
-                    </xfltpara>  
-                </xflt>
-            </xsql>
-        </xhandle>   
-        <xhandle desc="删除回路" id="deleteLoop" rtn="rs" rtnype="JSON">
-            <xsql id="a1" tpe="DDL" tpl="delete from t_loop where @CONDITION " var="rs">
-                <xflt id="CONDITION" tpl="@ID ">
-                    <xfltpara id="ID" nrp="1=1" para="id" sql="id =  :id ">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>
-        <xhandle desc="添加回路" id="addloop" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="l_worktype,l_groupe,l_name,l_factorycode,l_comaddr,name" tpe="DDL" tpl="insert into t_loop(l_worktype,l_groupe,l_name,l_factorycode,l_comaddr,name,l_deplayment) values(:l_worktype,:l_groupe,':l_name',':l_factorycode',':l_comaddr',':name',0) " var="rs">
-            </xsql>
-        </xhandle>
-
-        <xhandle desc="修改所有回路开关" id="modifyAllSwitch" rtnype="JSON">
-            <xsql id="a1" para="l_switch" tpe="DDL" tpl="update t_loop set l_switch=:l_switch where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_deplayment ">
-                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'">
-                    </xfltpara>
-                    <xfltpara id="l_deplayment" nrp="1=2" para="l_deplayment" sql="l_deplayment=:l_deplayment">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>  
-        
-        <xhandle desc="修改回路开关" id="modifySwitch" rtnype="JSON">
-            <xsql id="a1" para="l_switch" tpe="DDL" tpl="update t_loop set l_switch=:l_switch where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>
         
     </xform>
+    
     <xform desc="回路方案" id="planForm">
+        
         <xhandle desc="回路部署方案列表" id="getLoopPlan" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan tp where  @CONDITION  " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@p_attr AND @p_type AND @p_code AND @pid">
@@ -122,58 +73,7 @@
                 </xflt>
             </xsql>
         </xhandle>
-        <xhandle desc="添加回路方案" id="addlooptime" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="pid,p_outtime,p_intime,p_name,p_type" tpe="DDL" tpl="insert into t_plan(p_attr,pid,p_outtime,p_intime,p_name,p_type) values(0,':pid',':p_outtime',':p_intime',':p_name',:p_type) " var="rs">
-            </xsql>
-        </xhandle>
-        <xhandle desc="修改回路方案" id="editlooptime" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="p_outtime,p_intime,p_name" tpe="DDL" tpl="update t_plan set p_outtime=':p_outtime',p_intime=':p_intime',p_name=':p_name' where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=2" para="id" sql="id=:id">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>
-
-        <xhandle desc="修改回路方案" id="editlooptimeA" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="p_outtime,p_intime" tpe="DDL" tpl="update t_plan set p_outtime=':p_outtime',p_intime=':p_intime' where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@p_code ">
-                    <xfltpara id="p_code" nrp="1=2" para="p_code" sql="p_code=':p_code'">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>
-
-        <xhandle desc="修改回路方案经纬度" id="editloopjw" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="p_latitude,p_Longitude,p_name" tpe="DDL" tpl="update t_plan set p_latitude=':p_latitude',p_Longitude=':p_Longitude',p_name=':p_name' where @CONDITION " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>
-        <xhandle desc="添加回路方案" id="addloopjw" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="pid,p_name,p_type,p_Longitude,p_latitude" tpe="DDL" tpl="insert into t_plan(p_attr,pid,p_name,p_type,p_Longitude,p_latitude) values(0,':pid',':p_name',:p_type,':p_Longitude',':p_latitude') " var="rs">
-            </xsql>
-        </xhandle>
-        <xhandle desc="删除回路方案" id="deleteloop" rtn="rs" rtnype="JSON">
-            <xsql id="a1" tpe="DDL" tpl="delete from t_plan where @CONDITION " var="rs">
-                <xflt id="CONDITION" tpl="@ID ">
-                    <xfltpara id="ID" nrp="1=1" para="id" sql="id =  :id ">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>
-        <xhandle desc="" id="getPlanlist" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.p_code as id,tl.p_code as text,p_outtime,p_intime,p_Longitude,p_latitude,p_type,* FROM t_plan tl where  @CONDITION " var="list">
-                <xflt id="CONDITION" nrp="" tpl="@attr AND @pid ">
-                    <xfltpara id="attr" nrp="1=1" para="attr" sql="p_attr=:attr">
-                    </xfltpara>
-                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
-                    </xfltpara>
-                </xflt>
-            </xsql>
-        </xhandle>
+        
 
     </xform>
 </xforms>

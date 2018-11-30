@@ -1090,7 +1090,8 @@
                                 <select class="easyui-combobox" id="type" name="type" style="width:150px; height: 30px">
                                     <option value="" ></option>
                                     <option value="1" >温度</option>
-                                    <option value="2" >湿度</option>                                          
+                                    <option value="2" >湿度</option>  
+                                     <option value="3" >开关</option> 
                                 </select>
 
                             </td>                           

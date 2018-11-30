@@ -495,6 +495,8 @@
                         } else if (arrlist.length == 0) {
                             console.log(obj);
                             if (obj.model == "L-30MT-ES2") {
+                                //添加传感器
+
                                 for (var i = 0; i < 16; i++) {
                                     var z = i + 4100;
                                     var j = i >= 8 ? 10 + (i - 8) : i;
@@ -503,7 +505,7 @@
                                     ooo.name = "X" + j.toString();
                                     ooo.worktype = 0;
                                     ooo.dreg = z;
-                                    ooo.type=3;
+                                    ooo.type = 3;
                                     ooo.model = obj.model;
                                     ooo.l_comaddr = obj.comaddr;
                                     $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: ooo,
@@ -517,6 +519,31 @@
                                         }
                                     });
                                 }
+                                
+                                
+                                       //添加回路
+                                for (var i = 0; i < 16; i++) {
+                                    var z = i + 4100;
+                                    var j = i >= 8 ? 10 + (i - 8) : i;
+                                    var ooo = {};
+                                    ooo.l_site = 1;
+                                    ooo.l_name = "Y" + j.toString();
+                                    ooo.l_comaddr = obj.comaddr;
+                                    ooo.l_pos=z;
+                                    ooo.l_port=j;
+                                    $.ajax({url: "loop.loopForm.addLoop.action", async: false, type: "get", datatype: "JSON", data: ooo,
+                                        success: function (data) {
+                                            var arrlist = data.rs;
+                                            if (arrlist.length == 1) {
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("提交添加失败！");
+                                        }
+                                    });
+                                }
+                                
+
                                 $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
                                     success: function (data) {
                                         namesss = true;
@@ -529,6 +556,9 @@
                                         });
                                     }
                                 })
+
+                         
+     
                             }
                             return  false;
                         }

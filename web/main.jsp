@@ -17,6 +17,7 @@
         <link type="text/css" href="layer/layui.css" rel="stylesheet">
         <link type="text/css" href="layer/animate.css" rel="stylesheet">
         <link type="text/css" href="layer/indexNavigation.css" rel="stylesheet">
+        <link rel="icon" href="Images/logo.ico" type="image/x-icon" />
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript" src="js/md5.js"></script>
         <script type="text/javascript"  src="js/getdate.js"></script>
@@ -160,7 +161,7 @@
                 }
             };
             var websocket = null;
-            var conectstr = "ws://viphk.ngrok.org:10018/"; 
+            var conectstr = "ws://viphk.ngrok.org:10018/";
             var timestamp = 0;
             function sendData(obj) {
 
@@ -515,7 +516,7 @@
         <div class="wraper"> 
             <div class="bodyLeft" style="background: rgb(14, 98, 199) none repeat scroll 0% 0%;">
                 <div class="bodyLeftTop listdisplayNone" style="background:#5cb75c ">
-                    <span  style="width:80px;margin-left:30px;"><img src="img/jdkj.png" style=" width: 100px;"><label name="xxx" id="275" style=" color: black;">智慧农业生产管理控制系统</label></span>
+                    <span  style="width:80px;margin-left:30px;"><img src="img/jdkj.png" style=" width: 150px;"><label name="xxx" id="275" style=" color: black;">智慧农业生产管理控制系统</label></span>
                 </div>
 
                 <ul class="layui-nav layui-nav-tree  MenuBox " >
@@ -561,47 +562,45 @@
                     <div class="CCIOT-logo" style="display:none;height:60px;float:left;padding-top:7px;padding-left:15px;box-sizing:border-box;">
                         <img src="abc.action_files/sz-tit.png" style="min-width:50px;height:50px;float:left;" id="logoImg">
                     </div>
-                    <ul class="controlMessage animated fadeInRight">
+                    <ul class="controlMessage animated fadeInRight">                   
+
                         <li class="one">
-                            <span id="1" name="xxx">项目</span>&nbsp;&nbsp;
-                            <select style="width: 200px; height: 30px; margin-top:0px; font-size: 16px; border: 1px solid;" id="pojects">
+                            <select style="width: 200px; height: 30px; margin-top:0px; font-size: 16px; border: 1px solid; background-color:  #7aba7b; color:  white;" id="pojects">
 
                             </select>
                         </li>
-                        <li class="one imgM" id ="imgM" onclick="imgM()" title="告警信息">
+                        <li class="one imgM" id ="imgM" onclick="imgM()" title="告警信息" style=" margin-right: 20px;">
                             <img src="img/xx.png" class="alarmLi">
                             <div class="alarmNub alarmLi" id="alarmNumber">0</div>
                         </li>
+                        <li class="one" style=" margin-right: 20px;">
 
-                        <li class="one" style="width:74px;">
 
-                            <i class="layui-icon  indexIcon"></i>   
                             <!--                            <span class="glyphicon glyphicon-tags indexIcon"/>-->
-                            <span class="Till" style="width: 74px; text-align: center; color: rgb(255, 255, 255);" name="xxx" id="2">语言</span>
-
+                            <span class="Till" style=" text-align: center; color: rgb(255, 255, 255);">语言:</span>
+                            <span id="langtext">中文</span>
 
 
                             <ul class="two animated fadeInDown language" style="background: rgb(57, 61, 73) none repeat scroll 0% 0%; color: rgb(255, 255, 255);">
                                 <li language="zh_CN"><label name="xxx" id="268">中文</label></li>
                                 <li language="en_US"><label name="xxx" id="269">英文</label></li>
-                                <li language="e_BY"><label  name="xxx" id="270">俄文</label></li>
                             </ul>
                         </li>
-                        <li class="one" style=" margin-right: 10px;">
-                            <i class="layui-icon indexIcon"></i>  
-                            <!--<span class="glyphicon glyphicon-user"></span>-->
-                            <span class="Till" style=" padding-left: 24px; box-sizing: border-box; color: rgb(255, 255, 255);">
-                                <span id="u_name" class="admin" style="color: rgb(255, 255, 255);">${rs[0].name}</span>
+                        <li class="one" style=" margin-right: 20px; margin-top: 15px;">
+                            <span class="Till" style="box-sizing: border-box; color: rgb(255, 255, 255);  margin-top: -20px;"> 
+                                <span class="admin" style="color: rgb(255, 255, 255);"><img src="./img/user.jpg" style=" height: 40px; width: 40px;vertical-align: middle; border-radius: 16px;"></span>
                                 <input id="m_code" type="hidden" value="${rs[0].m_code}"/>
                                 <input id="pwd" type="hidden" value="${rs[0].password}"/>
                                 <input id="userid" type="hidden" value="${rs[0].id}"/>
                                 <input id="upid" type="hidden" value="${rs[0].pid}"/>
+                                <input id="u_name" type="hidden" value="${rs[0].name}"/>
                             </span>
-                            <ul class="two animated fadeInDown twoL" style="background: rgb(57, 61, 73) none repeat scroll 0% 0%; color: rgb(255, 255, 255);">
+                            <ul class="two animated fadeInDown twoL" style="background: rgb(57, 61, 73) none repeat scroll 0% 0%; color: rgb(255, 255, 255); width: 190px; margin-top:-13px; border: 1px solid red;">
                                 <li id="out" onclick="getout()"><label name="xxx" id="3">退出</label></li>
                                 <li data-toggle="modal" data-target="#updpwdDiv" ><label name="xxx" id="4">修改密码</label></li>
                             </ul>
                         </li>
+
                     </ul> 
                 </div>
                 <input  id="names" value="" type="hidden">
@@ -664,12 +663,12 @@
                                 &nbsp;</span>
                             <input id="comaddrlist" data-options='editable:false,valueField:"id", textField:"text"' class="easyui-combobox"/>
                         </td>
-<!--                        <td>
-                            <span style="margin-left:20px;" id="292" name="xxx">
-                                灯具编号
-                            </span>&nbsp;
-                            <input type="text" id ="l_factorycode" style="width:150px; height: 30px;">
-                        </td>-->
+                        <!--                        <td>
+                                                    <span style="margin-left:20px;" id="292" name="xxx">
+                                                        灯具编号
+                                                    </span>&nbsp;
+                                                    <input type="text" id ="l_factorycode" style="width:150px; height: 30px;">
+                                                </td>-->
                         <td>
                             <button class="btn btn-sm btn-success" onclick="select()" style="margin-left:10px;"><span id="34" name="xxx">搜索</span></button>
                         </td>
@@ -958,7 +957,7 @@
                             function (error) {
                                 alert(error.message);
                             });
-                })
+                });
 
                 $(".language li:eq(0)").click(function () {
                     var language = $(this).attr("language");
@@ -966,6 +965,7 @@
                     lang = language;
                     $("#1").html(o[1][language]);  //项目
                     $("#2").html(o[2][language]);  //语言
+                    $("#langtext").html("中文");
                     var bbb = $("label[name=xxx]");
                     for (var i = 0; i < bbb.length; i++) {
                         var d = bbb[i];
@@ -979,6 +979,7 @@
                     lang = language;
                     $("#1").html(o[1][language]);  //项目
                     $("#2").html(o[2][language]);  //语言
+                    $("#langtext").html("English");
                     var bbb = $("label[name=xxx]");
                     for (var i = 0; i < bbb.length; i++) {
                         var d = bbb[i];

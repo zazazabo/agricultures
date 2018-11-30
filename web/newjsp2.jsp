@@ -25,25 +25,37 @@
                 justify-content: space-around;
                 align-items: center;
             }
+            /*            .div1{
+                            width: 100%; height: 33%;font-size: 2em;text-align: center;padding-top: 10%;  border: 1px solid red;
+                        }
+                        .div2{
+                            width: 100%; height: 33%; border: 1px solid blue;
+                        }
+                        .div3{
+                            width: 100%; height: 30%;text-align: center;padding-top: 10%;font-size: 1.7em; border: 1px solid yellow;
+                        }*/
             .div1{
-                width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;
+                width: 50%; height: 50%;text-align: center;padding-top: 10%; float: left;font-size: 2em;position:relative;
             }
             .div2{
-                width: 50%; height: 50%; float: left;
+                width: 50%; height: 50%;text-align: center;padding-top: 10%; float: left;font-size: 2em;position:relative;
             }
             .div3{
-                width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 1.7em;
+                width: 30%; height: 50%;text-align: center;padding-top: 10%; float: left;position:relative;
+            }
+            .div4{
+                width: 70%; height: 50%;text-align: center;padding-top: 10%;float: left;font-size: 2em;position:relative;
             }
 
             .wd{
-                border: 1px solid black; width: 21%; float: left; height: 80%; background-color: #FAA523;  margin-left: 3%; margin-top: 2%;
+                border: 1px solid black; width: 13%; float: left; height: 80%;   margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60);
             }
 
             .sd{
-                border: 1px solid black; width: 21%; float: left; height: 80%; background-color: powderblue;  margin-left: 3%; margin-top: 2%; 
+                border: 1px solid black; width: 13%; float: left; height: 80%;   background:rgba(255,165,0,0.6); filter:alpha(opacity=60);  margin-left: 3%; margin-top: 2%; 
             }
 
-            .kg{ border: 1px solid black; width: 21%; float: left; height: 80%; background-color: lightcyan;  margin-left: 3%; margin-top: 2%; }
+            .kg{ border: 1px solid black; width: 13%; float: left; height: 80%;    margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60); }
 
             img{ width:100%;height:100%;}
 
@@ -75,13 +87,13 @@
                                 str = "%RH";
                                 str2 = "湿度值";
                             } else if (v1.type == 3) {
-                                if (v1.numvalue != null && v1.numvalue != "") {
+                                if (v1.numvalue != null && v1.numvalue != "" && v1.numvalue != 0) {
                                     str = "开";
                                 } else {
                                     str = "关";
                                 }
                                 pd = 1;
-                                str2 = "开关状态";
+                                str2 = "状态";
                             }
                             var val = "";
                             if (pd == 1) {
@@ -127,26 +139,27 @@
                                     str2 = "湿度值";
                                 } else if (sensor.type == 3) {
                                     $(bodydiv).addClass("kg");
-                                    if (sensor.numvalue != null && sensor.numvalue != "") {
+                                    if (sensor.numvalue != null && sensor.numvalue != "" && sensor.numvalue != 0) {
                                         str = "开";
-                                        img.src = "./img/kg.png";
+                                        img.src = "./img/k.png";
                                     } else {
                                         str = "关";
-                                        img.src = "./img/wd.png";
+                                        img.src = "./img/g.png";
                                     }
                                     pd = 1;
-                                    str2 = "开关状态";
+                                    str2 = "状态";
                                 }
-                                var div1 = document.createElement("div");
-
-                                $(div1).addClass("div1");
-                                $(div1).append(sensor.name);
-                                var div2 = document.createElement("div");
-                                $(div2).addClass("div2");
-                                $(div2).append(img);
-                                var div3 = document.createElement("div");
-                                $(div3).addClass("div3");
-                                $(div3).attr("id", "infonum" + sensor.infonum);
+//                                var div1 = document.createElement("div");
+//
+//                                $(div1).addClass("div1");
+//                                $(div1).append(sensor.name);
+//                                var div3 = document.createElement("div");
+//                                $(div3).addClass("div3");
+//                                var div2 = document.createElement("div");
+//                                $(div2).addClass("div2");
+//                                $(div2).append(img);
+//                                
+//                                $(div3).attr("id", "infonum" + sensor.infonum);
                                 var numvalue = parseInt(sensor.numvalue);
                                 if (numvalue != 0) {
                                     numvalue = numvalue / 10;
@@ -155,12 +168,28 @@
                                 if (pd == 1) {
                                     val = str;
                                 } else {
-                                    val = numvalue + str;
+                                    val = numvalue+ "<br>" + str;
                                 }
-                                $(div3).html(str2 + "<br/>" + val);
+//                                $(div3).html(str2 + "<br/>" + val);
+//                                $(bodydiv).append(div1);
+//                                $(bodydiv).append(div3);
+//                                $(bodydiv).append(div2);
+                                var div1 = document.createElement("div");
+                                $(div1).addClass("div1");
+                                div1.append(str2);
+                                var div2 = document.createElement("div");
+                                $(div2).addClass("div2");
+                                $(div2).append(val);
+                                var div3 = document.createElement("div");
+                                $(div3).addClass("div3");
+                                $(div3).append(img);
+                                var div4 = document.createElement("div");
+                                $(div4).addClass("div4");
+                                $(div4).append(sensor.name);
                                 $(bodydiv).append(div1);
                                 $(bodydiv).append(div2);
                                 $(bodydiv).append(div3);
+                                $(bodydiv).append(div4);
                                 $("#parentdiv").append(bodydiv);
                             }
                         }
@@ -178,8 +207,14 @@
 
     </head>
     <body id="activity_pane" >
-        <img src="./img/hm2.jpg" style="position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;">
+        <img src="./img/jdbj.jpg" style="position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;">
         <div style=" width: 100%; height: 40%;" class='top' id="parentdiv">
+<!--            <div class="sd">
+                <div class="div1"></div>
+                <div class="div2"></div>
+                <div class="div3"></div>
+                <div class="div4"></div>
+            </div>-->
             <!--            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
                             <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
                             <div style=" width: 50%; height: 50%; float: left; ">

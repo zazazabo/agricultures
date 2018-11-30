@@ -3,7 +3,7 @@
 
 
 
-  <xinfo class="com.microsoft.jdbc.sqlserver.SQLServerDriver" url="jdbc:microsoft:sqlserver://192.168.1.107:1433;databaseName=agriculture" psw="123" uname="sa">
+  <xinfo class="com.microsoft.jdbc.sqlserver.SQLServerDriver" url="jdbc:microsoft:sqlserver://192.168.1.109:1433;databaseName=agriculture" psw="123" uname="sa">
   </xinfo>  
 
 </xdatabases>

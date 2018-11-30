@@ -43,19 +43,30 @@
                         },
                         {
                             field: 'name',
-                            title: '名称', //回路名称
+                            title: '名称',
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'numvalue',
-                            title: '数值', //装置序号
+                            title: '数值',
                             width: 25,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                if (row.type == 3) {
+                                    if (value == 0) {
+                                        return "关";
+                                    } else {
+                                        return "开";
+                                    }
+                                } else {
+                                    return value / 10;
+                                }
+                            }
                         }, {
                             field: 'unit1',
-                            title: '单位', //组号
+                            title: '单位',
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -63,7 +74,7 @@
                                 if (row.type == null) {
                                     return value;
                                 }
-            
+
                                 if (row.type == "1") {
                                     return  "℃";
                                 } else if (row.type == "2") {
@@ -75,20 +86,17 @@
 //                                return  groupe;
                             }
                         }, {
-                            field: 'l_switch',
-                            title: '状态', //合闸参数
+                            field: 'onlinetime',
+                            title: '状态',
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                                if (value == 170) {
-                                    return langs1[340][lang];  //断开
-                                } else if (value == 85) {
-                                    return langs1[339][lang];  //闭合
-                                }
-
-//                                var groupe = value.toString();
-//                                return  groupe;
+                                var time1 = value.substring(0, 16);
+                                var time2 = row.dtime.substring(0, 16);
+                                console.log("1:"+time1+"//2:"+time2)
+                                var stime = TimeDifference(time1, time2);
+                                return  stime;
                             }
                         }],
                     clickToSelect: true,
@@ -117,7 +125,7 @@
                             pid: "${param.pid}"  
                         };      
                         return temp;  
-                    },
+                    }
                 });
 
                 $('#gayway').on('check.bs.table', function (row, element) {
@@ -134,7 +142,33 @@
                     $("#gravidaTable").bootstrapTable('refresh', opt);
 
                 });
-            })
+            });
+            //定时刷新数据
+            setInterval('getcominfo()', 6000);
+            function  getcominfo() {
+                var selects = $('#gayway').bootstrapTable('getSelections');
+                var l_comaddr = selects[0].comaddr;
+                var obj = {};
+                obj.l_comaddr = l_comaddr;
+                obj.pid = "${param.pid}";
+                var opt = {
+                    url: "monitor.monitorForm.getSensorList.action",
+                    silent: true,
+                    query: obj
+                };
+                $("#gravidaTable").bootstrapTable('refresh', opt);
+            }
+
+            //计算时间差
+            function TimeDifference(time1, time2)
+            {
+
+                time1 = new Date(time1.replace(/-/g, '/'));
+                time2 = new Date(time2.replace(/-/g, '/'));
+                var ms = Math.abs(time1.getTime() - time2.getTime());
+                return ms / 1000 / 60 ;
+                
+            }
 
 
             function formartcomaddr(value, row, index) {
@@ -154,24 +188,13 @@
                     return {disabled: false, //设置是否可用
                         checked: true//设置选中
                     };
-                    
+
                 } else {
                     return {checked: false//设置选中
                     };
 
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
         </script>
     </head>
     <body id="panemask">

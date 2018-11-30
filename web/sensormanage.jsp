@@ -359,6 +359,7 @@
                     console.log(v);
                     if (data[1] == 0x10) {
                         var infonum = (2000 + obj.val * 10) | 0x1000;
+                        console.log(infonum);
                         var high = infonum >> 8 & 0xff;
                         var low = infonum & 0xff;
                         if (data[2] == high && data[3] == low) {
@@ -400,26 +401,29 @@
                 vv.push(0x10);
                 var info = parseInt(ele.infonum);
                 console.log(info);
-                var infonum = (2000 + info * 10) | 0x1000;
-                vv.push(infonum >> 8 & 0xff);
+                var infonum = (2000 + info * 10) | 0x1000;  
+                vv.push(infonum >> 8 & 0xff); //起始地址
                 vv.push(infonum & 0xff);
-                vv.push(0);
-                vv.push(4); //寄存器数目 2字节
-                vv.push(8); //寄存器数目长度  1字节
+                vv.push(0);           //寄存器数目 2字节  
+                vv.push(4);           
+                vv.push(8);           //字节数目长度  1字节
 
 
-                vv.push(info >> 8 & 0xff);
-                vv.push(info & 0xff); //信息点
+                vv.push(info >> 8 & 0xff);  //信息点
+                vv.push(info & 0xff); 
 
-                var site = parseInt(ele.sitenum);
-                vv.push(site >> 8 & 0xff); //站点
+                var site = parseInt(ele.sitenum); //站点
+                vv.push(site >> 8 & 0xff);
                 vv.push(site & 0xff);
+                
                 var reg = parseInt(ele.dreg);
                 vv.push(reg >> 8 & 0xff)   //寄存器变量值
                 vv.push(reg & 0xff);
+                
                 var worktype = parseInt(ele.worktype);
                 vv.push(worktype >> 8 & 0xff)   //寄存器变量值
                 vv.push(worktype & 0xff);
+                
                 var data = buicode2(vv);
                 dealsend2("10", data, "deploySensorCB", o.l_comaddr, 1, ele.id, info);
                 $('#panemask').showLoading({
@@ -438,37 +442,36 @@
                     return;
                 }
                 var ele = selects[0];
+                o.l_comaddr = ele.l_comaddr;
+                console.log(ele);
                 var vv = [];
                 vv.push(1);
                 vv.push(0x10);
                 var info = parseInt(ele.infonum);
-                var infonum = (2000 + info * 10) | 0x1000;
-                vv.push(infonum >> 8 & 0xff);
+                console.log(info);
+                var infonum = (2000 + info * 10) | 0x1000;  
+                vv.push(infonum >> 8 & 0xff); //起始地址
                 vv.push(infonum & 0xff);
-                vv.push(0);
-                vv.push(4); //寄存器数目 2字节
-                vv.push(8); //寄存器数目长度  1字节
+                vv.push(0);           //寄存器数目 2字节  
+                vv.push(4);           
+                vv.push(8);           //字节数目长度  1字节
 
 
-                vv.push(info >> 8 & 0xff); //信息点
-                vv.push(info & 0xff);
-//                var site = parseInt(ele.sitenum);
-//                vv.push(site >> 8 & 0xff);   //站点
-//                vv.push(site & 0xff);
+                vv.push(0);  //信息点
+                vv.push(0); 
+
+            
                 vv.push(0); //站点
                 vv.push(0);
-                vv.push(0); //寄存器变量值
-                vv.push(0);
-                vv.push(0); //工作方式
-                vv.push(0);
-//                var reg = parseInt(ele.dreg);
-//                vv.push(reg >> 8 & 0xff)   //寄存器变量值
-//                vv.push(reg & 0xff);
+                
 
-//                var worktype = parseInt(ele.worktype);
-//                vv.push(worktype >> 8 & 0xff)   //寄存器变量值
-//                vv.push(worktype & 0xff);
+                vv.push(0)   //寄存器变量值
+                vv.push(0);
+                
 
+                vv.push(0)   //寄存器变量值
+                vv.push(0);
+                
                 var data = buicode2(vv);
                 dealsend2("10", data, "deploySensorCB", o.l_comaddr, 0, ele.id, info);
                 $('#panemask').showLoading({

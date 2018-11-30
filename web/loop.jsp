@@ -154,69 +154,6 @@
             }
 
 
-
-            function switchWorkTypeCB(obj) {
-                console.log(obj);
-                if (obj.status == "success") {
-
-                    var oo = {};
-                    oo.id = obj.param;
-                    oo.l_worktype = obj.val;
-                    //  addlogon(u_name, "修改", o_pid, "回路管理", "修改回路");
-
-                    $.ajax({async: false, url: "loop.loopForm.modifyWorkType.action", type: "get", datatype: "JSON", data: oo,
-                        success: function (data) {
-                            var arrlist = data.rs;
-                            if (arrlist.length == 1) {
-                                //修改成功
-                                layerAler(langs1[361][lang]);  //切换成功
-
-                                $('#gravidaTable').bootstrapTable('refresh');
-//                                layer.open({content: langs1[143][lang], icon: 1,
-//                                    yes: function (index, layero) {
-//                                        $("#gravidaTable").bootstrapTable('refresh');
-//                                        layer.close(index);
-//                                    }
-//                                });
-                            }
-                        },
-                        error: function () {
-                            alert("提交失败！");
-                        }
-                    });
-
-
-
-
-
-
-
-
-                }
-
-            }
-            function switchWorkType() {
-                var o = $("#form2").serializeObject();
-                if (o.l_deployment == "0") {
-                    layerAler(langs1[362][lang]);   //部署后能能切换
-                    return;
-                }
-                console.log(o);
-                var vv = [];
-                var l_code = parseInt(o.l_code);
-
-                var a = l_code >> 8 & 0x00FF;
-                var b = l_code & 0x00ff;
-                vv.push(b);
-                vv.push(a);
-                vv.push(parseInt(o.l_worktype2));
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 380, vv); //01 03 F24    
-                dealsend2("A4", data, 380, "switchWorkTypeCB", comaddr, o.l_code, o.id, o.l_worktype2);
-            }
-
-
             function modifyLoopName() {
                 var o = $("#form2").serializeObject();
                 o.id = o.hide_id;

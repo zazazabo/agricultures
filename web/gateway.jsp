@@ -57,7 +57,7 @@
                         btn: ['确定', '取消'] //确定、取消按钮
                     }, function (index) {
                         var o = {l_comaddr: selects[0].comaddr, id: selects[0].id};
-                         $.ajax({url: "homePage.gayway.gaywayinfo.action", type: "POST", datatype: "JSON", data: o,
+                        $.ajax({url: "homePage.gayway.gaywayinfo.action", type: "POST", datatype: "JSON", data: o,
                             success: function (data) {
                                 var arrlist = data.rs;
                                 if (arrlist.length > 0) {
@@ -496,12 +496,14 @@
                             console.log(obj);
                             if (obj.model == "L-30MT-ES2") {
                                 for (var i = 0; i < 16; i++) {
-                                    var z = i >= 8 ? 10 + (i - 8) + 4100 : i + 4100;
+                                    var z = i + 4100;
+                                    var j = i >= 8 ? 10 + (i - 8) : i;
                                     var ooo = {};
                                     ooo.sitenum = 1;
-                                    ooo.name = obj.model + "自带传感器";
+                                    ooo.name = "X" + j.toString();
                                     ooo.worktype = 0;
                                     ooo.dreg = z;
+                                    ooo.type=3;
                                     ooo.model = obj.model;
                                     ooo.l_comaddr = obj.comaddr;
                                     $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: ooo,
@@ -529,27 +531,6 @@
                                 })
                             }
                             return  false;
-
-//                            var latitudemstr = obj.latitudem26d + "." + obj.latitudem26m + "." + obj.latitudem26s;
-//                            obj.latitude = latitudemstr;
-//                            var longitudemstr = obj.longitudem26d + "." + obj.longitudem26m + "." + obj.longitudem26s;
-//                            obj.longitude = longitudemstr;
-//                            obj.latitude = obj.latitude == ".." ? "" : obj.latitude;
-//                            obj.longitude = obj.longitude == ".." ? "" : obj.longitude;
-//                            obj.multpower = obj.multpower == "" ? 0 : obj.multpower;
-//                            console.log(obj);
-//                            $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
-//                                success: function (data) {
-//                                    namesss = true;
-//                                    $("#gravidaTable").bootstrapTable('refresh');
-//                                },
-//                                error: function () {
-//                                    layer.alert('系统错误，刷新后重试', {
-//                                        icon: 6,
-//                                        offset: 'center'
-//                                    });
-//                                }
-//                            })
                         }
 
                     },

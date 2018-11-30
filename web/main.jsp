@@ -160,7 +160,7 @@
                 }
             };
             var websocket = null;
-            var conectstr = "ws://free.idcfengye.com:16181/";
+            var conectstr = "ws://viphk.ngrok.org:10018/"; 
             var timestamp = 0;
             function sendData(obj) {
 

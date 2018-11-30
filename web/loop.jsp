@@ -151,6 +151,11 @@
             }
 
             function deployLoop() {
+
+                var infoalldata = $("#formsearch").serializeObject();
+
+                console.log(infoalldata);
+
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var o = $("#form1").serializeObject();
                 var vv = new Array();
@@ -858,7 +863,49 @@
                                     <span class="menuBox">
                                         <input id="val1"    class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="value" type="text">
                                     </span>  
-                                    
+
+
+                                    信2:
+                                    <span class="menuBox">
+                                        <input id="info1"    class="form-control"  name="info2" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
+                                    值2:
+                                    <span class="menuBox">
+                                        <input id="val1"    class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
+                                    信3:
+                                    <span class="menuBox">
+                                        <input id="info1"    class="form-control"  name="info3" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
+                                    值3:
+                                    <span class="menuBox">
+                                        <input id="val1"    class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
+                                    信4:
+                                    <span class="menuBox">
+                                        <input id="info1"    class="form-control"  name="info4" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
+                                    值4:
+                                    <span class="menuBox">
+                                        <input id="val1"    class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
+
+                                    信5:
+                                    <span class="menuBox">
+                                        <input id="info1"    class="form-control"  name="info5" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
+                                    值5:
+                                    <span class="menuBox">
+                                        <input id="val1"    class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="value" type="text">
+                                    </span>  
+
 
                                 </td>
 

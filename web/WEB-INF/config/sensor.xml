@@ -35,11 +35,6 @@
             </xsql>
         </xhandle>
         
-
-
-
-
-        
         <xhandle desc="查询所有传感器" id="getAllSensor" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM  t_sensor where deplayment=1" var="rs">
    

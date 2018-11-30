@@ -17,12 +17,6 @@
         <script type="text/javascript"  src="js/getdate.js"></script>
         <script>
 
-            var u_name = parent.parent.getusername();
-            var o_pid = parent.parent.getpojectId();
-            var lang = '${param.lang}';//'zh_CN';
-            var langs1 = parent.parent.getLnas();
-
-
             function layerAler(str) {
                 layer.alert(str, {
                     icon: 6,
@@ -31,12 +25,6 @@
             }
 
             $(function () {
-
-                $('#gravidaTable').on("check.bs.table", function (field, value, row, element) {
-                    var index = row.data('index');
-                    value.index = index;
-                });
-
                 $('#gravidaTable').bootstrapTable({
                     showExport: true, //是否显示导出
                     exportDataType: "basic", //basic', 'a
@@ -52,28 +40,39 @@
                                 row.index = index;
                                 return index + 1;
                             }
-                        }, 
+                        },
                         {
-                            field: 'l_name',
-                            title: langs1[331][lang], //回路名称
+                            field: 'name',
+                            title: '名称', //回路名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'l_code',
-                            title: langs1[315][lang], //装置序号
+                            field: 'numvalue',
+                            title: '数值', //装置序号
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'l_groupe',
-                            title: langs1[332][lang], //组号
+                            field: 'unit1',
+                            title: '单位', //组号
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                                var groupe = value.toString();
-                                return  groupe;
+                                if (row.type == null) {
+                                    return value;
+                                }
+            
+                                if (row.type == "1") {
+                                    return  "℃";
+                                } else if (row.type == "2") {
+                                    return  "%RH";
+                                } else if (row.type == 3) {
+                                    return  "开/关";
+                                }
+//                                var groupe = value.toString();
+//                                return  groupe;
                             }
                         }, {
                             field: 'l_switch',
@@ -90,22 +89,6 @@
 
 //                                var groupe = value.toString();
 //                                return  groupe;
-                            }
-                        }, {
-                            field: 'l_deployment',
-                            title: langs1[317][lang], //部署情况
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle',
-                            formatter: function (value, row, index, field) {
-                                if (row.l_deplayment == "0") {
-                                    var str = "<span class='label label-warning'>" + langs1[318][lang] + "</span>";  //未部署
-                                    return  str;
-                                } else if (row.l_deplayment == "1") {
-                                    var obj1 = {index: index, data: row};
-                                    var str = "<span class='label label-success'>" + langs1[319][lang] + "</span>";  //已部署
-                                    return  str;
-                                }
                             }
                         }],
                     clickToSelect: true,
@@ -144,70 +127,79 @@
                     obj.pid = "${param.pid}";
                     console.log(obj);
                     var opt = {
-                        url: "loop.loopForm.getLoopList.action",
+                        url: "monitor.monitorForm.getSensorList.action",
                         silent: true,
                         query: obj
                     };
                     $("#gravidaTable").bootstrapTable('refresh', opt);
 
                 });
-
-
-
-
-
-
             })
-            function  formartcomaddr(value, row, index, field) {
-                console.log(row);
-                var val = value;
-                var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
-                return  val + v1;
+
+
+            function formartcomaddr(value, row, index) {
+                if (index == 0) {
+                    var l_comaddr = row.comaddr;
+                    var l_comaddr = row.comaddr;
+                    var obj = {};
+                    obj.l_comaddr = l_comaddr;
+                    obj.pid = "${param.pid}";
+                    var opt = {
+                        url: "monitor.monitorForm.getSensorList.action",
+                        silent: true,
+                        query: obj
+                    };
+                    $("#gravidaTable").bootstrapTable('refresh', opt);
+
+                    return {disabled: false, //设置是否可用
+                        checked: true//设置选中
+                    };
+                    
+                } else {
+                    return {checked: false//设置选中
+                    };
+
+                }
             }
+
+
+
+
+
+
+
+
+
+
 
         </script>
     </head>
     <body id="panemask">
-
         <div class="row "   >
             <div class="col-xs-2 " >
+                <table id="gayway" style="width:100%;"    data-toggle="table" 
+                       data-height="800"
+                       data-single-select="true"
+                       data-striped="true"
+                       data-click-to-select="true"
+                       data-search="true"
+                       data-checkbox-header="true"
+                       data-url="gayway.GaywayForm.getComaddrList.action?pid=${param.pid}&page=ALL" style="width:200px;" >
+                    <thead >
+                        <tr >
+                            <th data-width="25"    data-select="false" data-align="center" data-formatter='formartcomaddr'  data-checkbox="true"  ></th>
+                            <th data-width="100" data-field="comaddr" data-align="center"    >网关地址</th>
+                            <!--<th data-width="100" data-field="name" data-align="center"    >网关名称</th>-->
+                        </tr>
+                    </thead>       
 
-<!--                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 align='center' class="panel-title">
-                            网关列表
-                        </h3>
-                    </div>
-                    <div class="panel-body">-->
-                        <table id="gayway" style="width:100%;"    data-toggle="table" 
-                               data-height="800"
-                               data-single-select="true"
-                               data-striped="true"
-                               data-click-to-select="true"
-                               data-search="true"
-                               data-checkbox-header="true"
-                               data-url="gayway.GaywayForm.getComaddrList.action?pid=${param.pid}&page=ALL" style="width:200px;" >
-                            <thead >
-                                <tr >
-                                    <th data-width="25"    data-select="false" data-align="center"  data-checkbox="true"  ></th>
-                                    <th data-width="100" data-field="comaddr" data-align="center" data-formatter='formartcomaddr'   >网关地址</th>
-                                    <!--<th data-width="100" data-field="name" data-align="center"    >网关名称</th>-->
-                                </tr>
-                            </thead>       
-
-                        </table>
-<!--                    </div>
-                </div>    -->
-
+                </table>
             </div>   
             <div class="col-xs-10">
 
                 <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped">
                 </table>
             </div>
-
-
-
         </div>
 
 

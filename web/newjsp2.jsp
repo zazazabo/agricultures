@@ -32,7 +32,7 @@
                 width: 50%; height: 50%; float: left;
             }
             .div3{
-                width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;
+                width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 1.7em;
             }
 
             .wd{
@@ -129,7 +129,7 @@
                                     $(bodydiv).addClass("kg");
                                     if (sensor.numvalue != null && sensor.numvalue != "") {
                                         str = "开";
-                                        img.src = "./img/k.png";
+                                        img.src = "./img/kg.png";
                                     } else {
                                         str = "关";
                                         img.src = "./img/wd.png";
@@ -178,6 +178,7 @@
 
     </head>
     <body id="activity_pane" >
+        <img src="./img/hm2.jpg" style="position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;">
         <div style=" width: 100%; height: 40%;" class='top' id="parentdiv">
             <!--            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
                             <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>

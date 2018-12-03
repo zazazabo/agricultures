@@ -92,12 +92,12 @@
                 $("#hidden_id").val(select.id);
                 if (select.p_type == "0") {
                     $("#tr_time_hide").show();
-                    $("#tr_jw_hide").hide();
+                    $("#tr_scene_hide").hide();
                     $('#p_type_').combobox('select', '0');
 
                 } else if (select.p_type == "1") {
                     $("#tr_time_hide").hide();
-                    $("#tr_jw_hide").show();
+                    $("#tr_scene_hide").show();
                     $('#p_type_').combobox('select', "1");
                     var long = select.p_Longitude;
                     var lati = select.p_latitude;
@@ -263,17 +263,17 @@
                 $('#outtime').timespinner('setValue', '23:00');
 
 
-                $("#tr_jw_hide_add").hide();
+                $("#tr_scene_hide_add").hide();
 
                 $('#p_type').combobox({
                     onSelect: function (record) {
                         if (record.value == "0") {
-                            $("#tr_jw_hide_add").hide();
+                            $("#tr_scene_hide_add").hide();
                             $("#tr_time_hide_add").show();
                         }
                         if (record.value == "1")
                         {
-                            $("#tr_jw_hide_add").show();
+                            $("#tr_scene_hide_add").show();
                             $("#tr_time_hide_add").hide();
                         }
                         console.log(record);
@@ -329,7 +329,7 @@
                             valign: 'middle'
                         }, {
                             field: 'p_name',
-                            title: langs1[69][lang],//方案名称
+                            title: langs1[69][lang], //方案名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
@@ -341,13 +341,13 @@
                             valign: 'middle'
                         }, {
                             field: 'p_intime',
-                            title: langs1[71][lang],    //闭合时间
+                            title: langs1[71][lang], //闭合时间
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'p_outtime',
-                            title: langs1[72][lang],  //断开时间
+                            title: langs1[72][lang], //断开时间
                             width: 25,
                             align: 'center',
                             valign: 'middle'
@@ -367,7 +367,7 @@
 //                        }
                         {
                             field: 'p_attr',
-                            title: langs1[68][lang],  //方案类型
+                            title: langs1[68][lang], //方案类型
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -488,7 +488,8 @@
                                 <span class="menuBox">
                                     <select class="easyui-combobox" data-options="editable:false" id="p_type" name="p_type" style="width:150px; height: 30px">
                                         <option value="0">时间</option>
-                                        <!--<option value="1">经纬度</option>-->           
+                                        <option value="1">场景</option>     
+                                        <option value="2">信息点</option> 
                                     </select>
                                 </span>  
                             </td>
@@ -501,39 +502,81 @@
                             </td>
                         </tr>
 
-                        <tr id="tr_time_hide_add">
-                            <td>
-                                <!--闭合时间-->
-                                <span style="margin-left:20px;" id="71" name="xxx">闭合时间</span>&nbsp;
-                                <!--<input id="intime" class="form-control"  name="intime" style="width:150px;display: inline;" placeholder="请输入闭合时间" type="text">-->
-                                <input id="intime" name="p_intime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
-                            </td>
-                            <td></td>
-                            <td>
-                                <!--断开时间-->
-                                <span style="margin-left:20px;" id="72" name="xxx">断开时间</span>&nbsp;
-                                <input id="outtime" name="p_outtime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
-                            </td>
-                            </td>
-                        </tr>                                   
+                        <!--                        <tr id="tr_time_hide_add">
+                                                    <td>
+                                                        闭合时间
+                                                        <span style="margin-left:20px;" id="71" name="xxx">闭合时间</span>&nbsp;
+                                                        <input id="intime" class="form-control"  name="intime" style="width:150px;display: inline;" placeholder="请输入闭合时间" type="text">
+                                                        <input id="intime" name="p_intime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        断开时间
+                                                        <span style="margin-left:20px;" id="72" name="xxx">断开时间</span>&nbsp;
+                                                        <input id="outtime" name="p_outtime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
+                                                    </td>
+                                                    </td>
+                                                </tr>                                   -->
 
-                        <tr id="tr_jw_hide_add">
+
+
+                    </tbody>
+                </table>
+                <table id="timetable">
+                    <tbody></tbody>
+                </table>
+                <table scentable>
+                    <tbody>
+                        <tr >
                             <td>
-                                <span style="margin-left:20px;">区域经度</span>&nbsp;
-                                <input id="longitudem26d" class="form-control" name="longitudem26d" style="width:51px;display: inline;" type="text">&nbsp;°
-                                <input id="longitudem26m" class="form-control" name="longitudem26m" style="width:45px;display: inline;" type="text">&nbsp;'
-                                <input id="longitudem26s" class="form-control" name="longitudem26s" style="width:45px;display: inline;" type="text">&nbsp;"</td>
-                            <td></td>
+                                <span style="margin-left:20px;" >&emsp;场景一</span>&nbsp;
+                                <input id="scen1" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />
+                                <span style="margin-left:10px;">值一</span>&nbsp;
+                                <input id="val1" class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="值1" type="text" />
+                            </td>
                             <td>
-                                <span style="margin-left:20px;">区域纬度&nbsp;</span>
-                                <input id="latitudem26d" class="form-control" name="latitudem26d" style="width:51px;display: inline;" type="text">&nbsp;°
-                                <input id="latitudem26m" class="form-control" name="latitudem26m" style="width:45px;display: inline;" type="text">&nbsp;'
-                                <input id="latitudem26s" class="form-control" name="latitudem26s" style="width:45px;display: inline;" type="text">&nbsp;"
+
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景二</span>&nbsp;
+                                <input id="scen2" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />
+                                <span style="margin-left:10px;"  >值二</span>&nbsp;
+                                <input id="val2" class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="值2" type="text" />
                             </td>
                         </tr>
 
+                        <tr id="">
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景三</span>&nbsp;
+                                <input id="scen3" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />
+                                <span style="margin-left:10px;">值三</span>&nbsp;
+                                <input id="val3" class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="值3" type="text" />
+                            </td>
+                            <td>
 
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景四</span>&nbsp;
+                                <input id="scen4" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />
+                                <span style="margin-left:10px;"  >值四</span>&nbsp;
+                                <input id="val4" class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="值4" type="text" />
+                            </td>
+                        </tr>
 
+                        <tr id="">
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景五</span>&nbsp;
+                                <input id="scen5" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />
+                                <span style="margin-left:10px;">值五</span>&nbsp;
+                                <input id="val5" class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="值5" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </form>      
@@ -587,12 +630,13 @@
                             </td>
                         </tr>                                   
 
-                        <tr id="tr_jw_hide" >
+                        <tr id="tr_scene_hide" >
                             <td>
                                 <span style="margin-left:20px;">区域经度</span>&nbsp;
                                 <input id="longitudem26d_" class="form-control" name="longitudem26d" style="width:51px;display: inline;" type="text">&nbsp;°
                                 <input id="longitudem26m_" class="form-control" name="longitudem26m" style="width:45px;display: inline;" type="text">&nbsp;'
-                                <input id="longitudem26s_" class="form-control" name="longitudem26s" style="width:45px;display: inline;" type="text">&nbsp;"</td>
+                                <input id="longitudem26s_" class="form-control" name="longitudem26s" style="width:45px;display: inline;" type="text">&nbsp;"
+                            </td>
                             <td></td>
                             <td>
                                 <span style="margin-left:20px;">区域纬度&nbsp;</span>

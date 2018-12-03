@@ -103,9 +103,87 @@
                 return false;
             }
 
-            function deployLoopCB(obj) {
-                console.log(obj);
+            function checkLoopAdd() {
+                var o = $("#formadd").serializeObject();
+                console.log(o);
+                if (o.l_comaddr == "") {
+                    layerAler("网关不能为空");  //网关不能为空
+                    return  false;
+                }
+                var namesss = false;
+                addlogon(u_name, "添加", o_pid, "回路管理", "添加回路");
+                $.ajax({async: false, cache: false, url: "loop.loopForm.ExistLoop.action", type: "GET", data: o,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.total > 0) {
+                            layerAler("此回路已存在"); //此回路已存在
+                            return false;
+                        }
+                        if (data.total == 0) {
+                            $.ajax({async: false, cache: false, url: "loop.loopForm.addLoop.action", type: "GET", data: o,
+                                success: function (data) {
+                                    $("#gravidaTable").bootstrapTable('refresh');
+                                    namesss = true;
+                                },
+                                error: function () {
+                                    layerAler("系统错误，刷新后重试");
+                                }
+                            });
+                            return  false;
+                        }
 
+                    },
+                    error: function () {
+                        layer.alert('系统错误，刷新后重试', {icon: 6, offset: 'center'
+                        });
+
+                    }
+
+                })
+
+                return  namesss;
+            }
+
+
+
+            function  readinfoCB(obj) {
+                var data = Str2BytesH(obj.data);
+                var v = "";
+                for (var i = 0; i < data.length; i++) {
+                    v = v + sprintf("%02x", data[i]) + " ";
+                }
+                console.log(v);
+            }
+
+            function  readinfo() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                var o = $("#form1").serializeObject();
+
+                var vv = new Array();
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+                var ele = selects[0];
+                o.l_comaddr = ele.l_comaddr;
+                var vv = [];
+                vv.push(1);
+                vv.push(3);
+                var info = parseInt(ele.l_info);
+                var infonum = (3000 + info * 20) | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+
+                vv.push(0);
+                vv.push(20); //寄存器数目 2字节                         
+                var data = buicode2(vv);
+                console.log(data);
+                dealsend2("03", data, "readinfoCB", o.l_comaddr, 0, ele.id, info);
+            }
+
+
+
+            function deployLoopCB(obj) {
                 $('#panemask').hideLoading();
                 if (obj.status == "success") {
                     var data = Str2BytesH(obj.data);
@@ -141,13 +219,6 @@
 
                 }
 
-
-
-
-
-
-
-
             }
 
             function deployLoop() {
@@ -176,15 +247,15 @@
                 vv.push(infonum & 0xff);
 
                 vv.push(0);           //寄存器数目 2字节  
-                vv.push(15);   //5
-                vv.push(30);           //字节数目长度  1字节 10
+                vv.push(20);   //5
+                vv.push(40);           //字节数目长度  1字节 10
 
 
                 vv.push(info >> 8 & 0xff);  //信息点
                 vv.push(info & 0xff);
 
 
-                var site = parseInt(ele.sitenum); //站点
+                var site = parseInt(ele.l_site); //站点
                 vv.push(site >> 8 & 0xff);
                 vv.push(site & 0xff);
 
@@ -193,17 +264,33 @@
                 vv.push(reg & 0xff);
 
                 var worktype = parseInt(ele.worktype);
-                vv.push(worktype >> 8 & 0xff)   //寄存器变量值
+                vv.push(worktype >> 8 & 0xff)   //工作模式
                 vv.push(worktype & 0xff);
 
-                vv.push(0);
-                vv.push(0);
+
+                var val2 = parseInt(infoalldata.controlVal);
+
+                vv.push(val2 >> 8 & 0xff);   //控制值
+                vv.push(val2 & 0xff);
 
                 for (var i = 0; i < 5; i++) {
                     vv.push(0);
                     vv.push(0);
                 }
 
+                for (var i = 0; i < 5; i++) {
+                    var info1 = "info" + (i + 1).toString();
+
+                    var val1 = "val" + (i + 1).toString();
+
+                    var infonum = parseInt(infoalldata[info1]);
+                    var valnum = parseInt(infoalldata[val1]);
+
+                    vv.push(infonum >> 8 & 0xff)   //寄存器变量值
+                    vv.push(infonum & 0xff);
+                    vv.push(valnum >> 8 & 0xff)   //寄存器变量值
+                    vv.push(valnum & 0xff);
+                }
 
 
                 var data = buicode2(vv);
@@ -272,9 +359,6 @@
                 );
             }
 
-
-
-
             function checkLoopAdd() {
                 var o = $("#formadd").serializeObject();
                 console.log(o);
@@ -317,6 +401,13 @@
             }
 
 
+
+
+
+
+
+
+
             function modifyLoopName() {
                 var o = $("#form2").serializeObject();
                 o.id = o.hide_id;
@@ -325,11 +416,7 @@
                 $.ajax({async: false, url: "loop.loopForm.modifyloop.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
                         console.log(data);
-//                        var arrlist = data.rs;
-//                        if (arrlist.length == 1) {
-//                            //修改成功
                         $("#gravidaTable").bootstrapTable('refresh');
-//                        }
                     },
                     error: function () {
                         alert("提交失败！");
@@ -367,6 +454,11 @@
                 $('#dialog-edit').dialog('open');
 
             }
+
+
+
+
+
 
 
             //搜索
@@ -448,10 +540,10 @@
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
                                 if (row.l_deplayment == "0") {
-                                    var str = "<span class='label label-warning'>未部署</span>";  //未部署
+                                    var str = "<span class='label label-warning'>" + langs1[318][lang] + "</span>";  //未部署
                                     return  str;
                                 } else if (row.l_deplayment == "1") {
-                                    var str = "<span class='label label-success'>已部署</span>";  //已部署
+                                    var str = "<span class='label label-success'>" + langs1[319][lang] + "</span>";  //已部署
                                     return  str;
                                 }
                             }
@@ -552,62 +644,104 @@
                     }
                 });
 
-
-                $('#warningtable').bootstrapTable({
+                $('#gravidaTable').bootstrapTable({
                     columns: [
                         {
                             title: '单选',
                             field: 'select',
-                            //复选框
                             checkbox: true,
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            title: langs1[345][lang], //序号
-                            field: '序号',
+                            field: 'commname',
+                            title: '网关名称', //网关名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            title: langs1[314][lang], //网关名称
-                            field: '网关名称',
+                            field: 'l_comaddr',
+                            title: '网关地址',
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: '网关地址',
-                            title: langs1[25][lang], //网关地址
+                            field: 'l_name',
+                            title: "回路名称",
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: '回路名称',
-                            title: langs1[331][lang], //回路名称
+                            field: 'l_site',
+                            title: '站号', //站号
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: '回路编号',
-                            title: langs1[364][lang], //回路编号
+                            field: 'l_info',
+                            title: '控制点号', //信息点号
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: '回路组号',
-                            title: langs1[365][lang], //回路组号
+                            field: 'l_pos',
+                            title: '寄存器位置', //信息点号
                             width: 25,
                             align: 'center',
                             valign: 'middle'
-                        }
-                    ],
-                    singleSelect: false,
+                        }, {
+                            field: 'l_worktype',
+                            title: '工作模式', //控制方式
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                return value;
+                            }
+                        }, {
+                            field: 'l_deployment',
+                            title: '部署情况', //部署情况
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                if (row.l_deplayment == "0") {
+                                    var str = "<span class='label label-warning'>未部署</span>";  //未部署
+                                    return  str;
+                                } else if (row.l_deplayment == "1") {
+                                    var str = "<span class='label label-success'>已部署</span>";  //已部署
+                                    return  str;
+                                }
+                            }
+                        }],
+                    singleSelect: true,
+                    clickToSelect: true,
+                    sortName: 'id',
                     locale: 'zh-CN', //中文支持,
+                    showColumns: true,
+                    sortOrder: 'desc',
                     pagination: true,
+                    showExport: true, //是否显示导出
+                    exportDataType: "basic", //basic', 'a
+                    sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 40,
-                    pageList: [20, 40, 80, 160]
-
+                    pageSize: 5,
+                    showRefresh: true,
+                    showToggle: true,
+                    // 设置默认分页为 50
+                    pageList: [5, 10, 15, 20, 25],
+                    onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
+                    },
+                    queryParams: function (params)  {   //配置参数     
+                        var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
+                            search: params.search,
+                            skip: params.offset,
+                            limit: params.limit,
+                            type_id: "1",
+                            pid: "${param.pid}"   
+                        };      
+                        return temp;  
+                    },
                 });
 
                 $('#excel-file').change(function (e) {
@@ -820,7 +954,7 @@
                             <tr>
                                 <td>
                                     <span style="margin-left:10px;">
-                                        网关地址
+                                        <span id="25" name="xxxx">网关地址</span>
                                         &nbsp;</span>
                                 </td>
                                 <td>
@@ -843,78 +977,89 @@
                                 </td>
                                 <td>
                                     <button  type="button" style="margin-left:20px;" onclick="search()" class="btn btn-success btn-xm">
-                                        搜索
+                                        <!-- 搜索-->
+                                        <span id="34" name="xxxx">搜索</span>
                                     </button>&nbsp;
-
                                     <button  type="button" style="margin-left:20px;" onclick="deployLoop()" class="btn btn-success btn-xm">
                                         部署
                                     </button>&nbsp;
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style=" float: right">
 
-                                    信1:
-                                    <span class="menuBox">
-                                        <input id="info1"    class="form-control"  name="info1" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-                                    值1:
-                                    <span class="menuBox">
-                                        <input id="val1"    class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-
-                                    信2:
-                                    <span class="menuBox">
-                                        <input id="info1"    class="form-control"  name="info2" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-                                    值2:
-                                    <span class="menuBox">
-                                        <input id="val1"    class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-                                    信3:
-                                    <span class="menuBox">
-                                        <input id="info1"    class="form-control"  name="info3" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-                                    值3:
-                                    <span class="menuBox">
-                                        <input id="val1"    class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-                                    信4:
-                                    <span class="menuBox">
-                                        <input id="info1"    class="form-control"  name="info4" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-                                    值4:
-                                    <span class="menuBox">
-                                        <input id="val1"    class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-
-                                    信5:
-                                    <span class="menuBox">
-                                        <input id="info1"    class="form-control"  name="info5" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
-                                    值5:
-                                    <span class="menuBox">
-                                        <input id="val1"    class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="value" type="text">
-                                    </span>  
-
+                                    <button  type="button" style="margin-left:20px;" onclick="readinfo()" class="btn btn-success btn-xm">
+                                        读取
+                                    </button>&nbsp;
 
                                 </td>
-
-
-
                             </tr>
                         </tbody>
                     </table> 
+                    <table style="border-collapse:separate;  border-spacing:0px 10px;border: 1px solid #16645629; margin-left: 10px; margin-top: 10px; align-content:  center">
+                        <tr>
+                            <td style=" float: right">
 
+                                信1:
+                                <span class="menuBox">
+                                    <input id="info1"  value="1"   class="form-control"  name="info1" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+                                值1:
+                                <span class="menuBox">
+                                    <input id="val1"   value="2"  class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+
+                                信2:
+                                <span class="menuBox">
+                                    <input id="info1"   value="3"  class="form-control"  name="info2" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+                                值2:
+                                <span class="menuBox">
+                                    <input id="val1"  value="4"   class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+                                信3:
+                                <span class="menuBox">
+                                    <input id="info1"   value="5"   class="form-control"  name="info3" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+                                值3:
+                                <span class="menuBox">
+                                    <input id="val1"  value="6"    class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+                                信4:
+                                <span class="menuBox">
+                                    <input id="info1"   value="7"   class="form-control"  name="info4" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+                                值4:
+                                <span class="menuBox">
+                                    <input id="val1"  value="8"   class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+
+                                信5:
+                                <span class="menuBox">
+                                    <input id="info1"  value="9"   class="form-control"  name="info5" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+                                值5:
+                                <span class="menuBox">
+                                    <input id="val1"  value="10"   class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>  
+
+
+                                控制值:
+                                <span class="menuBox">
+                                    <input id="controlVal"  value="10"   class="form-control"  name="controlVal" style="width:50px;display: inline;" placeholder="value" type="text">
+                                </span>    
+
+                            </td>
+
+
+
+                        </tr>
+                    </table>
                 </div>
             </form>
         </div>
@@ -1021,7 +1166,10 @@
                             </td>
                             <td></td>
                             <td>
-
+                                <span style="margin-left:8px;" >控制值</span>&nbsp;
+                                <span class="menuBox">
+                                    <input id="l_controval" class="form-control"  name="l_controval" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
+                                </span>
                             </td>
                         </tr>    
 
@@ -1111,6 +1259,7 @@
 
             </form>
         </div>
+
 
         <div id="dialog-excel"  class="bodycenter"  style=" display: none" title="导入Excel">
             <input type="file" id="excel-file" style=" height: 40px;">

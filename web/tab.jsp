@@ -34,18 +34,6 @@
                     win[func](obj);
                 }
             }
-
-
-            function changeFrameHeight() {
-                var ifm = document.getElementById("myiframe");
-                ifm.height = document.documentElement.clientHeight - 56;
-            }
-            window.onresize = function () {
-                changeFrameHeight();
-            };
-            $(function () {
-                changeFrameHeight();
-            });
         </script>
     </head>
 
@@ -62,7 +50,7 @@
             </div>
 
             <div  id="content-main">
-                <iframe id="myiframe" class="J_iframe" name="iframe0" src="#"  seamless="" width="99%" height="100%" frameborder="0"></iframe>
+                <iframe id="myiframe" class="J_iframe" name="iframe0" src="#"  seamless="" width="100%" frameborder="0"  height="800px"></iframe>
             </div>
         </div>
         <!--<script type="text/javascript" src="abc_files/jquery.js"></script>-->

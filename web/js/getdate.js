@@ -23,7 +23,7 @@
             }
             
             
-            function  addlogon(name,type,pid,page,comment,l_comaddr=""){
+            function  addlogon(name,type,pid,page,comment,l_comaddr){
                 var nobj = {};
                                 nobj.name = name;
                                 nobj.time = getNowFormatDate2();

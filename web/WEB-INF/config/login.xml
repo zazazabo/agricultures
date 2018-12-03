@@ -105,14 +105,14 @@
                 </xflt>
             </xsql>
         </xhandle>
-        <xhandle desc="查询所有灯具信息" id="lamp" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_lamp where @CONDITION " var="bootstrap">
-                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_name AND @pid">
+        <xhandle desc="查询所有传感器信息" id="sensor" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where deplayment= 1 and @CONDITION " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @name AND @pid">
                     <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>
-                    <xfltpara id="l_name" nrp="1=1" para="l_name" sql="l_name = ':l_name'">
+                    <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'">
                     </xfltpara>
-                    <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
                     </xfltpara>
                 </xflt>
             </xsql>
@@ -139,23 +139,23 @@
         <xhandle desc="修改网关经纬度" id="updatelnglat" rtn="rs" rtnype="JSON">
             <xsql id="a1" para="Longitude,latitude"  tpe="DDL" tpl="update t_baseinfo set Longitude=':Longitude',latitude=':latitude' where @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@comaddr">
-                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=:comaddr">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=':comaddr'">
                     </xfltpara>
                 </xflt>
             </xsql>
         </xhandle> 
         <xhandle desc="修改灯具经纬度" id="updateLamplnglat" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="Longitude,latitude"  tpe="DDL" tpl="update t_lamp set Longitude=':Longitude',latitude=':latitude' where @CONDITION " var="rs">
+            <xsql id="a1" para="Longitude,latitude"  tpe="DDL" tpl="update t_sensor set Longitude=':Longitude',latitude=':latitude' where @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@id">
                     <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
                     </xfltpara>
                 </xflt>
             </xsql>
         </xhandle> 
-        <xhandle desc="查询灯具分布列表" id="queryLamp" rtnype="JSON">
-            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="SELECT *  FROM t_lamp  AS tb where @CONDITION " var="rs">
+        <xhandle desc="查询传感器分布" id="queryLamp" rtnype="JSON">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where deplayment= 1 and @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@comaddr AND @pid">
-                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr = ':comaddr'">
+                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="l_comaddr = ':comaddr'">
                     </xfltpara>
                     <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')">
                     </xfltpara>

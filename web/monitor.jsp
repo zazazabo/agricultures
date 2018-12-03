@@ -94,9 +94,13 @@
                             formatter: function (value, row, index, field) {
                                 var time1 = value.substring(0, 16);
                                 var time2 = row.dtime.substring(0, 16);
-                                console.log("1:"+time1+"//2:"+time2)
+                                console.log("1:" + time1 + "//2:" + time2);
                                 var stime = TimeDifference(time1, time2);
-                                return  stime;
+                                if (stime <= 15) {
+                                    return "在线";
+                                } else {
+                                    return "离线";
+                                }
                             }
                         }],
                     clickToSelect: true,
@@ -179,8 +183,8 @@
                 time1 = new Date(time1.replace(/-/g, '/'));
                 time2 = new Date(time2.replace(/-/g, '/'));
                 var ms = Math.abs(time1.getTime() - time2.getTime());
-                return ms / 1000 / 60 ;
-                
+                return ms / 1000 / 60;
+
             }
 
 

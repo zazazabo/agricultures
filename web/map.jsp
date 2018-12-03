@@ -53,7 +53,7 @@
             } 
             #items li:hover {color: #FF00FF}
         </style>
-        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Uppxai1CT7jTHF9bjKFx0WGTs7nCyHMr"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=19mXqU4pjrrqSH20w2gORu6OhFaKddYo"></script>
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript" src="js/getdate.js"></script>
         <script type="text/javascript" src="bootstrap-table/dist/bootstrap-table.js"></script>
@@ -177,65 +177,6 @@
             </div>
         </div>
 
-        <!-- 切换场景-->
-        <div  id="switchCj" class="bodycenter"  style=" display: none" >
-            <table>
-                <tbody class="search">
-                    <tr>
-                        <td>
-                            <span style="margin-left:10px;">
-                                <!--场景号-->
-                                <span id="47" name="xxxx">场景号</span>
-                                &nbsp;</span>
-                            <!--<input id="scennum" class="form-control" name="scennum" style="width:50px;display: inline;" placeholder="场景号" type="text">&nbsp;-->
-                            <select class="easyui-combobox" id="scennum" name="scennum" style="width:150px; height: 30px">
-                                <option value="1" name="xxxx" id="320">场景1</option>
-                                <option value="2" name="xxxx" id="321">场景2</option>    
-                                <option value="3" name="xxxx" id="322">场景3</option> 
-                                <option value="4" name="xxxx" id="323">场景4</option> 
-                                <option value="5" name="xxxx" id="324">场景5</option> 
-                                <option value="6" name="xxxx" id="325">场景6</option> 
-                                <option value="7" name="xxxx" id="326">场景7</option> 
-                                <option value="8" name="xxxx" id="327">场景8</option> 
-                            </select>
-                            <button  type="button"  name="btnsingle" style="margin-left:20px;" onclick="scenesingle()" class="btn btn-success btn-sm">
-                                <!--单灯场景调光-->
-                                <span id="45" name="xxxx">单灯场景调光</span>
-                            </button>
-                        </td>
-                    </tr>                                   
-                </tbody>
-            </table>
-        </div>
-        <!--立即调光-->
-        <div  id="ddljtg" class="bodycenter"  style=" display: none" >
-            <div class="">  
-                <table>
-                    <tbody class="search">
-                        <tr>
-                            <td >
-                                <span style="margin-left:10px;">
-                                    <!--调光值-->
-                                    <span id="42" name="xxxx">调光值</span>
-                                    &nbsp;</span>
-                                <input id="val" value="0" class="form-control" readonly="true" name="val" style="width:50px;display: inline; height: 30px; " placeholder="调光值" type="text">
-
-                            </td>
-                            <td>
-                                <div  id="slide_lamp_val"  class="easyui-slider"     data-options="showTip:true,min:0,max:100,step:1" style="width:100px;    "></div>
-
-                            </td>
-                            <td>
-                                <button  type="button"  name="btnsingle"  onclick="aiming()" class="btn btn-success btn-sm">
-                                    <span>立即调光</span>
-                                </button>  
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
         <script type="text/javascript">
             //创建网关在线图标
             var wggreenicon = new BMap.Icon('./img/wgreen.png', new BMap.Size(27, 32), {//20，30是图片大小
@@ -268,190 +209,7 @@
                 });
             }
 
-            var l_comaddr; //传感器所属网关
-            var l_code;  //装置序号
-            var name = parent.parent.getusername();
             var pid = parent.parent.getpojectId();
-            function lightCB1(obj) {
-                if (obj.status == "success") {
-
-                    if (obj.fn == 301) {
-                        layerAler(lans[410][lang]);   //开灯成功
-                        var comaddr = obj.comaddr;
-                        var l_code = obj.param;
-                        var val = obj.val;
-                        var o = {};
-                        o.comaddr = comaddr;
-                        o.l_code = l_code;
-                        o.l_value = val;
-                        addlogon(name, "开灯", pid, "地图导航", "开灯", comaddr);
-                        $.ajax({async: false, url: "login.map.lampval.action", type: "get", datatype: "JSON", data: o,
-                            success: function (data) {
-                                var arrlist = data.rs;
-                                if (arrlist.length == 1) {
-                                    $("#dj").click();
-                                }
-                            },
-                            error: function () {
-                                alert("提交失败！");
-                            }
-                        });
-                    }
-                }
-
-            }
-
-            function lightCB2(obj) {
-                if (obj.status == "success") {
-
-                    if (obj.fn == 301) {
-                        layerAler(lans[411][lang]);  //关灯成功
-                        var comaddr = obj.comaddr;
-                        var l_code = obj.param;
-                        var val = obj.val;
-                        var o = {};
-                        o.comaddr = comaddr;
-                        o.l_code = l_code;
-                        o.l_value = val;
-                        addlogon(name, "关灯", pid, "地图导航", "关灯", comaddr);
-                        $.ajax({async: false, url: "login.map.lampval.action", type: "get", datatype: "JSON", data: o,
-                            success: function (data) {
-                                var arrlist = data.rs;
-                                if (arrlist.length == 1) {
-                                    $("#dj").click();
-                                }
-                            },
-                            error: function () {
-                                alert("提交失败！");
-                            }
-                        });
-                    }
-                }
-
-            }
-            //调光
-            function aiming() {
-                var vv = new Array();
-                var lampval = $("#val").val();
-                var lampval = parseInt(lampval);   //亮度
-
-
-                var c = parseInt(l_code);
-                var h = c >> 8 & 0x00ff;
-                var l = c & 0x00ff;
-                vv.push(l);
-                vv.push(h); //装置序号  2字节
-
-                vv.push(parseInt(lampval));
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(l_comaddr, 0x04, 0xA5, num, 0, 301, vv); //01 03
-                //dealsend(sss, o1);
-                dealsend3("A5", data, 301, "lightCB3", l_comaddr, 0, l_code, lampval);
-                $('#ddljtg').dialog("close");
-
-            }
-
-            //调光回调函数
-            function lightCB3(obj) {
-                if (obj.status == "success") {
-
-                    if (obj.fn == 301) {
-                        layerAler(lans[412][lang]);  //调光成功
-                        var comaddr = obj.comaddr;
-                        var l_code = obj.param;
-                        var val = obj.val;
-                        var o = {};
-                        o.comaddr = comaddr;
-                        o.l_code = l_code;
-                        o.l_value = val;
-                        addlogon(name, "调光", pid, "地图导航", "单灯调光", comaddr);
-                        $.ajax({async: false, url: "login.map.lampval.action", type: "get", datatype: "JSON", data: o,
-                            success: function (data) {
-                                var arrlist = data.rs;
-                                if (arrlist.length == 1) {
-                                    $("#dj").click();
-                                }
-                            },
-                            error: function () {
-                                alert("提交失败！");
-                            }
-                        });
-                    }
-                }
-
-            }
-            //切换场景
-            function scenesingle() {
-
-                //addlogon(u_name, "传感器调光", o_pid, "传感器调光", "按组立即调光");
-                var vv = new Array();
-                // var l_comaddr = l_comaddr;
-                var c = parseInt(l_code);
-                var h = c >> 8 & 0x00ff;
-                var l = c & 0x00ff;
-
-                vv.push(l);
-                vv.push(h); //装置序号  2字节
-                var scenenum = $("#scennum").val();
-                vv.push(parseInt(scenenum));
-                var param = {};
-
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(l_comaddr, 0x04, 0xA5, num, 0, 304, vv); //01 03
-                dealsend3("A5", data, 304, "sceneCB", l_comaddr, 0, 0, scenenum);
-                addlogon(name, "切换场景", pid, "地图导航", "切换场景", l_comaddr);
-                $('#switchCj').dialog("close");
-            }
-            //切换场景回调
-            function sceneCB(obj) {
-                console.log(obj);
-                if (obj.status == "success") {
-                    if (obj.fn == 304) {
-                        layerAler(lans[306][lang]);  //单灯场景调光成功
-                    } else if (obj.fn == 308) {
-                        layerAler(lans[307][lang]);  //按组场景调光成功
-                    }
-                }
-            }
-            //读取传感器时间表回调函数
-            function readLampPlanCB(obj) {
-                var data = Str2BytesH(obj.data);
-                var v = "";
-                for (var i = 0; i < data.length; i++) {
-
-                    v = v + sprintf("%02x", data[i]) + " ";
-                }
-                if (obj.status == "success") {
-                    if (obj.fn == 402) {
-                        //读场景方案
-                        var str = "";
-                        for (var i = 0; i < 8; i++) {
-                            var t0 = 20 + (i * 2);
-                            var t1 = 20 + (i * 2) + 1;
-//                            $("#__num" + (i + 1).toString()).val(data[t0].toString());
-//                            $("#__val" + (i + 1).toString()).val(data[t1].toString());
-                            str = str + "场景号：" + data[t0].toString() + "&nbsp;&nbsp;" + "调光值：" + data[t1].toString() + "<br/>";
-                        }
-                        layerAler(str);
-                    } else if (obj.fn == 401) {
-                        //读时间方案
-                        //console.log("时间方案");
-                        var str = "";
-                        for (var i = 0; i < 6; i++) {
-                            var t0 = 20 + (i * 3);
-                            var t1 = 20 + (i * 3) + 1;
-                            var t2 = 20 + (i * 3) + 2;
-                            var time = sprintf("%02x:%02x", data[t1], data[t0]);
-//                            $("#time" + (i + 1).toString()).timespinner('setValue', time);
-//                            $("#val" + (i + 1).toString()).val(data[t2].toString());
-                            console.log(data[t2].toString());
-                            str = str + "时间：&nbsp;" + time + "&nbsp;&nbsp;" + "调光值：&nbsp;" + data[t2].toString() + "<br/>";
-                        }
-                        layerAler(str);
-                    }
-                }
-            }
-
             //调用父页面的方法获取用户名
             var u_name = parent.getusername();
 
@@ -461,7 +219,7 @@
             function  getAllLampInfo(pid) {
 
                 $('#lamptable').bootstrapTable({
-                    url: 'login.map.lamp.action?pid=' + pid,
+                    url: 'login.map.sensor.action?pid=' + pid,
                     columns: [
                         {
                             title: 'id',
@@ -481,43 +239,38 @@
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'l_name',
-                            title: lans[54][lang], //传感器名称
+                            field: 'name',
+                            title: '传感器名称', //传感器名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'l_comaddr',
-                            title: lans[55][lang], //所属网关
+                            title: '所属网关', //所属网关
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         },
                         {
-                            field: 'Longitude',
-                            title: lans[59][lang], //经度
+                            field: 'longitude',
+                            title: '经度', //经度
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'latitude',
-                            title: lans[60][lang], //纬度
+                            title: '纬度', //纬度
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'presence',
-                            title: lans[61][lang], //在线状态
+                            field: 'onlinetime',
+                            title:'在线状态', //在线状态
                             width: 25,
                             align: 'center',
                             valign: 'middle',
-                            formatter: function (value, row, index) {
-                                if (value == 1) {
+                            formatter: function (value, row, index) {                              
                                     return "<img  src='img/online1.png'/>";
-                                } else {
-                                    return "<img  src='img/off.png'/>";
-                                }
-
                             }
                         }],
                     method: "post",
@@ -971,87 +724,41 @@
                             for (var i = 0; i < arrlist.length; i++) {
                                 (function (x) {
                                     var obj = arrlist[i];
-                                    var Longitude = obj.Longitude;
+                                    var longitude = obj.longitude;
                                     var latitude = obj.latitude;
-                                    //var s = obj.l_name;
-                                    var Iszx = lans[285][lang];    //是否离线,离线
-                                    var Isfault = lans[13][lang]; //是否有故障,默认正常
-                                    var isfault2 = 0;
-                                    if (obj.l_fault == 1) {
-                                        Isfault = lans[14][lang]; //异常
-                                        isfault2 = 1;
-                                    }
-                                    if (obj.presence == 1) {
-                                        Iszx = lans[284][lang];  //在线
-                                    }
-                                    var lampcode = parseInt(arrlist[i].l_factorycode);
-                                    //lans[][]代表的文字依次是：亮度、名称、传感器编号、网关地址、在线情况、状态、电压、电流
-                                    var activepower = arrlist[i].activepower * 1000;  //有功功率
                                     var textvalue = "<div style='line-height:1.8em;font-size:12px;'>\n\
                                    \n\
                                     <table style='text-align:center'>\n\
                                         <tr>\n\
-                                            <td>" + lans[290][lang] + ":</td>\n\
-                                            <td>" + arrlist[i].l_value + "</td>\n\
-                                            <td></td>\n\
-                                            <td>" + lans[63][lang] + ":</td>\n\
-                                            <td>" + arrlist[i].l_name + "</td>\n\
-                                        </tr>\n\
-                                        <tr>\n\
-                                            <td>" + lans[292][lang] + ":</td>\n\
-                                            <td>" + lampcode + "</td>\n\
-                                             <td>&nbsp&nbsp</td>\n\
-                                            <td>" + lans[25][lang] + ":</td>\n\
-                                            <td>" + arrlist[i].l_comaddr + "</td>\n\
-                                        </tr>\n\ \n\
-                                        <tr>\n\
-                                            <td>" + lans[294][lang] + ":</td>\n\
-                                            <td>" + Iszx + "</td>\n\
-                                             <td>&nbsp&nbsp</td>\n\
-                                            <td>" + lans[12][lang] + ":</td>\n\
-                                            <td>" + Isfault + "</td>\n\
-                                        </tr>\n\ \n\
-                                        <tr>\n\
-                                            <td>" + lans[95][lang] + ":</td>\n\
-                                            <td>" + arrlist[i].voltage + "(V)</td>\n\
+                                            <td>" + "xxx" + ":</td>\n\
+                                            <td>" +"xxx" + "</td>\n\
                                             <td>&nbsp;&nbsp;</td>\n\
-                                            <td>" + lans[96][lang] + ":</td>\n\
-                                            <td>" + arrlist[i].electric + "(A)</td>\n\
-                                        </tr>\n\
-                                        <tr>\n\
-                                            <td>" + lans[97][lang] + ":</td>\n\
-                                            <td>" + activepower + "(W)</td>\n\
-                                            <td>&nbsp;&nbsp;</td>\n\
-                                            <td>" + lans[413][lang] + ":</td>\n\
-                                            <td>" + arrlist[i].temperature + "</td>\n\
-                                        </tr>\n\
-                                        <tr>\n\
-                                            <td>" + "抄读时间" + ":</td>\n\
-                                            <td>" + arrlist[i].newlyread + "</td>\n\
+                                            <td>" + "xxx" + ":</td>\n\
+                                            <td>" + "xxx" + "</td>\n\
                                         </tr>\n\
                                     </table></div>";
-                                    if ((Longitude != "" && latitude != "") && (Longitude != null && latitude != null)) {
-                                        var point = new BMap.Point(Longitude, latitude);
+                                    if ((longitude != "" && latitude != "") && (longitude != null && latitude != null)) {
+                                        var point = new BMap.Point(longitude, latitude);
                                         var marker1;
-                                        console.log(obj.presence);
-                                        if (isfault2 == 1) {
-                                            marker1 = new BMap.Marker(point, {
-                                                icon: lred
-                                            });
-                                        } else if (obj.presence == 1 && obj.l_value > 0) {
-                                            marker1 = new BMap.Marker(point, {
-                                                icon: lyello
-                                            });
-                                        } else if (obj.presence == 1) {
-                                            marker1 = new BMap.Marker(point, {
-                                                icon: lgreen
-                                            });
-                                        } else {
-                                            marker1 = new BMap.Marker(point, {
-                                                icon: lhui
-                                            });
-                                        }
-                                        var opts = {title: '<span style="font-size:14px;color:#0A8021">' + lans[404][lang] + '</span>', width: 300, height: 170};//设置信息框、信息说明
+//                                        if (isfault2 == 1) {
+//                                            marker1 = new BMap.Marker(point, {
+//                                                icon: lred
+//                                            });
+//                                        } else if (obj.presence == 1 && obj.l_value > 0) {
+//                                            marker1 = new BMap.Marker(point, {
+//                                                icon: lyello
+//                                            });
+//                                        } else if (obj.presence == 1) {
+//                                            marker1 = new BMap.Marker(point, {
+//                                                icon: lgreen
+//                                            });
+//                                        } else {
+//                                            marker1 = new BMap.Marker(point, {
+//                                                icon: lhui
+//                                            });
+//                                        }
+                                       marker1 = new BMap.Marker(point, {icon: lgreen});
+                                        var opts = {title: '<span style="font-size:14px;color:#0A8021">' + "操作" + '</span>', width: 300, height: 170};//设置信息框、信息说明
                                         var infoWindow = new BMap.InfoWindow(textvalue, opts); // 创建信息窗口对象，引号里可以书写任意的html语句。
                                         marker1.addEventListener("mouseover", function () {
                                             this.openInfoWindow(infoWindow);
@@ -1059,119 +766,19 @@
                                         //标注点点击事件
 
                                         marker1.addEventListener("rightclick", function () {
-                                            //开灯、关灯、调光值、请输入调光值、调光
-//                                            var textvalue2 = "<table style='text-valign:center'><tr style='height:36px;'>\n\
-//                                                <td><button id='kd' class='btn btn-success btn-sm'>" + lans[35][lang] + "</button>&nbsp;&nbsp;<button id='gd' class='btn btn-success btn-sm'>" + lans[36][lang] + "</button></td>\n\
-//                                                <td></td>\n\
-//                                                </tr>\n\
-//                                                <tr style='height:36px;'>\n\
-//                                                    <td><span>" + lans[42][lang] + "</span>：<input id='val' class='form-control' name='val' style='width:100px;display: inline; height: 28px;' type='text' placeholder='请输入调光值'>\n\
-//                                                     &nbsp;<button id='tg' class='btn btn-success btn-sm'>" + lans[407][lang] + "</button></td>\n\
-//                                                </tr>\n\
-//                                                <tr style='height:36px;'><td><button id='' class='btn btn-success btn-sm'>" + "灯控状态" + "</button>&nbsp;&nbsp;<button id='' class='btn btn-success btn-sm'>" + "安装信息" + "</button></td></tr>\n\
-//                                                <tr style='height:36px;'><td><button id='' class='btn btn-success btn-sm'>" + "读灯控时间表" + "</button>&nbsp;&nbsp;<button id='' class='btn btn-success btn-sm'>" + "读场景设置" + "</button></td></tr>\n\
-//                                                <tr style='height:36px;'><td><button id='setchjing' class='btn btn-success btn-sm'>" + "切换场景" + "</button>&nbsp;&nbsp;<button id='' class='btn btn-success btn-sm'>" + "PM2.5传感器" + "</button></td></tr>\n\
-//                                                <tr style='height:36px;'><td><button id='move' class='btn btn-success btn-sm'>" + "移动" + "</button>&nbsp;&nbsp;<button id='clean' class='btn btn-success btn-sm'>" + "移除" + "</button></td></tr>\n\
-//                                                <tr style='height:36px;'><td><button id='' class='btn btn-success btn-sm'>" + "灯控未安装记录" + "</button></td></tr>\n\
-//                                                </table>";
                                             var textvalue2 = "<ul id='items' style='list-style-type:none;width=100px;'>\n\
-                                                                <li id='kd'>开灯</li>\n\
-                                                                <li id='gd'>关灯</li>\n\
-                                                                <li id='tg'>立即调光</li>\n\
-                                                                <li id='qhcj'>切换场景</li>\n\
-                                                                <li style='color: blue;cursor:default;'>-------------------------</li>\n\
-                                                                <li>灯控状态</li>\n\
-                                                                <li>安装信息</li>\n\
-                                                                <li id='getlamptime'>读灯控时间表</li>\n\
-                                                                <li id='getcjval'>读场景设置</li>\n\
-                                                                <li>灯控未安装记录</li>\n\
-                                                                <li style='color: blue;cursor:default;'>-------------------------</li>\n\
-                                                                <li>PM2.5传感器</li>\n\
-                                                                <li style='color: blue;cursor:default;'>-------------------------</li>\n\
                                                                 <li id='move'>移动</li>\n\
                                                                 <li id='clean'>清除</li>\n\
                                                                 </ul>";
                                             var opts2 = {title: '<span style="font-size:14px;color:#0A8021">' + lans[405][lang] + '</span>', width: 120, height: 330};//设置信息框、功能操作
                                             var infoWindow2 = new BMap.InfoWindow(textvalue2, opts2); // 创建信息窗口对象，引号里可以书写任意的html语句。
                                             this.openInfoWindow(infoWindow2);
-                                            //开灯
-                                            $("#kd").click(function () {
-                                                marker1.closeInfoWindow(infoWindow2);
-                                                if (obj.presence != 1) {
-                                                    layerAler(lans[406][lang]);  //此传感器不在线
-                                                    return;
-                                                }
-                                                var vv = new Array();
-                                                var l_comaddr = obj.l_comaddr;
-                                                var lampval = 100;   //亮度
-                                                var l_code = obj.l_code;  //装置序号
-
-
-                                                var c = parseInt(obj.l_code);
-                                                var h = c >> 8 & 0x00ff;
-                                                var l = c & 0x00ff;
-                                                vv.push(l);
-                                                vv.push(h); //装置序号  2字节
-
-                                                vv.push(parseInt(lampval));
-                                                var num = randnum(0, 9) + 0x70;
-                                                var data = buicode(l_comaddr, 0x04, 0xA5, num, 0, 301, vv); //01 03
-                                                //dealsend(sss, o1);
-                                                dealsend3("A5", data, 301, "lightCB1", l_comaddr, 0, l_code, lampval);
-
-                                            });
-                                            //关灯
-                                            $("#gd").click(function () {
-                                                marker1.closeInfoWindow(infoWindow2);
-                                                if (obj.presence != 1) {
-                                                    layerAler(lans[406][lang]);  //此传感器不在线
-                                                    return;
-                                                }
-                                                var vv = new Array();
-                                                var l_comaddr = obj.l_comaddr;  //网关地址
-                                                var lampval = 0;   //亮度
-                                                var l_code = obj.l_code;  //装置序号
-
-
-                                                var c = parseInt(obj.l_code);
-                                                var h = c >> 8 & 0x00ff;
-                                                var l = c & 0x00ff;
-                                                vv.push(l);
-                                                vv.push(h); //装置序号  2字节
-
-                                                vv.push(parseInt(lampval));
-                                                var num = randnum(0, 9) + 0x70;
-                                                var data = buicode(l_comaddr, 0x04, 0xA5, num, 0, 301, vv); //01 03
-                                                //dealsend(sss, o1);
-                                                dealsend3("A5", data, 301, "lightCB2", l_comaddr, 0, l_code, lampval);
-                                            });
-                                            //调光
-                                            $("#tg").click(function () {
-                                                marker1.closeInfoWindow(infoWindow2);
-                                                if (obj.presence != 1) {
-                                                    layerAler(lans[406][lang]);  //此传感器不在线
-                                                    return;
-                                                }
-                                                l_comaddr = obj.l_comaddr;
-                                                l_code = obj.l_code;  //装置序号
-                                                $("#ddljtg").dialog("open");
-                                            });
-                                            //切换场景
-                                            $("#qhcj").click(function () {
-                                                marker1.closeInfoWindow(infoWindow2);
-                                                if (obj.presence != 1) {
-                                                    layerAler(lans[406][lang]);  //此传感器不在线
-                                                    return;
-                                                }
-                                                l_comaddr = obj.l_comaddr;
-                                                l_code = obj.l_code;  //装置序号
-                                                $("#switchCj").dialog("open");
-                                            });
+                                          
                                             //移动
                                             $("#move").click(function () {
                                                 marker1.closeInfoWindow(infoWindow2);
                                                 layer.confirm("确认要移动该传感器吗", {//确认要移动该传感器吗？
-                                                    btn: [lans[146][lang], lans[147][lang]] //确定、取消按钮
+                                                    btn: ["确定", "取消"] //确定、取消按钮
                                                 }, function (index) {
                                                     marker1.enableDragging(); //标注可拖拽
                                                     marker1.addEventListener("dragend", function (e) {
@@ -1204,7 +811,7 @@
                                             $("#clean").click(function () {
                                                 marker1.closeInfoWindow(infoWindow2);
                                                 layer.confirm("确认要移除该传感器吗", {//确认要移动该传感器吗？
-                                                    btn: [lans[146][lang], lans[147][lang]] //确定、取消按钮
+                                                    btn: ["确定","取消"] //确定、取消按钮
                                                 }, function (index) {
                                                     var allOverlay = map.getOverlays();
                                                     for (var i = 0; i < allOverlay.length; i++) {
@@ -1234,35 +841,10 @@
                                                     layer.close(index);
                                                 });
                                             });
-                                            //切换场景
-                                            $("#setchjing").click(function () {
-                                                marker1.closeInfoWindow(infoWindow2);
-                                                $("#switchCj").dialog("open");
-                                            });
+                                           
+                                           
 
-                                            //读取灯控时间表
-                                            $("#getlamptime").click(function () {
-                                                var vv = [];
-                                                vv.push(1);
-                                                vv.push(parseInt(obj.l_groupe));
-                                                var comaddr = obj.l_comaddr;
-                                                var num = randnum(0, 9) + 0x70;
-                                                var data = buicode(comaddr, 0x04, 0xAA, num, 0, 401, vv); //01 03 F24    
-                                                dealsend3("AA", data, 401, "readLampPlanCB", comaddr, 0, obj.p_type, 0, 0);
-                                                marker1.closeInfoWindow(infoWindow2);
-                                            });
-
-                                            //读经纬度
-                                            $("#getcjval").click(function () {
-                                                var vv = [];
-                                                vv.push(1);
-                                                vv.push(parseInt(obj.l_groupe));
-                                                var comaddr = obj.l_comaddr;
-                                                var num = randnum(0, 9) + 0x70;
-                                                var data = buicode(comaddr, 0x04, 0xAA, num, 0, 402, vv); //01 03 F24    
-                                                dealsend3("AA", data, 402, "readLampPlanCB", comaddr, 0, obj.p_type, 0, 0);
-                                                marker1.closeInfoWindow(infoWindow2);
-                                            });
+                                       
                                         });
                                         map.addOverlay(marker1);
                                         map.panTo(point);
@@ -1297,7 +879,7 @@
 
             var txtMenuItem = [
                 {
-                    text: lans[53][lang], //添加传感器
+                    text: '添加传感器', //添加传感器
                     callback: function () {
                         var allOver = map.getOverlays(); //获取全部标注
                         for (var j = 0; j < allOver.length; j++) {
@@ -1317,7 +899,7 @@
                         var opt = {
                             method: "post",
                             contentType: "application/x-www-form-urlencoded",
-                            url: "login.map.lamp.action",
+                            url: "login.map.sensor.action",
                             silent: true,
                             query: obj
                         };
@@ -1337,7 +919,7 @@
                     }
                 },
                 {
-                    text: lans[58][lang], //添加网关
+                    text: '添加网关', //添加网关
                     callback: function () {
 
                         var allOver = map.getOverlays(); //获取全部标注
@@ -1439,7 +1021,7 @@
                     $("#wgtable").bootstrapTable('refresh');
                     $('#addwanguang').dialog("close");
                 } else {
-                    alert(lans[73][lang]);  //请勾选表格数据
+                    alert("请勾选表格数据");  //请勾选表格数据
                 }
             }
             //根据条件查询传感器
@@ -1554,22 +1136,6 @@
                 //修改网关经纬度
                 function updatelnglat(lng, lat, comaddr) {
                     var porjectId = parent.getpojectId();
-                    var nobj = {};
-                    nobj.name = u_name;
-                    var day = getNowFormatDate2();
-                    nobj.time = day;
-                    nobj.type = "修改";
-                    nobj.comment = "修改网关经纬度";
-                    nobj.pid = porjectId;
-                    nobj.page = "地图导航";
-                    $.ajax({async: false, url: "login.oplog.addoplog.action", type: "get", datatype: "JSON", data: nobj,
-                        success: function (data) {
-                            var arrlist = data.rs;
-                            if (arrlist.length > 0) {
-
-                            }
-                        }
-                    });
                     var obj = {};
                     obj.Longitude = lng;
                     obj.latitude = lat;
@@ -1599,7 +1165,7 @@
                                 marker.addEventListener("dragend", function (e) {
                                     var x = e.point.lng; //经度
                                     var y = e.point.lat; //纬度
-                                    if (confirm(lans[288][lang])) {  //该设备已有经纬度了，您确定更改吗?
+                                    if (confirm("该设备已有经纬度了，您确定更改吗?")) {  //该设备已有经纬度了，您确定更改吗?
                                         var obj2 = {};
                                         obj2.Longitude = x;
                                         obj2.latitude = y;
@@ -1631,7 +1197,7 @@
 
                                 });
                             } else {
-                                alert(lans[281][lang]);  //修改失败
+                                alert("修改失败");  //修改失败
                             }
                         },
                         error: function () {
@@ -1807,7 +1373,7 @@
                         }
                     }
 
-                    //单灯修改经纬度
+                    //单个传感器修改经纬度
                     if (onedraw) {
                         if (lampchecck.Longitude != null && lampchecck.latitude != null) {
                             if (confirm(lans[288][lang])) {  //该设备已有经纬度了，您确定更改吗?
@@ -1827,6 +1393,7 @@
                         lampchecck = [];
                         onedraw = false;
                     }
+                    //多个传感器
                     if (draw) {
                         var obj3 = {};
                         obj3.x = e.point.lng;
@@ -1845,14 +1412,14 @@
                                 strokeOpacity: 0.5});//透明度
                             map.addOverlay(polyline);
 
-                            if (confirm(lans[289][lang])) {  //你还要继续选点吗？
+                            if (confirm("你还要继续选点吗？")) {  //你还要继续选点吗？
 
                             } else {
                                 for (var i = 0; i < idlist.length; i++) {
                                     //alert("id:" + idlist[i] + "lng:" + array[i].x + "lat:" + array[i].y);
                                     updateMayLamplnglat(array[i].x, array[i].y, idlist[i]);
                                 }
-                                alert(lans[295][lang]); //配置经纬度成功
+                                alert("配置成功"); //配置经纬度成功
                                 var nobj = {};
                                 nobj.name = u_name;
                                 var day = getNowFormatDate2();

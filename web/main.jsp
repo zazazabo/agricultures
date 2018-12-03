@@ -33,8 +33,21 @@
             .a-upload:hover { color: #444; background: #eee; border-color: #ccc; text-decoration: none } 
         </style>
         <script>
+            function getCookie(name) {
+                var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+                if (arr = document.cookie.match(reg))
+                    return unescape(arr[2]);
+                else
+                    return null;
+            }
+            function setCookie(name, value) {
+                var Days = 30;
+                var exp = new Date();
+                exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+                document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+            }
             var o = {};
-            var lang;
+            var lang = getCookie("lang");
             var eventobj = {
                 "ERC44": {
                     "status1": {
@@ -343,8 +356,8 @@
                     success: function (data) {
                         var arrlist = data.rs;
                         if (arrlist.length > 0) {
-                              layerAler("修改成功！");
-                              $('#updinfo').modal("hide");
+                            layerAler("修改成功！");
+                            $('#updinfo').modal("hide");
                         }
                     }
                 });
@@ -458,6 +471,7 @@
                 });
             }
 
+
             //获取语言
             function getLnas() {
                 return o;
@@ -496,7 +510,10 @@
                 websocket.close();
             }
             $(function () {
-                lang = getCookie("lang");
+                if (lang == "" || lang == null) {
+                    lang = "zh_CN";
+                    changeLanguage(lang);
+                }
             <c:forEach items="${lans}" var="t" varStatus="i">
                 var id =${t.id};
                 var zh_CN1 = "${empty t.zh_CN?"":t.zh_CN}";
@@ -549,7 +566,7 @@
         <div class="wraper"> 
             <div class="bodyLeft" style="background: rgb(14, 98, 199) none repeat scroll 0% 0%;">
                 <div class="bodyLeftTop listdisplayNone" style="background:#5cb75c ">
-                    <span  style="width:80px;margin-left:30px;"><img src="img/jdkj.png" style=" width: 150px;"><label name="xxx" id="275" style=" color: black;">智慧农业生产管理控制系统</label></span>
+                    <span  style="width:80px;margin-left:0px;"><img src="img/jdkj.png" style=" width: 120px;"><label name="xxx" id="275" style=" color: black;">智慧农业生产管理控制系统</label></span>
                 </div>
 
                 <ul class="layui-nav layui-nav-tree  MenuBox " >
@@ -620,7 +637,7 @@
                             </ul>
                         </li>
                         <li class="one" style=" margin-right: 0px; margin-top: 15px;" >
-                            <span class="Till" style="box-sizing: border-box; color: rgb(255, 255, 255);  margin-top: -20px;"> 
+                            <span class="Till" style="box-sizing: border-box; color: rgb(255, 255, 255);  margin-top: -20px; margin-right: 10px;"> 
                                 <span class="admin" style="color: rgb(255, 255, 255);"><img src="./img/user.jpg" style=" height: 40px; width: 40px;vertical-align: middle; border-radius: 16px;"></span>
                                 <input id="m_code" type="hidden" value="${rs[0].m_code}"/>
                                 <input id="pwd" type="hidden" value="${rs[0].password}"/>
@@ -653,7 +670,7 @@
                 </div>
                 <input  id="names" value="" type="hidden">
                 <!--<input id="configurations" value="[{&quot;title&quot;:&quot;参数配置&quot;,&quot;action&quot;:&quot;config/paramConfig.action&quot;,&quot;icon&quot;:&quot;imgs/manager/paramConfiguration.png&quot;},{&quot;title&quot;:&quot;网关配置&quot;,&quot;action&quot;:&quot;config/gateway.action&quot;,&quot;icon&quot;:&quot;imgs/manager/gatewayConfiguration.png&quot;},{&quot;title&quot;:&quot;项目配置&quot;,&quot;action&quot;:&quot;config/alarmConfig.action&quot;,&quot;icon&quot;:&quot;imgs/manager/alarmConfiguration.png&quot;}]" type="hidden">-->
-                <iframe id="iframe" name="iframe" src="formuser.mainsub.home.action?pid=${fn:split(param.pid,",")[0]}&lang=${empty cookie.lang.value?"zh_CN":cookie.lang.value}" seamless="" style="height: 886px;" width="100%" frameborder="0">
+                <iframe id="iframe" name="iframe" src="formuser.mainsub.home.action?pid=${fn:split(param.pid,",")[0]}&lang=${empty cookie.lang.value?"zh_CN":cookie.lang.value}" seamless="" height="700px"  width="100%" frameborder="0">
                 </iframe>
             </div>
         </div>

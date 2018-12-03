@@ -462,6 +462,7 @@
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript" src="js/md5.js"></script>
         <script type="text/javascript" src="js/getdate.js"></script>
+        <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript">
             $.extend({
                 PostSubmitForm: function (url, args) {
@@ -507,9 +508,9 @@
                     var pass = $("#password").val();
                     var name = $("#username").val();
                     var password = hex_md5(pass);
-                    var obj = $("#myfrom").serializeObject();
+                    var obj = {};
+                    obj.name= name;
                     obj.password = password;
-                    obj.name = name;
                     $.ajax({async: false, url: "login.loginform.loginhand.action", type: "POST", datatype: "JSON", data: obj,
                         success: function (data) {
                             // console.log(data);
@@ -605,6 +606,7 @@
                     $("#rememberPW").html("记住密码");
                     $("#login").val("登陆");
                     $("#top").html("账号登陆");
+                   setCookie("lang", "zh_CN");
                 });
                 //切换英文
                 $("#english").click(function () {
@@ -612,6 +614,7 @@
                     $("#rememberPW").html("remember password");
                     $("#login").val("Login");
                     $("#top").html("Account login");
+                    setCookie("lang", "en_US");
                 });
 
             });

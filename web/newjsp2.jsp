@@ -176,10 +176,10 @@
 //                                $(bodydiv).append(div2);
                                 var div1 = document.createElement("div");
                                 $(div1).addClass("div1");
-                                div1.append(str2);
+                                div1.innerHTML = str2;
                                 var div2 = document.createElement("div");
                                 $(div2).addClass("div2");
-                                $(div2).append(val);
+                                $(div2).innerHTML =val;
                                 var div3 = document.createElement("div");
                                 $(div3).addClass("div3");
                                 $(div3).append(img);

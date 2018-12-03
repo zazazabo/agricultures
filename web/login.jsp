@@ -514,8 +514,16 @@
                         success: function (data) {
                             // console.log(data);
                             var arrlist1 = data.rs;
-                            if (arrlist1.length == 1) {
-                                addlogon(name, "登陆",arrlist1[0].pid, "登陆", "登陆");
+                            if (arrlist1.length > 0) {
+                                var pid = "";
+                                if(arrlist1[0].pid =="" ||arrlist1[0].pid == null){
+                                    pid = "";
+                                }else{
+                                     var pids = arrlist1[0].pid.split(",");   //项目编号
+                                     pid = pids[0];
+                                }
+                               console.log(pid);
+                                addlogon(name, "登陆",pid, "登陆", "登陆");
 
                                 var o1 = arrlist1[0];
                                 o1.role = arrlist1[0].m_code;

@@ -171,7 +171,7 @@
                     layerAler(langs1[259][lang]);   //项目不能为空
                     return false;
                 }
-                addlogon(u_name, "添加", o_pid, "项目管理", "添加项目");
+                addlogon(u_name, "添加", o_pid, "项目管理", "添加【"+obj.name+"】项目");
                 var isflesh = false;
                 $.ajax({url: "login.project.queryProject.action", async: false, type: "POST", datatype: "JSON", data: obj,
                     success: function (data) {
@@ -274,7 +274,7 @@
                     layerAler(langs1[262][lang]);  //项目名不能为空
                     return;
                 }
-                addlogon(u_name, "修改", o_pid, "项目管理", "修改项目信息");
+                addlogon(u_name, "修改", o_pid, "项目管理", "修改【"+pname+"】项目信息");
                 var obj = {};
                 obj.area = $("#parea").val();
                 obj.name = pname;
@@ -297,7 +297,6 @@
             //删除
             function deleteUser() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
-                console.log(selects[0]);
                 var num = selects.length;
                 if (num == 0) {
                     layerAler(langs1[263][lang]);  //请选择您要删除的记录
@@ -318,7 +317,7 @@
                                         if (arrlist.length > 1) {
                                             layerAler(langs1[265][lang]);   //该项目下拥有管理人员，不可删除
                                         } else {
-                                            addlogon(u_name, "删除", o_pid, "项目管理", "删除项目");
+                                            addlogon(u_name, "删除", o_pid, "项目管理", "删除【"+selects[0].name+"】项目");
                                             $.ajax({async: false, url: "login.project.delete.action", type: "POST", datatype: "JSON", data: {id: selects[0].id},
                                                 success: function (data) {
                                                     var arrlist = data.rs;

@@ -163,7 +163,32 @@
                             title: langs1[226][lang],  //管理项目
                             width: 25,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                var pids = [];
+                                if (value != "") {
+                                    pids = value.split(",");   //项目编号 
+                                }
+                                // $("#pojects").val(pids[0]);
+                                var pname = "";   //项目名称
+                                for (var i = 0; i < pids.length; i++) {
+                                    var obj = {};
+                                    obj.code = pids[i];
+                                    $.ajax({url: "login.main.getpojcetname.action", async: false, type: "get", datatype: "JSON", data: obj,
+                                        success: function (data) {
+                                            if (i == pids.length - 1) {
+                                                pname += data.rs[0].name;
+                                            } else {
+                                                pname = pname + data.rs[0].name + "、";
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("出现异常！");
+                                        }
+                                    });
+                                }
+                                return pname;
+                            }
                         }],
                     clickToSelect: true,
                     singleSelect: true,

@@ -226,7 +226,7 @@
                     autoOpen: false,
                     modal: true,
                     width: 600,
-                    height: 250,
+                    height: 450,
                     position: ["top", "top"],
                     buttons: {
                         添加: function () {
@@ -259,11 +259,11 @@
 
 
 
-                $('#intime').timespinner('setValue', '00:00');
-                $('#outtime').timespinner('setValue', '23:00');
+//                $('#intime').timespinner('setValue', '00:00');
+//                $('#outtime').timespinner('setValue', '23:00');
 
 
-                $("#tr_scene_hide_add").hide();
+                $("#scenetype").hide();
 
                 $('#p_type').combobox({
                     onSelect: function (record) {
@@ -474,7 +474,6 @@
 
 
         <div id="dialog-add"  class="bodycenter"  style=" display: none" title="回路方案添加">
-
             <form action="" method="POST" id="formadd" onsubmit="return checkPlanLoopAdd()">      
                 <input type="hidden" name="pid" value="${param.pid}"/>
                 <table>
@@ -501,29 +500,28 @@
 
                             </td>
                         </tr>
-
-                        <!--                        <tr id="tr_time_hide_add">
-                                                    <td>
-                                                        闭合时间
-                                                        <span style="margin-left:20px;" id="71" name="xxx">闭合时间</span>&nbsp;
-                                                        <input id="intime" class="form-control"  name="intime" style="width:150px;display: inline;" placeholder="请输入闭合时间" type="text">
-                                                        <input id="intime" name="p_intime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
-                                                    </td>
-                                                    <td></td>
-                                                    <td>
-                                                        断开时间
-                                                        <span style="margin-left:20px;" id="72" name="xxx">断开时间</span>&nbsp;
-                                                        <input id="outtime" name="p_outtime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
-                                                    </td>
-                                                    </td>
-                                                </tr>                                   -->
-
-
-
                     </tbody>
                 </table>
                 <table id="timetable">
-                    <tbody></tbody>
+                    <tbody>
+
+                        <tr >
+                            <td>
+                                闭合时间
+                                <span style="margin-left:20px;" >闭合时间</span>&nbsp;
+                                <input id="intime" class="form-control"  name="intime" style="width:150px;display: inline;" placeholder="请输入闭合时间" type="text">
+                                <input id="intime" name="p_intime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
+                            </td>
+                            <td></td>
+                            <td>
+                                断开时间
+                                <span style="margin-left:20px;" >断开时间</span>&nbsp;
+                                <input id="outtime" name="p_outtime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
+                            </td>
+                            </td>
+                        </tr>                                   
+
+                    </tbody>
                 </table>
                 <table scentable>
                     <tbody>

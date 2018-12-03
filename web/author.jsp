@@ -71,7 +71,8 @@
 
                             }
                             alert(langs1[144][lang]); //添加成功
-                            addlogon(u_name, "添加", o_pid, "角色权限管理", "添加角色");
+                            getcombox();
+                            addlogon(u_name, "添加", o_pid, "角色权限管理", "添加【"+name+"】角色");
                         }
                     },
                     error: function () {
@@ -82,7 +83,7 @@
 
             function getIdSelections() {
                 return $.map($("#gravidaTable").bootstrapTable('getSelections'), function (row) {
-                    return row.id
+                    return row.id;
                 });
             }
 // 在ztree上的右击事件
@@ -135,7 +136,7 @@
                         var node = zTreeOjb.getNodeByParam("id", id);
                         if (node.checked == true) {
 
-                            layer.confirm(langs1[251][lang], {   //确认要取消权限吗？
+                            layer.confirm(langs1[251][lang], {//确认要取消权限吗？
                                 btn: [langs1[146][lang], langs1[147][lang]]  //确定、取消按钮
                             }, function (index) {
                                 layer.close(index);
@@ -156,7 +157,7 @@
                                             isok = true;
                                         } else {
                                             layerAler(langs1[253][lang]);   //该角色不拥有该权限
-                                        } 
+                                        }
                                         freshenTree(role);
                                     },
                                     error: function () {
@@ -193,7 +194,7 @@
                                                     layerAler(langs1[254][lang]);   //取消成功
                                                     addlogon(u_name, "取消权限", o_pid, "角色权限管理", "取消角色权限");
                                                 } else {
-                                                   layerAler(langs1[255][lang]);  //取消失败
+                                                    layerAler(langs1[255][lang]);  //取消失败
                                                 }
                                                 freshenTree(role);
                                             },
@@ -217,13 +218,12 @@
 
             }
 
-
+            //分配权限
             function addauthor() {
                 var zTreeOjb = $.fn.zTree.getZTreeObj("treeDemo");
                 var nodes = zTreeOjb.getCheckedNodes();
                 var roletype = $("#role").combobox('getValue');
                 var name = $("#role").combobox('getText');
-
                 if ($("#role").val() == "") {
                     layerAler(langs1[239][lang]);   //请选择要分配权限的角色
                     return;
@@ -234,8 +234,8 @@
                 }
 
                 //console.log(nodes);
-                layer.confirm(langs1[241][lang], {    //确认要分配权限吗？
-                    btn: [langs1[146][lang],langs1[147][lang]]//确定、取消按钮
+                layer.confirm(langs1[241][lang], {//确认要分配权限吗？
+                    btn: [langs1[146][lang], langs1[147][lang]]//确定、取消按钮
                 }, function (index) {
 
                     addlogon(u_name, "分配权限权限", o_pid, "角色权限管理", "分配权限");
@@ -262,21 +262,62 @@
                     layer.close(index);
                 });
             }
+            //删除角色
+            function delrole() {
+                if ($("#role").val() == "") {
+                    layerAler(langs1[505][lang]);   //请选择要删除的角色
+                    return;
+                }
+                var obj = {};
+                obj.m_code = $("#role").val();
+                //查看角色是否已分配给用户
+                $.ajax({async: false, url: "login.rolemanage.lookrole.action", type: "get", datatype: "JSON", data: obj,
+                    success: function (data) {
+                        var rs = data.rs;
+                        if (rs.length > 0) {
+                            layerAler("该角色已分配给用户不可删除");
+                        } else {
+                            layer.confirm(langs1[145][lang], {//确认删除吗？
+                                btn: [langs1[146][lang], langs1[147][lang]]//确定、取消按钮
+                            }, function (index) {
+                                addlogon(u_name, "删除角色", o_pid, "权限管理", "删除【"+$("#role").combobox('getText')+"】角色");
+                                var obj2 = {};
+                                obj2.roletype = $("#role").val();
+                                $.ajax({async: false, url: "login.rolemanage.deleterole.action", type: "POST", datatype: "JSON", data: obj2,
+                                    success: function (data) {
+                                        var list = data.rs;
+                                        if (list.length > 0) {
+                                            getcombox();
+                                            layerAler("删除成功");  //删除成功！
+                                        }
+                                    },
+                                    error: function () {
+                                        alert("提交失败！");
+                                    }
+                                });
+                                layer.close(index);
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+            }
 
 
             $(function () {
+                var lang = "${param.lang}";
                 var aaa = $("span[name=xxx]");
                 for (var i = 0; i < aaa.length; i++) {
                     var d = aaa[i];
                     var e = $(d).attr("id");
-                    console.log(e);
                     $(d).html(langs1[e][lang]);
                 }
                 var obj = {};
                 obj.roletype = ${param.role};
                 var zNodes = [
                 ];
-                var lang = "${param.lang}";
                 $.ajax({async: false, url: "login.rolemanage.queryZtree.action", type: "get", datatype: "JSON", data: obj,
                     success: function (data) {
                         for (var i = 0; i < data.length; i++) {
@@ -285,7 +326,7 @@
 //                            console.log(obj1);
                             data[i].name = obj1[lang];
                         }
-                        var obj2 = {id: "0", pId: 0, name: "菜单目录", open: true};
+                        var obj2 = {id: "0", pId: 0, name:'菜单目录', open: true};   //菜单目录
                         data.push(obj2);
                         zNodes = data;
                     },
@@ -312,7 +353,7 @@
 
 
 
-            })
+            });
 
             function layerAler(str) {
                 layer.alert(str, {
@@ -320,9 +361,19 @@
                     offset: 'center'
                 });
             }
-
+            //获取角色
+            function  getcombox() {
+                $("#role").combobox({
+                    url: "login.usermanage.rolemenu.action?parent_id=${param.role}"
+//                    onLoadSuccess: function (data) {
+//                        $(this).combobox("select", data[0].id);
+//                        $(this).val(data[0].text);
+//                    }
+                });
+            }
 
             $(function () {
+                getcombox();
                 $('#role').combobox({
                     onSelect: function (record) {
                         var objrole = {role: record.id};
@@ -342,7 +393,9 @@
                         });
                     }
                 });
-            })
+
+
+            });
             //修改权限后刷新权限树形图
             function  freshenTree(roleid) {
                 var objrole = {role: roleid};
@@ -377,23 +430,24 @@
                         <div class="" style="width:20%;float: left;">
                             <ul id="treeDemo" class="ztree"></ul>
                         </div>
-                        <div class="" style="align-items: center;width:10%; float: left;">
+                        <div class="" style=" width: 50%; margin-left: 5%; float: left; margin-top: 2%;">
                             <div id="btnauthor" style=" display: none;" >
 
-                                <button class="btn btn-success" onclick="addauthor()" style="  margin-top: 20px"><span name="xxx" id="244">分配权限</span></button>
+                                <button class="btn btn-success" onclick="addauthor()" style=" margin-left: 30%;"><span name="xxx" id="244">分配权限</span></button>
 
                             </div>
+                            <div style=" margin-top: 3%;">
+                                <span style=" width: 20%;" name="xxx" id="245">角色列表</span>
+<!--                            <input id="role" class="easyui-combobox" name="role" style="width:40%; height: 34px;" data-options="editable:true,valueField:'id', textField:'text',url:'login.usermanage.rolemenu.action?parent_id=${param.role}'" />-->
+                                <input id="role" data-options='editable:false,valueField:"id", textField:"text"' style="width:35%; height: 34px;" class="easyui-combobox"/>
+                                <button class="btn btn-success" style=" width:18%;" onclick="delrole()" ><span>删除角色</span></button>
+                            </div>
+                            <div style=" margin-top: 3%;">
+                                <span style=" width: 20%;" name="xxx" id="246">角色名称</span>&nbsp;
+                                <input id="rolename" class="form-control" name="rolename" style="width:35%;display: inline;" placeholder="请输入角色名称" type="text">
+                                <button id="btnrole" onclick="addrole()" class="btn btn-success" style=" width: 18%;"><span name="xxx" id="247">生成角色</span></button>
+                            </div>
 
-                        </div>
-
-                        <div class="" style=" width: 30%; float: left; margin-top: 2%;">
-                            <span style=" width: 30%;" name="xxx" id="245">角色列表</span>
-                            <input id="role" class="easyui-combobox" name="role" style="width:60%; height: 34px" data-options="editable:true,valueField:'id', textField:'text',url:'login.usermanage.rolemenu.action?parent_id=${param.role}'" />
-                        </div>
-                        <div class="" style=" width: 30%; margin-left: 5%; float: left; margin-top: 2%;">
-                            <span style=" width: 30%;" name="xxx" id="246">角色名称</span>&nbsp;
-                            <input id="rolename" class="form-control" name="rolename" style="width:40%;display: inline;" placeholder="请输入角色名称" type="text">
-                            <button id="btnrole" onclick="addrole()" class="btn btn-success" style=" width: 30%;"><span name="xxx" id="247">生成角色</span></button>
                         </div>
                     </div>
                 </div>

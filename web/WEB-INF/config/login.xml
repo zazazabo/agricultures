@@ -236,6 +236,14 @@
     </xform>
     
     <xform desc="用户管理" id="usermanage">
+        <xhandle desc="修改用户基本信息" id="editUinfo" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="department,email,phone" tpe="DDL" tpl="update t_user set department=':department',email=':email',phone=':phone' where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@name ">
+                    <xfltpara id="name" nrp="1=2" para="name" sql="name=':name'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
         <xhandle desc="查看用户名是否存在" id="isusername" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select name from t_user where @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@name">
@@ -340,6 +348,22 @@
             <xsql id="a1" para="name,roletype,code,enable,parent_id" tpe="DDL" tpl="insert into t_role(name,roletype,code,enable,parent_id) values(':name',:roletype,':code',':enable',':parent_id') " var="rs">
             </xsql>
         </xhandle> 
+        <xhandle desc="查看角色是否已分配用户" id="lookrole" rtn="rs" rtnype="JSON">
+            <xsql desc="" id="a1" list="true" page="true" tpe="SQL" tpl=" select * from t_user where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@m_code">
+                    <xfltpara id="m_code" nrp="1=1" para="m_code" sql="m_code = :m_code">
+                    </xfltpara>                              
+                </xflt>        
+            </xsql>
+        </xhandle> 
+        <xhandle desc="删除角色" id="deleterole" rtn="rs" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_role where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@roletype">
+                    <xfltpara id="roletype" nrp="1=2" para="roletype" sql="roletype = :roletype">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
         <xhandle desc="获取角色" id="getrole" rtnype="JSON">
             <xsql desc="获取当前登陆用户的权限" id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM t_role AS tr where @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@roletype AND @enable">
@@ -462,7 +486,7 @@
                     </xfltpara>
                     <xfltpara id="end" nrp="1=1" para="end" sql="o_time &lt;=  ':end 23:59:59' ">
                     </xfltpara>
-                    <xfltpara id="o_pid" nrp="1=1" para="pid" sql="o_pid like  '%:pid%' ">
+                    <xfltpara id="o_pid" nrp="1=1" para="pid" sql="o_pid=':pid' ">
                     </xfltpara>
                 </xflt>
             </xsql> 

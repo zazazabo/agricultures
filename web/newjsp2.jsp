@@ -131,12 +131,12 @@
                                     $(bodydiv).addClass("wd");
                                     img.src = "./img/wd.png";
                                     str = "℃";
-                                    str2 = "温度值";
+                                    str2 = "数值";
                                 } else if (sensor.type == 2) {  //湿度
                                     $(bodydiv).addClass("sd");
                                     img.src = "./img/sd.png";
                                     str = "%RH";
-                                    str2 = "湿度值";
+                                    str2 = "数值";
                                 } else if (sensor.type == 3) {
                                     $(bodydiv).addClass("kg");
                                     if (sensor.numvalue != null && sensor.numvalue != "" && sensor.numvalue != 0) {
@@ -179,7 +179,7 @@
                                 div1.innerHTML = str2;
                                 var div2 = document.createElement("div");
                                 $(div2).addClass("div2");
-                                $(div2).innerHTML =val;
+                                div2.innerHTML =val;
                                 var div3 = document.createElement("div");
                                 $(div3).addClass("div3");
                                 $(div3).append(img);

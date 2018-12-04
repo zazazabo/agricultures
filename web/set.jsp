@@ -29,40 +29,6 @@
                 return reg.test(ip);
             }
 
-            function StartCheck() {
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-
-                var vv = [];
-                vv.push(1);
-                vv.push(parseInt(obj.l_groupe)); //新组号  1字节            
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA5, num, 0, 1, vv); //01 03 F24   
-                dealsend2("A5", data, 1, "allCallBack", comaddr, 0, 0, 0, 0);
-            }
-
-            function StopCheck() {
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-
-                var vv = [];
-                vv.push(1);
-                vv.push(parseInt(obj.l_groupe)); //新组号  1字节            
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA5, num, 0, 2, vv); //01 03 F24   
-                dealsend2("A5", data, 2, "allCallBack", comaddr, 0, 0, 0, 0);
-            }
-
-
-            function refleshgayway(obj) {
-                var vv = [];
-                var l_comaddr = "17020101";
-                var num = randnum(0, 9) + 0x70;
-                var data = "0"
-                dealsend2("ALL", data, 1, "ALL", l_comaddr, 0, 0, 0);
-            }
 
             function readTrueTimeCB(obj) {
                 if (obj.status == "success") {
@@ -73,65 +39,201 @@
                         v = v + sprintf("%02x", data[i]) + " ";
                     }
 
-                    var yh = data[23] >> 4 & 0x0F;
-                    var yl = data[23] & 0x0F;
-                    var mh = data[22] >> 4 & 0x03;
-                    var ml = data[22] & 0x0F;
-                    var dh = data[21] >> 4 & 0x0F;
-                    var dl = data[21] & 0x0F;
-                    var hh = data[20] >> 4 & 0x0F;
-                    var hl = data[20] & 0x0F;
-                    var minh = data[19] >> 4 & 0x0F;
-                    var minl = data[19] & 0x0F;
-                    var sh = data[18] >> 4 & 0x0F;
-                    var sl = data[18] & 0x0F;
-                    var y = sprintf("20%d%d", yh, yl);
-                    var m = sprintf("%d%d", mh, ml);
-                    var d = sprintf("%d%d", dh, dl);
-                    var h = sprintf("%d%d", hh, hl);
-                    var min = sprintf("%d%d", minh, minl);
-                    var s = sprintf("%d%d", sh, sl);
+                    console.log(obj);
+
+
+
+
+                    var yh = data[15];
+                    var yl = data[16];
+
+
+
+                    var mh = data[11];
+                    var ml = data[12];
+
+                    var dh = data[9];
+                    var dl = data[10];
+
+
+
+                    var hh = data[7];
+                    var hl = data[8];
+
+                    var minh = data[5];
+                    var minl = data[6];
+
+                    var sh = data[3];
+                    var sl = data[4];
+                    var y = sprintf("%d", yl);
+                    var m = sprintf("%d", ml);
+                    var d = sprintf("%d", dl);
+                    var h = sprintf("%d", hl);
+                    var min = sprintf("%d", minl);
+                    var s = sprintf("%d", sl);
                     var timestr = sprintf("%s-%s-%s %s:%s:%s", y, m, d, h, min, s);
                     $("#gaytime").val(timestr);
-                    console.log(timestr);
+//                    console.log(timestr);
                 }
 
             }
             function readTrueTime() {
-                var o1 = $("#form1").serializeObject();
-                var vv = [0];
-                var l_comaddr = o1.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(l_comaddr, 0x04, 0xAC, num, 0, 1, vv); //01 03
-                dealsend2("AC", data, 1, "readTrueTimeCB", l_comaddr, 0, 0, 0);
-            }
 
-            function  setChgTimeCB(obj) {
-                obj.id = obj.val;
-                console.log(obj.domain)
-
-                if (obj.status == "success") {
-                    $.ajax({async: false, url: "param.param.updatesite.action", type: "get", datatype: "JSON", data: obj,
-                        success: function (data) {
-                            var arrlist = data.rs;
-                            if (arrlist.length == 1) {
-                                layerAler(langs1[161][lang]); //读取站点信息成功
-                                var opt = {
-                                    url: "test1.f5.h1.action",
-                                    silent: true,
-                                    query: obj
-                                };
-                                $("#gravidaTable").bootstrapTable('refresh', opt);
-                            }
-                        },
-                        error: function () {
-                            alert("提交失败！");
-                        }
-                    });
+                var obj = $("#form1").serializeObject();
+                if (obj.l_comaddr == "") {
+                    layerAler('网关不能为空'); //
+                    return;
                 }
 
+
+                console.log(obj);
+
+                var vv = [];
+                vv.push(1);
+                vv.push(3);
+                var infonum = 1313 | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+                vv.push(0);
+                vv.push(7); //寄存器数目 2字节                         
+                var data = buicode2(vv);
+                dealsend2("03", data, "readTrueTimeCB", obj.l_comaddr, 0, 0, 0);
+
+
+
+
+//                var o1 = $("#form1").serializeObject();
+//                var vv = [0];
+//                var l_comaddr = o1.l_comaddr;
+//                var num = randnum(0, 9) + 0x70;
+//                var data = buicode(l_comaddr, 0x04, 0xAC, num, 0, 1, vv); //01 03
+//                dealsend2("AC", data, 1, "readTrueTimeCB", l_comaddr, 0, 0, 0);
             }
 
+
+            function dateFormatter(value) {
+                var date = new Date(value);
+                var year = date.getFullYear().toString();
+                var month = (date.getMonth() + 1);
+                var day = date.getDate().toString();
+                var hour = date.getHours().toString();
+                var minutes = date.getMinutes().toString();
+                var seconds = date.getSeconds().toString();
+                if (month < 10) {
+                    month = "0" + month;
+                }
+                if (day < 10) {
+                    day = "0" + day;
+                }
+                if (hour < 10) {
+                    hour = "0" + hour;
+                }
+                if (minutes < 10) {
+                    minutes = "0" + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = "0" + seconds;
+                }
+                return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+            }
+
+            function setNowtime() {
+                var myDate = new Date();//获取系统当前时
+                var y = myDate.getFullYear();
+                var m = myDate.getMonth() + 1;
+                var d = myDate.getDate();
+                var h = myDate.getHours();
+                var mm = myDate.getMinutes();
+                var s = myDate.getSeconds();
+
+                var str = y + "-" + m + "-" + d + " " + h + ":" + mm + ":" + s;
+                console.log(str);
+                $('#nowtime').datetimebox('setValue', str);
+
+            }
+
+            function  setTimeNowCB(obj) {
+                console.log(obj);
+            }
+            function setTimeNow() {
+                var time = $('#nowtime').datetimebox('getValue');
+                var myDate = new Date(time);
+
+                var o = $("#form1").serializeObject();
+                var obj = $("#form2").serializeObject();
+
+                var y = sprintf("%d", myDate.getFullYear()).substring(2, 4);
+
+
+                var m = sprintf("%d", myDate.getMonth() + 1);
+                var d = sprintf("%d", myDate.getDate());
+                var h = sprintf("%d", myDate.getHours());
+                var mm = sprintf("%d", myDate.getMinutes());
+                var s = sprintf("%d", myDate.getSeconds());
+                
+                var sunday=myDate.get
+
+                var y1 = parseInt(y);
+                var m1 = parseInt(m);
+                var d1 = parseInt(d);
+                var h1 = parseInt(h);
+                var mm1 = parseInt(mm);
+                var s1 = parseInt(s);
+
+//                console.log(m);
+//                var vv = [];
+//                vv.push(parseInt(s, 16));
+//                vv.push(parseInt(mm, 16));
+//                vv.push(parseInt(h, 16));
+//                vv.push(parseInt(d, 16));
+//                vv.push(parseInt(m, 16));
+//                vv.push(parseInt(y, 16));
+
+
+
+                var comaddr = o.l_comaddr;
+                var vv = new Array();
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+
+                var infonum = 1313 | 0x1000;
+                vv.push(infonum >> 8 & 0xff); //起始地址
+                vv.push(infonum & 0xff);
+                vv.push(0);           //寄存器数目 2字节  
+                vv.push(7);
+                vv.push(14);           //字节数目长度  1字节
+
+
+
+                vv.push(s1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(s1 & 0xff);
+
+                vv.push(mm1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(mm1 & 0xff);
+
+                vv.push(h1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(h1 & 0xff);
+
+
+                vv.push(d1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(d1 & 0xff);
+
+                vv.push(m1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(m1 & 0xff);
+
+                vv.push(0);
+                vv.push(1);
+
+
+                vv.push(y1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(y1 & 0xff);
+
+                var data = buicode2(vv);
+                console.log(data);
+                dealsend2("10", data, "setTimeNowCB", comaddr, 1, 0, 0);
+
+            }
             function allCallBack(obj) {
                 if (obj.status == "success") {
                     //更换分组
@@ -249,156 +351,14 @@
                 }
             }
 
-            function readjwd() {
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
 
-                var vv = [];
-                vv.push(1);
-                vv.push(parseInt(obj.l_groupe)); //新组号  1字节            
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xFE, num, 0, 10, vv); //01 03 F24   
-                dealsend2("FE", data, 10, "allCallBack", comaddr, 0, 0, obj.l_groupe);
-            }
-            function setjwd() {
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-                var long = obj.Longitude;
-                var lati = obj.latitude;
-                var longarr = long.split(".");
-                var latiarr = lati.split(".");
-                console.log(longarr.length);
-                if (longarr.length != 2 || latiarr.length != 2) {
-                    layerAler("经纬度错误输入格式");
-                    return;
-                }
-                if (longarr[0].length != 4 || longarr[1].length != 4) {
-                    layerAler("经度4位十进制数字");
-                    return;
-                }
-                if (latiarr[0].length != 4 || latiarr[1].length != 4) {
-                    layerAler("纬度应是4位十进制数字");
-                    return;
-                }
-                if (isNumber(longarr[0]) == false || isNumber(longarr[1]) == false) {
-                    layerAler("经度应是4位十进制数字");
-                    return;
-                }
-                if (isNumber(latiarr[0]) == false || isNumber(latiarr[1]) == false) {
-                    layerAler("纬度应是4位十进制数字");
-                    return;
-                }
-                if (isNumber(obj.timezone) == false) {
-                    layerAler("时区应是数字");
-                    return;
-                }
-                if (isNumber(obj.outoffset) == false) {
-                    layerAler("日出偏移应是数字");
-                    return;
-                }
-                if (isNumber(obj.inoffset) == false) {
-                    layerAler("日落偏移应是数字");
-                    return;
-                }
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-
-                var vv = [];
-                var longh = Str2BytesH(longarr[0]);
-                var longl = Str2BytesH(longarr[1]);
-
-                var latih = Str2BytesH(latiarr[0]);
-                var latil = Str2BytesH(latiarr[1]);
-                vv.push(longl[1]);
-                vv.push(longl[0]);
-                vv.push(longh[1]);
-                vv.push(longh[0]);
-
-                vv.push(latil[1]);
-                vv.push(latil[0]);
-                vv.push(latih[1]);
-                vv.push(latih[0]);
-
-                vv.push(parseInt(obj.inoffset)); //新组号  1字节      
-                vv.push(parseInt(obj.outoffset)); //新组号  1字节    
-                vv.push(parseInt(obj.areazone));
-                vv.push(parseInt(obj.timezone));
-
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xff, num, 0, 10, vv); //01 03 F24   
-                dealsend2("FF", data, 10, "allCallBack", comaddr, 0, 0, obj.l_groupe);
-            }
-
-            function setGroupe() {
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-
-                var vv = [];
-                vv.push(1);
-                vv.push(parseInt(obj.l_groupe)); //新组号  1字节            
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 110, vv); //01 03 F24    
-                dealsend2("A4", data, 110, "allCallBack", comaddr, 0, 0, obj.l_groupe);
-            }
-
-            function delAllplan() {
-                var o = $("#form1").serializeObject();
-                var vv = [];
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 180, vv); //01 03 F24    
-                dealsend2("A4", data, 180, "allCallBack", comaddr, 0, 0, 0);
-            }
-            function delAllLoopPlan() {
-                var o = $("#form1").serializeObject();
-                var vv = [];
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 402, vv); //01 03 F24    
-                dealsend2("A4", data, 402, "allCallBack", comaddr, 0, 0, 0);
-            }
-            function delAllLoop() {
-                var o = $("#form1").serializeObject();
-                var vv = [];
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 340, vv); //01 03 F24    
-                dealsend2("A4", data, 340, "allCallBack", comaddr, 0, 0, 0);
-            }
-            function delAllLamp() {
-
-                var o = $("#form1").serializeObject();
-
-                var vv = [];
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 108, vv); //01 03 F24    
-
-                dealsend2("A4", data, 108, "allCallBack", comaddr, 0, 0, 0);
-            }
-            function setWowktype() {
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-                console.log(obj);
-                var vv = [];
-                vv.push(1);
-                vv.push(parseInt(obj.l_worktype)); //新工作方式  1字节            
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 120, vv); //01 03 F24    
-
-                dealsend2("A4", data, 120, "allCallBack", comaddr, 0, 0, obj.l_worktype);
-            }
 
             $(function () {
                 var aaa = $("span[name=xxx]");
                 for (var i = 0; i < aaa.length; i++) {
                     var d = aaa[i];
                     var e = $(d).attr("id");
-                    $(d).html(langs1[e][lang]);
+                    // $(d).html(langs1[e][lang]);
                 }
                 var d = [];
                 for (var i = 0; i < 18; i++) {
@@ -681,233 +641,37 @@
 
             }
 
-            function setChgTimeCB(obj) {
-                if (obj.status == "success") {
-                    layerAler(langs1[179][lang]);  //设置换日时间和冻结时间成功
-                }
-            }
-
-            function setChgTime() {
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-                var o4 = obj.time4;
-                var o3 = obj.time3;
-                var oo = {"o4": o4, "o3": o3};
-                var a = o4.split(":");
-                var b = o3.split(":");
-
-                var h1 = parseInt(a[0], 16);
-                var m1 = parseInt(a[1], 16);
-
-                var h2 = parseInt(b[0], 16);
-                var m2 = parseInt(b[1], 16);
-                var vv = [];
-                vv.push(h1);
-                vv.push(m1);
-                vv.push(h2);
-                vv.push(m2);
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 4, vv); //01 03 F24    
-                dealsend2("A4", data, 4, "setChgTimeCB", comaddr, 0, oo, 0);
-            }
-
-
-            function setAPNCB(obj) {
-                if (obj.status == "success") {
-                    layerAler(langs1[180][lang]);  //设置运营商APN成功
-                }
-            }
-
-            function setAPN() {
-                var o = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-                if (obj.apn == "") {
-                    layerAler(langs1[181][lang]);  //apn不能为空
-                    return;
-                }
-                if (obj.apn.length > 16) {
-                    layerAler(langs1[176][lang]);
-                    return;
-                }
-                addlogon(u_name, "设置", o_pid, "网关参数设置", "设置运营商APN");
-                var vv = [];
-                for (var i = 0; i < 16; i++) {
-                    var apn = obj.apn;
-                    var len = apn.length;
-                    if (len <= i) {
-                        vv.push(0);
-                    } else {
-                        var c = apn.charCodeAt(i);
-                        vv.push(c);
-                    }
-
-                }
-
-                var comaddr = o.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 2, vv); //01 03 F24    
-                dealsend2("A4", data, 4, "setAPNCB", comaddr, 0, apn, 0);
-            }
-
-            function setInspectcb(obj) {
-                console.log(obj);
-                if (obj.status == "success") {
-                    layerAler(langs1[182][lang]);  //灯具通信失联巡检次数成功
-                }
-                if (obj.status == "fail") {
-                    layerAler(langs1[183][lang]);  //灯具通信失联巡检次数失败
-                }
-            }
-            function setInspect() {
-                var obj1 = $("#form1").serializeObject();
-                var obj = $("#form2").serializeObject();
-                var o = obj.inspect;
-                if (o == "") {
-                    layerAler(langs1[184][lang]);  //请填写巡检次数
-                    return;
-                }
-                var vv = [];
-                vv.push(parseInt(o));
-
-                var comaddr = obj1.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xA4, num, 0, 202, vv); //01 03 F24    
-                dealsend2("A4", data, 202, "setInspectcb", comaddr, 0, 0, 0);
-            }
-
-            function readInspectcb(obj) {
-                console.log(obj);
-            }
-            function readInspect() {
-                var vv = [];
-                var obj = $("#form1").serializeObject();
-                var comaddr = obj.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xAA, num, 0, 202, vv); //01 03 F24    
-                dealsend2("AA", data, 202, "readInspectcb", comaddr, 0, 0, 0);
-            }
-
-
-            function readAreaCb(obj) {
-                if (obj.status == "success") {
-                    var src = Str2BytesH(obj.data);
-                    var v = "";
-                    for (var i = 0; i < src.length; i++) {
-
-                        v = v + sprintf("%02x", src[i]) + " ";
-                    }
-                    console.log(v);
-
-                    var z = 18;
-                    //dns解析的ip
-                    var area1 = sprintf("%02x%02x", src[z + 1], src[z]);
-                    var area2 = sprintf("%02x%02x", src[z + 3], src[z + 2]);
-                    $("#area").val(area1);
-                    $("#addr").val(area2);
-                    console.log(area1, area2);
-                }
-
-            }
-            function readArea() {
-                var vv = [];
-                var obj = $("#form1").serializeObject();
-                var comaddr = obj.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xFE, num, 0, 1, vv); //01 03 F24    
-                dealsend2("FE", data, 1, "readAreaCb", comaddr, 0, 0, 0);
-            }
-            function setAreaCB(obj) {
-                if (obj.status == "success") {
-                    var src = Str2BytesH(obj.data);
-                    var v = "";
-                    for (var i = 0; i < src.length; i++) {
-
-                        v = v + sprintf("%02x", src[i]) + " ";
-                    }
-                    console.log(v);
-
-                    var z = 18;
-
-                }
-            }
-            function setArea() {
-                var vv = [];
-                var obj = $("#form1").serializeObject();
-                var obj1 = $("#form2").serializeObject();
-                if (!isNumber(obj1.area) || obj1.area.length != 4) {
-                    layerAler(langs1[185][lang]); //区划码是2位字节4数字长度
-                    return;
-                }
-                if (!isNumber(obj1.addr) || obj1.addr.length != 4) {
-                    layerAler(langs1[185][lang]);
-                    return;
-                }
-
-                var arr = Str2BytesH(obj1.area);
-                vv.push(arr[1]);
-                vv.push(arr[0]);
-
-                arr = Str2BytesH(obj1.addr);
-                vv.push(arr[1]);
-                vv.push(arr[0]);
-
-
-//                var h = area >> 8 && 0x00ff;
-//                var l = area & 0x00ff;
-//                vv.push(l);
-//                vv.push(h);
-
-
-
-//                var addr = parseInt(obj1.addr, 106);
-//                var h1 = addr >> 8 && 0x0f;
-//                var l1 = addr & 0x0f;
-//                vv.push(l1);
-//                vv.push(h1);
-
-                console.log(area);
-                console.log(obj1);
-                var comaddr = obj.l_comaddr;
-                var num = randnum(0, 9) + 0x70;
-                var data = buicode(comaddr, 0x04, 0xFF, num, 0, 1, vv); //01 03 F24    
-                dealsend2("FF", data, 1, "setAreaCB", comaddr, 0, 0, 0);
-            }
-            //检测时间
-            function jcsj() {
-                var obj = {};
-                obj.jd = $("#Longitude").val();
-                obj.wd = $("#latitude").val();
-                if (obj.jd == "" || obj.wd == "") {
-                    layerAler("请读取网关经纬度");
-                    return;
-                }
-                $.ajax({async: false, url: "login.rc.r.action", type: "get", datatype: "JSON", data: obj,
-                    success: function (data) {
-                        var list = data.cl[0];
-
-                        $("#sunrise").val(list.rc);  //日出
-                        $("#sunset").val(list.rl);  //日落
-                        $("#sunriseSunset").show();
-                        console.log(data);
-
-                    },
-                    error: function () {
-                        alert("提交失败！");
-                    }
-                });
-
-            }
 
             $(function () {
-                $('#l_comaddr').combobox({
+                $("#l_comaddr").combobox({
                     url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
+                    formatter: function (row) {
+                        var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
+                        var v = row.text + v1;
+                        row.id = row.id;
+                        row.text = v;
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField];
+                    },
                     onLoadSuccess: function (data) {
                         if (Array.isArray(data) && data.length > 0) {
-                            $(this).combobox("select", data[0].id);
+                            for (var i = 0; i < data.length; i++) {
+                                data[i].text = data[i].id;
+                            }
+                            $(this).combobox('select', data[0].id);
                         }
+
                     },
                     onSelect: function (record) {
+                        var obj = {};
+                        obj.l_comaddr = record.id;
+                        obj.pid = "${param.pid}";
+                        var opt = {
+                            url: "sensor.sensorform.getSensorList.action",
+                            query: obj,
+                            silent: false
+                        };
+                        $("#gravidaTable").bootstrapTable('refresh', opt);
                     }
                 });
 
@@ -941,7 +705,7 @@
 
         <div class="panel panel-success" >
             <div class="panel-heading">
-                <h3 class="panel-title"><span id="186" name="xxx">网关参数设置</span></h3>
+                <h3 class="panel-title"><span >网关参数设置</span></h3>
             </div>
             <div class="panel-body" >
                 <div class="container" style=" height:400px;"  >
@@ -956,7 +720,7 @@
                                         <tr>
 
                                             <td>
-                                                <span style="margin-left:10px;" name="xxx" id="25">网关地址</span>&nbsp;
+                                                <span style="margin-left:10px;" >网关地址</span>&nbsp;
 
                                                 <span class="menuBox">
                                                     <input id="l_comaddr" class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 
@@ -964,19 +728,20 @@
                                                 </span>  
                                             </td>
                                             <td>
-                                                <span style="margin-left:10px;" name="xxx" id="187">功能选择</span>&nbsp;
+                                                <span style="margin-left:10px;" >功能选择</span>&nbsp;
 
                                                 <span class="menuBox">
                                                     <select class="easyui-combobox" id="type" name="type" data-options="editable:false,valueField:'id', textField:'text' " style="width:200px; height: 30px">
                                                         <option value="1" >主站域名或IP设置</option>
-<!--                                                        <option value="2">设置换日冻结时间参数</option>    
-                                                        <option value="3">设置通信巡检次数</option> 
-                                                        <option value="4">读取网关时间</option> 
-                                                        <option value="5">网关行政区划码</option> 
-                                                        <option value="6">设置灯具</option> 
-                                                        <option value="7">设置回路</option> 
-                                                        <option value="8">设置经纬度</option> 
-                                                        <option value="9">设置巡测任务</option> -->
+                                                        <option value="2">读取网关时间</option> 
+                                                        <!--                                                        <option value="2">设置换日冻结时间参数</option>    
+                                                                                                                <option value="3">设置通信巡检次数</option> 
+                                                                                                                <option value="4">读取网关时间</option> 
+                                                                                                                <option value="5">网关行政区划码</option> 
+                                                                                                                <option value="6">设置灯具</option> 
+                                                                                                                <option value="7">设置回路</option> 
+                                                                                                                <option value="8">设置经纬度</option> 
+                                                                                                                <option value="9">设置巡测任务</option> -->
                                                     </select>
                                                 </span>  
                                             </td>
@@ -1050,261 +815,40 @@
                             </div>
                         </div>
 
-                        <div class="row" id="row2" style=" display: none">
+
+                        <div class="row" id="row2"  style=" display: none">
                             <div class="col-xs-12">
                                 <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <span  style="margin-left:10px;"  name="xxx" id="195">换日时间</span>
-                                                <input id="time4" name="time4" style=" height: 30px; width: 100px;  "  class="easyui-timespinner">
-                                                <span  style="margin-left:10px;"  name="xxx" id="196">冻结时间</span>
-                                                <input id="time3" name="time3" style=" height: 30px; width: 100px;"  class="easyui-timespinner">
-                                                &nbsp;
-                                            </td>
+                                                <span style="margin-left:10px;">当前时间</span>
+                                                <span class="menuBox">
+                                                    <input class="easyui-datetimebox" name="nowtime" id="nowtime"
+                                                           data-options="formatter:dateFormatter,showSeconds:true" value="" style="width:180px">
+                                                </span> 
+                                                <button  type="button" onclick="setNowtime()"  class="btn btn-success btn-sm"><span >获取当前时间</sspan>
+                                                </button>&nbsp; 
 
-                                        </tr>
-                                        <tr><td></td></tr>
-                                        <tr>
-                                            <td>
-                                                <button   type="button" onclick="setChgTime()" class="btn btn-success btn-sm"><span name="xxx" id="197">设置换日冻结时间</span></button>
-                                                <button  type="button" onclick="readTime()" class="btn btn-success btn-sm"><span name="xxx" id="198">读取换日冻结时间</span></button>
+                                                <button  style="float:right; margin-right: 5px;" type="button" onclick="setTimeNow()" class="btn btn-success btn-sm"><span >设置</span></button>
                                             </td>
                                         </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
 
-                        <div class="row" id="row3"  style=" display: none">
-                            <div class="col-xs-12">
-                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-
-
-                                                <span style="margin-left:10px; " name="xxx" id="199">通信巡检次数</span>&nbsp;
-                                                <input id="inspect" class="form-control" name="inspect" value="" style="width:100px;" placeholder="灯具通信失联巡检次数" type="text">
-                                                <button  type="button" onclick="setInspect()" class="btn btn-success btn-sm"><span name="xxx" id="200">设置通信失联巡检次数</span></button>
-                                                <button  type="button"  onclick="readInspect()" class="btn btn-success btn-sm"><span name="xxx" id="201">读取通信失联巡检次数</span></button>
-                                            </td>
-
-                                        </tr>
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row" id="row4"  style=" display: none">
-                            <div class="col-xs-12">
-                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
-                                    <tbody>
                                         <tr>
                                             <td>
                                                 <span style="margin-left:10px; " name="xxx" id="202">网关终端时间</span>&nbsp;
                                                 <input id="gaytime" readonly="true" class="form-control" name="gaytime" value="" style="width:150px;" placeholder="网关终端时间" type="text">
-                                                <button  type="button" onclick="readTrueTime()" class="btn btn-success btn-sm"><span name="xxx" id="203">读取时间</span></button>&nbsp;
+                                                <button  type="button" onclick="readTrueTime()" class="btn btn-success btn-sm">读取</button>&nbsp;
                                             </td>
                                         </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row" id="row5" style=" display: none">
-                            <div class="col-xs-12" >
-
-                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629; ">
-                                    <tbody>
-
-                                        <tr >
-                                            <td>
-                                                <span  style=" float: right; margin-right: 2px;" name="xxx" id="204" >行政区域码</span>
-                                            <td>
-
-                                                <input id="area"  class="form-control" name="area" style="width:150px;"  placeholder="区域码" type="text">&nbsp;
-                                            </td>
-
-                                        </tr>                                   
-
-                                        <tr>
-                                            <td>
-                                                <span  style=" float: right; margin-right: 2px;" name="xxx" id="25" >网关地址</span>
-                                            </td>
-
-                                            <td >
-                                                <input id="addr" class="form-control" name="addr" value="" style="width:150px;" placeholder="终端地址" type="text">
-                                                &nbsp;
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <button  type="button" onclick="readArea()" class="btn btn-success btn-sm"><span id="205" name="xxx">读取</span> </button>
-                                                <button type="button"  onclick="setArea()" class="btn  btn-success btn-sm" style="margin-left: 2px;"><span id="49" name="xxx">设置</span></button>
-
-                                            </td>
 
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <div class="row" id="row6"  style=" display: none">
-                            <div class="col-xs-12">
-                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <span style="margin-left:10px;" name="xxx" id="206">新组号</span>
-                                                <span class="menuBox">
-                                                    <input id="l_groupe" class="easyui-combobox" name="l_groupe" style="width:100px; height: 30px" 
-                                                           data-options="editable:true,valueField:'id', textField:'text' " />
-                                                </span> 
-                                                <!-- <button  type="button" onclick="chgLampGroupe()" class="btn btn-success btn-sm">更换所有灯具的组号</button>&nbsp; -->
-                                                <button  onclick="setGroupe()" style=" margin-left: 2px;" class="btn btn-success btn-xs" name="xxx" id="207" >更换</button>
-
-                                                <span style=" margin-left: 10px;" name="xxx" id="208">新工作方式</span>&nbsp;
-                                                <span class="menuBox">
-                                                    <select class="easyui-combobox" id="l_worktype" name="l_worktype" data-options='editable:false' style="width:100px; height: 30px">
-                                                        <option value="0" >时间</option>
-                                                        <option value="1">经纬度</option>
-                                                        <option value="2">场景</option>           
-                                                    </select>
-                                                </span> 
-                                                <button  onclick="setWowktype()" style=" margin-left: 2px;" class="btn btn-success btn-xs"  name="xxx" id="207">更换</button>
-
-                                                <button  type="button" onclick="delAllLamp()" class="btn btn-success btn-sm"><span id="209" name="xxx">删除全部灯具信息</span></button>
-                                                <button  style="float:right; margin-right: 5px;" type="button" onclick="delAllplan()" class="btn btn-success btn-sm"><span name="xxx" id="210">删除全部灯时间表</span></button>
-                                            </td>
-                                        </tr>
 
 
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row" id="row7"  style=" display: none">
-                            <div class="col-xs-12">
-                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
-                                    <tbody>
-                                        <tr>
-                                            <td>       
-                                                <button  type="button" onclick="delAllLoop()" class="btn btn-success btn-sm"><span id="211" name="xxx">删除全部回路开关信息</span></button>&nbsp;
-                                                <button  type="button" onclick="delAllLoopPlan()" class="btn btn-success btn-sm"><span id="212">删除全部回路时间表</span></button>&nbsp;
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row" id="row8"  style=" display: none">
-                            <div class="col-xs-12">
-                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <span style=" float: right; " name="xxxx" id="199">经度&nbsp;</span>&nbsp;
-                                            </td>
-                                            <td>
-                                                <input id="Longitude" name="Longitude"  value="" style="width:100px;" placeholder="经度" type="text">
-                                            </td>
-                                            <td>
-                                                <span style="float: right; " name="xxxx" id="199">纬度&nbsp;</span>
-                                            </td>
-                                            <td>
-                                                <input id="latitude" name="latitude"  value="" style="width:100px;" placeholder="纬度" type="text">
-                                            </td>
-
-
-                                            <td>
-                                                <span style="float: right; " name="xxxx" id="199">&nbsp;时区范围:</span>
-
-
-                                            </td>
-                                            <td>
-                                                <select class="easyui-combobox" id="areazone" name="areazone" data-options="editable:false,valueField:'id', textField:'text'" style="width:100px; height: 30px">
-                                                    <option value="0" >东经</option>
-                                                    <option value="1">西经</option>
-                                                </select>
-
-                                            </td>
-
-
-
-
-                                            <td>
-                                                <span style="float: right; " name="xxxx" id="199">&nbsp;时区</span>
-                                            </td>
-
-
-
-                                            <td>
-                                                <input id="timezone" name="timezone" value="" style="width:100px;" placeholder="时区" type="text">
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span style="margin-left:10px; " name="xxxx" id="199">日出偏移</span>&nbsp;
-                                            </td>
-                                            <td>
-                                                <input id="outoffset" class="form-control" name="outoffset" value="" style="width:100px;" placeholder="日出偏移" type="text">
-                                            </td>
-                                            <td>
-                                                <span style="margin-left:10px; " name="xxxx" id="199">日落偏移</span>&nbsp;
-                                            </td>
-                                            <td>
-                                                <input id="inoffset"  name="inoffset" value="" style="width:100px;" placeholder="日落偏移" type="text">
-                                            </td> 
-                                            <td >
-                                                <button  type="button" onclick="readjwd()" class="btn btn-success btn-sm"><span id="205" name="xxx">读取</span> </button>
-                                            </td>
-                                            <td>     <button type="button"  onclick="setjwd()" class="btn  btn-success btn-sm" style="margin-left: 10px;"><span id="49" name="xxx">设置</span></button></td>
-                                            <td>     <button type="button"  onclick="jcsj()" class="btn  btn-success btn-sm" style="margin-left: 0px;"><span >检测时间</span></button></td>
-
-                                        </tr>
-
-                                        <tr id="sunriseSunset" style=" display: none">
-                                            <td>
-                                                <span style="margin-left:10px;">日出时间</span>&nbsp;
-                                            </td>
-                                            <td>
-                                                <input id="sunrise" class="form-control" value="" style="width:100px;" placeholder="日出时间" type="text">
-                                            </td>
-                                            <td>
-                                                <span style="margin-left:10px; " name="xxxx" id="199">日落时间</span>&nbsp;
-                                            </td>
-                                            <td>
-                                                <input id="sunset"   value="" style="width:100px;" placeholder="日落偏移" type="text">
-                                            </td> 
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row" id="row9"  style=" display: none">
-                            <div class="col-xs-12">
-                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
-                                    <tbody>
-                                        <tr>
-                                            <td>       
-                                                <button  type="button" onclick="StartCheck()" class="btn btn-success btn-sm"><span id="415" name="xxx">启动巡测任务</span></button>&nbsp;
-                                                <button  type="button" onclick="StopCheck()" class="btn btn-success btn-sm"><span id="416">结束巡测任务</span></button>&nbsp;
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>                   
 
                     </form>
                 </div>

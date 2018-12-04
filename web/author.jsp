@@ -222,6 +222,7 @@
             function addauthor() {
                 var zTreeOjb = $.fn.zTree.getZTreeObj("treeDemo");
                 var nodes = zTreeOjb.getCheckedNodes();
+                
                 var roletype = $("#role").combobox('getValue');
                 var name = $("#role").combobox('getText');
                 if ($("#role").val() == "") {
@@ -403,6 +404,7 @@
                     success: function (datas) {
                         //console.log(datas);
                         var zTreeOjb = $.fn.zTree.getZTreeObj("treeDemo");
+                        
                         zTreeOjb.checkAllNodes(false);
                         datas.forEach(function (data) {
                             //console.log(data);

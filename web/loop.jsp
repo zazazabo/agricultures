@@ -144,7 +144,52 @@
                 return  namesss;
             }
 
+            function  deleteloop() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                if (selects.length == 0) {
+                    layerAler('请勾选您要删除的数据');   //请勾选您要删除的数据
+                    return;
+                }
+                layer.confirm('确定要删除吗？', {//确定要删除吗？
+                    btn: ['确定', '取消按钮'], //确定、取消按钮
+                    icon: 3,
+                    offset: 'center',
+                    title: langs1[174][lang]  //提示
+                }, function (index) {
+                    addlogon(u_name, "删除", o_pid, "回路管理", "删除回路");
+                    for (var i = 0; i < selects.length; i++) {
+                        var select = selects[i];
+                        var l_deployment = select.deplayment;
+                        if (l_deployment == 1) {
+                            layerAler('已部署不能删除');  //已部署不能删除
+                            continue;
+                        } else {
+                            $.ajax({url: "loop.loopForm.deleteLoop.action", type: "POST", datatype: "JSON", data: {id: select.id},
+                                success: function (data) {
+                                    var arrlist = data.rs;
+                                    if (arrlist.length == 1) {
+                                        layer.open({
+                                            content: '删除成功', //删除成功
+                                            icon: 1,
+                                            yes: function (index, layero) {
+                                                search();
+                                                layer.close(index);
+                                            }
+                                        });
+                                    }
+                                    layer.close(index);
+                                },
+                                error: function () {
+                                    alert("提交失败！");
+                                }
+                            });
+                        }
+                    }
 
+                    layer.close(index);
+
+                });
+            }
 
             function  readinfoCB(obj) {
                 var data = Str2BytesH(obj.data);
@@ -181,8 +226,6 @@
                 dealsend2("03", data, "readinfoCB", o.l_comaddr, 0, ele.id, info);
             }
 
-
-
             function deployLoopCB(obj) {
                 $('#panemask').hideLoading();
                 if (obj.status == "success") {
@@ -193,7 +236,7 @@
                     }
                     console.log(v);
                     if (data[1] == 0x10) {
-                        var infonum = (3000 + obj.val * 10) | 0x1000;
+                        var infonum = (3000 + obj.val * 20) | 0x1000;
                         console.log(infonum);
                         var high = infonum >> 8 & 0xff;
                         var low = infonum & 0xff;
@@ -305,6 +348,7 @@
             }
 
             function removeLoop() {
+                var infoalldata = $("#formsearch").serializeObject();
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var o = $("#form1").serializeObject();
                 var vv = new Array();
@@ -314,43 +358,26 @@
                 }
                 var ele = selects[0];
                 o.l_comaddr = ele.l_comaddr;
-                console.log(ele);
                 var vv = [];
                 vv.push(1);
                 vv.push(0x10);
                 var info = parseInt(ele.l_info);
-                console.log(info);
                 var infonum = (3000 + info * 20) | 0x1000;
                 vv.push(infonum >> 8 & 0xff); //起始地址
                 vv.push(infonum & 0xff);
 
                 vv.push(0);           //寄存器数目 2字节  
-                vv.push(5);
-                vv.push(10);           //字节数目长度  1字节
+                vv.push(20);   //5
+                vv.push(40);           //字节数目长度  1字节 10
 
 
-                vv.push(0);  //信息点
-                vv.push(0);
-
-
-
-                vv.push(0);//站点
-                vv.push(0);
-
-                //寄存器变量值
-                vv.push(0)   //寄存器变量值
-                vv.push(0);
-
-
-                vv.push(0)   //工作模式
-                vv.push(0);
-
-                vv.push(0); //控制值
-                vv.push(0);
-
-
+                for (var i = 0; i < 20; i++) {
+                    vv.push(0);
+                    vv.push(0);
+                }
                 var data = buicode2(vv);
-                dealsend2("10", data, "deploySensorCB", o.l_comaddr, 0, ele.id, info);
+                console.log(data);
+                dealsend2("10", data, "deployLoopCB", o.l_comaddr, 0, ele.lid, info);
                 $('#panemask').showLoading({
                     'afterShow': function () {
                         setTimeout("$('#panemask').hideLoading()", 10000);
@@ -400,14 +427,6 @@
                 return  namesss;
             }
 
-
-
-
-
-
-
-
-
             function modifyLoopName() {
                 var o = $("#form2").serializeObject();
                 o.id = o.hide_id;
@@ -424,7 +443,6 @@
                 });
                 return  false;
             }
-
 
             function modifyModal() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
@@ -454,12 +472,6 @@
                 $('#dialog-edit').dialog('open');
 
             }
-
-
-
-
-
-
 
             //搜索
             function  search() {
@@ -526,6 +538,15 @@
                         }, {
                             field: 'l_worktype',
                             title: '工作模式', //控制方式
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                return value;
+                            }
+                        }, {
+                            field: 'l_plan',
+                            title: '工作方案', //控制方式
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -833,86 +854,46 @@
                     }
                 });
 
-
-//                var obj = {};
-//                obj.code = ${param.m_parent};
-//                obj.roletype = ${param.role};
-//                $.ajax({async: false, url: "login.usermanage.power.action", type: "get", datatype: "JSON", data: obj,
-//                    success: function (data) {
-//                        var rs = data.rs;
-//                        if (rs.length > 0) {
-//                            for (var i = 0; i < rs.length; i++) {
-//
-//                                if (rs[i].code == "600201" && rs[i].enable != 0) {
-//                                    $("#add").attr("disabled", false);
-//                                    $("#addexcel").attr("disabled", false);
-//                                    continue;
-//                                }
-//                                if (rs[i].code == "600202" && rs[i].enable != 0) {
-//                                    $("#update").attr("disabled", false);
-//                                    continue;
-//                                }
-//                                if (rs[i].code == "600203" && rs[i].enable != 0) {
-//                                    $("#shanchu").attr("disabled", false);
-//                                    continue;
-//                                }
-//                            }
-//                        }
-//
-//                    },
-//                    error: function () {
-//                        alert("提交失败！");
-//                    }
-//                });
-//
-
-
-
-                $("#shanchu").click(function () {
-                    var selects = $('#gravidaTable').bootstrapTable('getSelections');
-                    if (selects.length == 0) {
-                        layerAler(langs1[263][lang]);   //请勾选您要删除的数据
-                        return;
-                    }
-                    layer.confirm(langs1[145][lang], {//确定要删除吗？
-                        btn: [langs1[146][lang], langs1[147][lang]], //确定、取消按钮
-                        icon: 3,
-                        offset: 'center',
-                        title: langs1[174][lang]  //提示
-                    }, function (index) {
-                        addlogon(u_name, "删除", o_pid, "回路管理", "删除回路");
-                        for (var i = 0; i < selects.length; i++) {
-                            var select = selects[i];
-                            var l_deployment = select.l_deplayment;
-                            if (l_deployment == 1) {
-                                layerAler(langs1[368][lang]);  //已部署不能删除
-                                continue;
-                            } else {
-                                $.ajax({url: "loop.loopForm.deleteLoop.action", type: "POST", datatype: "JSON", data: {id: select.id},
-                                    success: function (data) {
-                                        var arrlist = data.rs;
-                                        if (arrlist.length == 1) {
-                                            layer.open({
-                                                content: langs1[342][lang], //删除成功
-                                                icon: 1,
-                                                yes: function (index, layero) {
-                                                    search();
-                                                    layer.close(index);
-                                                }
-                                            });
-                                        }
-                                        layer.close(index);
-                                    },
-                                    error: function () {
-                                        alert("提交失败！");
-                                    }
-                                });
-                            }
+                $('#l_plan').combobox({
+                    url: "loop.planForm.getPlanlist.action?attr=0&pid=${param.pid}",
+                    formatter: function (row) {
+                        var strtype = "(时间)";
+                        if (row.p_type == 0) {
+                            strtype = "(时间)";
+                        } else if (row.p_type == 1) {
+                            strtype = "(场景)";
+                        } else if (row.p_type == 2) {
+                            strtype = "(信息点)"
                         }
 
-                        layer.close(index);
+                        var v = row.p_name + strtype;
+                        row.id = row.id;
+                        row.text = v;
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField];
+                    },
+                    onLoadSuccess: function (data) {
+                        console.log(data);
+                        if (Array.isArray(data) && data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                data[i].text = data[i].p_name;
+                            }
 
-                    });
+                            $(this).combobox('select', data[0].id);
+
+                        }
+
+
+
+
+                        for (var i = 1; i < 9; i++) {
+                            $("#__num" + i.toString()).attr('readonly', true);
+                        }
+                    },
+                    onSelect: function (record) {
+
+
+                    }
                 });
 
             })
@@ -923,7 +904,7 @@
 
 
         <style>* { margin: 0; padding: 0; } 
-/*            body, html { width: 99%; height: 100%; } */
+            /*            body, html { width: 99%; height: 100%; } */
 
             input[type="text"],input[type="radio"] { height: 30px; } 
             table td { line-height: 40px; } 
@@ -985,6 +966,9 @@
                                         部署
                                     </button>&nbsp;
 
+                                    <button  type="button" style="margin-left:20px;" onclick="removeLoop()" class="btn btn-success btn-xm">
+                                        移除
+                                    </button>&nbsp;
                                     <button  type="button" style="margin-left:20px;" onclick="readinfo()" class="btn btn-success btn-xm">
                                         读取
                                     </button>&nbsp;
@@ -1078,7 +1062,7 @@
             <button class="btn btn-primary ctrol"  onclick="modifyModal();" id="update" >
                 <span class="glyphicon glyphicon-pencil"></span>&nbsp;编辑
             </button>
-            <button class="btn btn-danger ctrol" id="shanchu">
+            <button class="btn btn-danger ctrol" onclick="deleteloop()"  id="shanchu">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;删除
             </button>
             <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
@@ -1115,7 +1099,7 @@
 
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" name="xxxx" id="314">网关名称</span>&nbsp;
+                                <span style="margin-left:10px;" >网关名称</span>&nbsp;
                                 <input id="comaddrname" readonly="true"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text"></td>
 
                             </td>
@@ -1123,12 +1107,12 @@
 
                         <tr>
                             <td>
-                                <span style="margin-left:20px;" name="xxxx" id="364">&emsp;&emsp;站号</span>&nbsp;
+                                <span style="margin-left:20px;">&emsp;&emsp;站号</span>&nbsp;
                                 <input id="l_site" class="form-control" name="l_site" style="width:150px;display: inline;" placeholder="站号" type="text">
 
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" name="xxxx" id="331">回路名称</span>&nbsp;
+                                <span style="margin-left:10px;">回路名称</span>&nbsp;
                                 <input id="l_name" class="form-control"  name="l_name" style="width:150px;display: inline;" placeholder="请输入回路名称" type="text">
                             </td>
                             </td>
@@ -1151,8 +1135,9 @@
                                 <span style="margin-left:10px;" >工作方式</span>&nbsp;
                                 <span class="menuBox">
                                     <select class="easyui-combobox" id="l_worktype" name="l_worktype"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
-                                        <option value="0">0</option>
-
+                                        <option value="3">时间</option>
+                                        <option value="5">场景</option>
+                                        <option value="9">信息点</option>
                                     </select>
                                 </span>
                             </td>
@@ -1167,9 +1152,11 @@
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:8px;" >控制值</span>&nbsp;
+                                <span style="margin-left:8px;" >工作方案</span>&nbsp;
                                 <span class="menuBox">
-                                    <input id="l_controval" class="form-control"  name="l_controval" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
+                                    <select class="easyui-combobox" id="l_plan" name="l_plan"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
+
+                                    </select>
                                 </span>
                             </td>
                         </tr>    
@@ -1250,7 +1237,6 @@
                             </td>
                             <td></td>
                             <td>
-
                             </td>
                         </tr>    
 
@@ -1265,7 +1251,6 @@
         <div id="dialog-excel"  class="bodycenter"  style=" display: none" title="导入Excel">
             <input type="file" id="excel-file" style=" height: 40px;">
             <table id="warningtable"></table>
-
         </div>
 
 

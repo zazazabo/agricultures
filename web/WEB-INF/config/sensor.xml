@@ -69,5 +69,22 @@
             <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
         </xhandle>      
         
+
+
+
+
+
+
+
+
+
+        
+        <xhandle desc="" id="getInfoNumList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT DISTINCT infonum as id,infonum as text FROM t_sensor where deplayment = 1 " var="list">
+  
+            </xsql>
+        </xhandle>  
+
+       
     </xform>
 </xforms>

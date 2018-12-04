@@ -97,9 +97,9 @@
                                 console.log("1:" + time1 + "//2:" + time2);
                                 var stime = TimeDifference(time1, time2);
                                 if (stime <= 15) {
-                                    return "在线";
+                                    return "<img  src='img/online1.png'/>"; 
                                 } else {
-                                    return "离线";
+                                     return "<img  src='img/off.png'/>"; 
                                 }
                             }
                         }],

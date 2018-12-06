@@ -120,7 +120,7 @@
                         }
                     });
                 } else if (obj.p_type == 2) {
-                    for (var i = 0; i < 5; i++) {
+                    for (var i = 0; i < 4; i++) {
                         var pinfo = "info" + (i + 1).toString();
                         var pinfoval = "infoval" + (i + 1).toString();
                         var info = obj[pinfo];
@@ -134,6 +134,9 @@
                         var str = "p_info" + (i + 1).toString();
                         obj[str] = JSON.stringify(obj1);
                     }
+                    var obj2 = {"num": parseInt(obj.infonum), "offset": parseInt(obj.offset)};
+                    obj.p_info = JSON.stringify(obj2);
+                    
                     var ret = false;
                     $.ajax({async: false, url: "loop.planForm.editLoopInfoPlan.action", type: "get", datatype: "JSON", data: obj,
                         success: function (data) {
@@ -226,17 +229,20 @@
                     var obj2 = eval('(' + select.p_info2 + ')');
                     var obj3 = eval('(' + select.p_info3 + ')');
                     var obj4 = eval('(' + select.p_info4 + ')');
-                    var obj5 = eval('(' + select.p_info5 + ')');
-
-                    var ooo = [obj1, obj2, obj3, obj4, obj5];
+                    var obj5 = eval('(' + select.p_info + ')');
+//
+                    var ooo = [obj1, obj2, obj3, obj4];
                     $("#p_name1").val(select.p_name);
                     for (var i = 0; i < ooo.length; i++) {
                         var istr = (i + 1).toString();
                         var info = "#info" + istr + istr;
                         var val = "#infoval" + istr + istr;
-                        $(info).combobox('setValue', ooo[i].info);
+                        $(info).val(ooo[i].info);
                         $(val).val(ooo[i].value);
                     }
+                    $("#infonum1").combobox('setValue', obj5.num);
+                    $("#offset1").val(obj5.offset);
+
                 }
 
 
@@ -345,7 +351,6 @@
 
                     a.p_type = 1;
                     a.p_attr = 0;
-                    a.p_name = obj.p_name;
                     a.pid = obj.pid;
                     console.log(a);
                     var ret = false;
@@ -363,7 +368,9 @@
 
 
                 } else if (obj.p_type == "2") {
-                    for (var i = 0; i < 5; i++) {
+
+
+                    for (var i = 0; i < 4; i++) {
                         var pinfo = "info" + (i + 1).toString();
                         var pinfoval = "infoval" + (i + 1).toString();
                         var info = obj[pinfo];
@@ -378,10 +385,13 @@
                         a[str] = JSON.stringify(obj1);
                     }
 
+                    var obj2 = {"num": parseInt(obj.infonum), "offset": parseInt(obj.offset)};
+                    a.p_info = JSON.stringify(obj2);
+
                     a.p_type = 2;
                     a.p_attr = 0;
-                    a.p_name = obj.p_name;
                     a.pid = obj.pid;
+                    a.p_name=obj.p_name;
                     console.log(a);
                     var ret = false;
                     $.ajax({async: false, url: "loop.planForm.addLoopInfoPlan.action", type: "get", datatype: "JSON", data: a,
@@ -1151,8 +1161,8 @@
                                 colspan: 1
                             },
                             {
-                                field: 'p_info',
-                                title: '信息点一', //
+                                field: 'p_infonum',
+                                title: '信息点号', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1161,8 +1171,8 @@
 
                             },
                             {
-                                field: 'p_info',
-                                title: '信息点二', //
+                                field: 'p_infonum',
+                                title: '一', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1171,8 +1181,8 @@
 
                             },
                             {
-                                field: 'p_info',
-                                title: '信息点三', //
+                                field: 'p_infonum',
+                                title: '二', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1181,8 +1191,8 @@
 
                             },
                             {
-                                field: 'p_info',
-                                title: '信息点四', //
+                                field: 'p_infonum',
+                                title: '三', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1191,8 +1201,8 @@
 
                             },
                             {
-                                field: 'p_info',
-                                title: '信息点五', //
+                                field: 'p_infonum',
+                                title: '四', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1202,8 +1212,40 @@
                             }
                         ], [
                             {
+                                field: 'p_info',
+                                title: '信息点', //场景号
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    if (isJSON(value)) {
+
+                                        var obj = eval('(' + value + ')');
+                                        return obj.num.toString();
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_info',
+                                title: '偏差值', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        if (obj.offset != null) {
+                                            return obj.offset.toString();
+                                        }
+                                    }
+                                }
+                            },
+                            {
                                 field: 'p_info1',
-                                title: '信息点', //
+                                title: '数值', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1230,15 +1272,13 @@
                                         if (obj.value != null) {
                                             return obj.value.toString();
                                         }
-
-
                                     }
 
                                 }
 
                             }, {
                                 field: 'p_info2',
-                                title: '信息点', //
+                                title: '数值', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1271,7 +1311,7 @@
                                 }
                             }, {
                                 field: 'p_info3',
-                                title: '信息点', //
+                                title: '数值', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1306,7 +1346,7 @@
                             }, {
 
                                 field: 'p_info4',
-                                title: '信息点', //
+                                title: '数值', //
                                 width: 25,
                                 align: 'center',
                                 valign: 'middle',
@@ -1329,38 +1369,6 @@
                                     // console.log(row);
                                     if (isJSON(row.p_info4)) {
                                         var obj = eval('(' + row.p_info4 + ')');
-                                        if (obj.value != null) {
-                                            return obj.value.toString();
-                                        }
-                                    }
-
-                                }
-                            }, {
-                                field: 'p_info5',
-                                title: '信息点', //场景号
-                                width: 25,
-                                align: 'center',
-                                valign: 'middle',
-                                colspan: 1,
-                                formatter: function (value, row, index, field) {
-                                    if (isJSON(value)) {
-                                        var obj = eval('(' + value + ')');
-                                        return obj.info;
-                                    }
-
-                                }
-                            },
-                            {
-                                field: 'p_val5',
-                                title: '控制值', //调光控制控制值
-                                width: 25,
-                                align: 'center',
-                                valign: 'middle',
-                                colspan: 1,
-                                formatter: function (value, row, index, field) {
-                                    // console.log(row);
-                                    if (isJSON(row.p_info5)) {
-                                        var obj = eval('(' + row.p_info5 + ')');
                                         if (obj.value != null) {
                                             return obj.value.toString();
                                         }
@@ -1413,13 +1421,15 @@
 
                 $.ajax({async: false, url: "sensor.sensorform.getInfoNumList.action", type: "get", datatype: "JSON", data: {},
                     success: function (data) {
-                        console.log(data);
+                        $("#infonum").combobox('loadData', data);
+                        $("#infonum1").combobox('loadData', data);
+//                        console.log(data);
 
-                        for (var i = 0; i < 5; i++) {
-                            var str = (i + 1).toString();
-                            $("#info" + str).combobox('loadData', data);
-                            $("#info" + str + str).combobox('loadData', data);
-                        }
+//                        for (var i = 0; i < 5; i++) {
+//                            var str = (i + 1).toString();
+//                            $("#info" + str).combobox('loadData', data);
+//                            $("#info" + str + str).combobox('loadData', data);
+//                        }
                     },
                     error: function () {
                         alert("提交失败！");
@@ -1637,58 +1647,64 @@
                     <tbody>
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >信息点一</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info1" name="info1" style="width:70px; height: 30px">
+                                <span style="margin-left:20px;" >信息点号</span>&nbsp;
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum" name="infonum" style="width:70px; height: 30px">
                                 </select>
-                                <span style="margin-left:10px;">控制值一</span>&nbsp;
+                                <span style="margin-left:10px;">偏差值</span>&nbsp;
+                                <input id="offset" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info1" name="info1" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info1" name="info1" style="width:70px; height: 30px">
+                                                                     <input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
                                 <input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
                             <td>
 
                             </td>
                             <td>
-                                <span style="margin-left:20px;" >信息点二</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info2" name="info2" style="width:70px; height: 30px">
-                                </select>
-                                <span style="margin-left:10px;">控制值二</span>&nbsp;
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info2" name="info2" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info2" name="info2" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
                                 <input id="infoval2" class="form-control"  name="infoval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
                             </td>
                         </tr>
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >信息点三</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info3" name="info3" style="width:70px; height: 30px">
-                                </select>
-                                <span style="margin-left:10px;">控制值三</span>&nbsp;
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info3" name="info3" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info3" name="info3" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
                                 <input id="infoval3" class="form-control"  name="infoval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
                             </td>
                             <td>
 
                             </td>
                             <td>
-                                <span style="margin-left:20px;" >信息点四</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info4" name="info4" style="width:70px; height: 30px">
-                                </select>
-                                <span style="margin-left:10px;">控制值四</span>&nbsp;
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info4" name="info4" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info4" name="info4" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
                                 <input id="infoval4" class="form-control"  name="infoval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
                             </td>
                         </tr>                      
 
-                        <tr >
-                            <td>
-                                <span style="margin-left:20px;" >信息点五</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info5" name="info5" style="width:70px; height: 30px">
-                                </select>
-                                <span style="margin-left:10px;">控制值五</span>&nbsp;
-                                <input id="infoval5" class="form-control"  name="infoval5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
-                            </td>
-                            <td>
 
-                            </td>
-                            <td>
-
-                            </td>
-                        </tr>
 
                     </tbody>
                 </table>
@@ -1839,63 +1855,64 @@
                     <tbody>
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >信息点一</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info11" name="info1" style="width:70px; height: 30px">
+                                <span style="margin-left:20px;" >信息点号</span>&nbsp;
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum1" name="infonum" style="width:70px; height: 30px">
                                 </select>
-                                <span style="margin-left:10px;">控制值一</span>&nbsp;
+                                <span style="margin-left:10px;">偏差值</span>&nbsp;
+                                <input id="offset1" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info11" name="info1" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info1" name="info1" style="width:70px; height: 30px">
+                                                                     <input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
                                 <input id="infoval11" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
                             <td>
 
                             </td>
                             <td>
-                                <span style="margin-left:20px;" >信息点二</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info22" name="info2" style="width:70px; height: 30px">
-                                </select>
-                                <span style="margin-left:10px;">控制值二</span>&nbsp;
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info22" name="info2" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info2" name="info2" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
                                 <input id="infoval22" class="form-control"  name="infoval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
                             </td>
                         </tr>
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >信息点三</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info33" name="info3" style="width:70px; height: 30px">
-                                </select>
-                                <span style="margin-left:10px;">控制值三</span>&nbsp;
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info33" name="info3" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info3" name="info3" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
                                 <input id="infoval33" class="form-control"  name="infoval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
                             </td>
                             <td>
 
                             </td>
                             <td>
-                                <span style="margin-left:20px;" >信息点四</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info44" name="info4" style="width:70px; height: 30px">
-                                </select>
-                                <span style="margin-left:10px;">控制值四</span>&nbsp;
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info44" name="info4" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info4" name="info4" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
                                 <input id="infoval44" class="form-control"  name="infoval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
                             </td>
                         </tr>                      
-
-                        <tr >
-                            <td>
-                                <span style="margin-left:20px;" >信息点五</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info55" name="info5" style="width:70px; height: 30px">
-                                </select>
-                                <span style="margin-left:10px;">控制值五</span>&nbsp;
-                                <input id="infoval55" class="form-control"  name="infoval5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-
-                            </td>
-                        </tr>
-
                     </tbody>
                 </table>        
-
-
             </form>
         </div>
 

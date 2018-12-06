@@ -170,8 +170,8 @@
                 var h = sprintf("%d", myDate.getHours());
                 var mm = sprintf("%d", myDate.getMinutes());
                 var s = sprintf("%d", myDate.getSeconds());
-                
-                var sunday=myDate.get
+
+                var sunday = myDate.get
 
                 var y1 = parseInt(y);
                 var m1 = parseInt(m);
@@ -197,37 +197,49 @@
                 vv.push(1);
                 vv.push(0x10);
 
-                var infonum = 1313 | 0x1000;
+                var infonum = 3920 | 0x1000;
                 vv.push(infonum >> 8 & 0xff); //起始地址
                 vv.push(infonum & 0xff);
                 vv.push(0);           //寄存器数目 2字节  
-                vv.push(7);
-                vv.push(14);           //字节数目长度  1字节
+                vv.push(8);
+                vv.push(16);           //字节数目长度  1字节
 
+                vv.push(y1 >> 8 & 0xff)   //年
+                vv.push(y1 & 0xff);
 
+                vv.push(0);
+                vv.push(3);             //星期
+                vv.push(m1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(m1 & 0xff);
 
-                vv.push(s1 >> 8 & 0xff)   //寄存器变量值
-                vv.push(s1 & 0xff);
-
-                vv.push(mm1 >> 8 & 0xff)   //寄存器变量值
-                vv.push(mm1 & 0xff);
-
-                vv.push(h1 >> 8 & 0xff)   //寄存器变量值
-                vv.push(h1 & 0xff);
 
 
                 vv.push(d1 >> 8 & 0xff)   //寄存器变量值
                 vv.push(d1 & 0xff);
 
-                vv.push(m1 >> 8 & 0xff)   //寄存器变量值
-                vv.push(m1 & 0xff);
+                vv.push(h1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(h1 & 0xff);
+                vv.push(mm1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(mm1 & 0xff);
+
+
+                vv.push(s1 >> 8 & 0xff)   //寄存器变量值
+                vv.push(s1 & 0xff);
 
                 vv.push(0);
                 vv.push(1);
 
 
-                vv.push(y1 >> 8 & 0xff)   //寄存器变量值
-                vv.push(y1 & 0xff);
+
+
+
+
+
+
+
+
+
+
 
                 var data = buicode2(vv);
                 console.log(data);

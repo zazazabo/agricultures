@@ -566,7 +566,7 @@
         <div class="wraper"> 
             <div class="bodyLeft" style="background: rgb(14, 98, 199) none repeat scroll 0% 0%;">
                 <div class="bodyLeftTop listdisplayNone" style="background:#5cb75c ">
-                    <span  style="width:80px;margin-left:0px;"><img src="img/jdkj.png" style=" width: 120px;"><label name="xxx" id="275" style=" color: black;">智慧农业生产管理控制系统</label></span>
+                    <span  style="width:80px;margin-left:0px;"><img src="img/jdkj.png" style=" width: 120px;"><label  style=" color: black;">智慧农业生产管理控制系统</label></span>
                 </div>
 
                 <ul class="layui-nav layui-nav-tree  MenuBox " >

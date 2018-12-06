@@ -87,4 +87,20 @@
 
        
     </xform>
+        <xform desc="回路方案" id="planForm">
+            
+     <xhandle desc="添加回路场景方案" id="addSensorScenePlan" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="pid,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name" tpe="DDL" tpl="insert into t_plan(pid,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name) values(':pid',:p_attr,:p_type,':p_scene1',':p_scene2',':p_scene3',':p_scene4',':p_scene5',':p_name') " var="rs"></xsql>
+        </xhandle>
+
+
+       <xhandle desc="修改回路场景方案" id="editSensorScenePlan" rtnype="JSON">
+            <xsql id="a1" para="p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name" tpe="DDL" tpl="update t_plan set p_scene1=':p_scene1',p_scene2=':p_scene2',p_scene3=':p_scene3',p_scene4=':p_scene4',p_scene5=':p_scene5',p_name=':p_name' where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+
+        </xform>
 </xforms>

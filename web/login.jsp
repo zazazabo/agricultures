@@ -509,7 +509,7 @@
                     var name = $("#username").val();
                     var password = hex_md5(pass);
                     var obj = {};
-                    obj.name= name;
+                    obj.name = name;
                     obj.password = password;
                     $.ajax({async: false, url: "login.loginform.loginhand.action", type: "POST", datatype: "JSON", data: obj,
                         success: function (data) {
@@ -517,18 +517,18 @@
                             var arrlist1 = data.rs;
                             if (arrlist1.length > 0) {
                                 var pid = "";
-                                if(arrlist1[0].pid =="" ||arrlist1[0].pid == null){
+                                if (arrlist1[0].pid == "" || arrlist1[0].pid == null) {
                                     pid = "";
-                                }else{
-                                     var pids = arrlist1[0].pid.split(",");   //项目编号
-                                     pid = pids[0];
+                                } else {
+                                    var pids = arrlist1[0].pid.split(",");   //项目编号
+                                    pid = pids[0];
                                 }
-                               console.log(pid);
-                                addlogon(name, "登陆",pid, "登陆", "登陆");
+                                console.log(pid);
+                                addlogon(name, "登陆", pid, "登陆", "登陆");
 
                                 var o1 = arrlist1[0];
                                 o1.role = arrlist1[0].m_code;
-                                 console.log(o1);
+                                console.log(o1);
                                 $.PostSubmitForm('login.main.home.action', arrlist1[0]);
 
 
@@ -542,7 +542,7 @@
                             alert("提交失败！");
                         }
                     });
-                })
+                });
 
                 //打勾记住密码
                 $("#cc").click(function () {
@@ -606,7 +606,7 @@
                     $("#rememberPW").html("记住密码");
                     $("#login").val("登陆");
                     $("#top").html("账号登陆");
-                   setCookie("lang", "zh_CN");
+                    setCookie("lang", "zh_CN");
                 });
                 //切换英文
                 $("#english").click(function () {
@@ -616,8 +616,19 @@
                     $("#top").html("Account login");
                     setCookie("lang", "en_US");
                 });
+               
+               $("#username").focus();
 
             });
+            //回车登录
+            document.onkeydown = function mykeyDown(e) {
+                //compatible IE and firefox because there is not event in firefox
+                e = e || event;
+                if (e.keyCode == 13) {
+                    document.getElementById("login").click(); //调用登录按钮的登录事件
+                }
+            };
+
         </script>
     </head>
     <body>

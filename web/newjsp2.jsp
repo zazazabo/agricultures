@@ -17,45 +17,34 @@
 
 
         <style type="text/css">
-            body{
-                height: 800px;
-            }
+            body {background:url(./img/jdbj.jpg) top center no-repeat; background-size:cover;}
             .top{
                 /*                display: flex;*/
                 justify-content: space-around;
                 align-items: center;
             }
-            /*            .div1{
-                            width: 100%; height: 33%;font-size: 2em;text-align: center;padding-top: 10%;  border: 1px solid red;
-                        }
-                        .div2{
-                            width: 100%; height: 33%; border: 1px solid blue;
-                        }
-                        .div3{
-                            width: 100%; height: 30%;text-align: center;padding-top: 10%;font-size: 1.7em; border: 1px solid yellow;
-                        }*/
             .div1{
-                width: 50%; height: 50%;text-align: center;padding-top: 10%; float: left;font-size: 2em;position:relative;
+                width: 50%; height: 128px;text-align: center;padding-top: 10%; float: left;font-size: 2em;position:relative;
             }
             .div2{
-                width: 50%; height: 50%;text-align: center;padding-top: 10%; float: left;font-size: 2em;position:relative;
+                width: 50%; height: 128px;text-align: center;padding-top: 10%; float: left;font-size: 2em;position:relative;
             }
             .div3{
-                width: 30%; height: 50%;text-align: center;padding-top: 10%; float: left;position:relative;
+                width: 30%; height: 128px;text-align: center;padding-top: 10%; float: left;position:relative;
             }
             .div4{
-                width: 70%; height: 50%;text-align: center;padding-top: 10%;float: left;font-size: 2em;position:relative;
+                width: 70%; height:128px;text-align: center;padding-top: 10%;float: left;font-size: 2em;position:relative;
             }
 
             .wd{
-                border: 1px solid black; width: 13%; float: left; height: 80%;   margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60);
+                border: 1px solid black; width: 13%; float: left; height: 256px;   margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60);
             }
 
             .sd{
-                border: 1px solid black; width: 13%; float: left; height: 80%;   background:rgba(255,165,0,0.6); filter:alpha(opacity=60);  margin-left: 3%; margin-top: 2%; 
+                border: 1px solid black; width: 13%; float: left; height: 256px;   background:rgba(255,165,0,0.6); filter:alpha(opacity=60);  margin-left: 3%; margin-top: 2%; 
             }
 
-            .kg{ border: 1px solid black; width: 13%; float: left; height: 80%;    margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60); }
+            .kg{ border: 1px solid black; width: 13%; float: left; height: 256px;    margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60); }
 
             img{ width:100%;height:100%;}
 
@@ -206,47 +195,8 @@
 
 
     </head>
-    <body id="activity_pane" >
-        <img src="./img/jdbj.jpg" style="position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;">
-        <div style=" width: 100%; height: 40%;" class='top' id="parentdiv">
-<!--            <div class="sd">
-                <div class="div1"></div>
-                <div class="div2"></div>
-                <div class="div3"></div>
-                <div class="div4"></div>
-            </div>-->
-            <!--            <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
-                            <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
-                            <div style=" width: 50%; height: 50%; float: left; ">
-                                <img src="./img/wd.png" style="width:100%;height:100%;">
-                            </div>
-                            <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
-                        </div>
-            
-                        <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: powderblue;  margin-left: 4%; margin-top: 2%;  ">
-                            <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">湿度传感器1</div>
-                            <div style=" width: 50%; height: 50%; float: left; ">
-                                <img src="./img/sd.png" style="width:100%;height:100%;">
-                            </div>
-                            <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38%</div>
-                        </div>
-            
-            
-                        <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
-                            <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
-                            <div style=" width: 50%; height: 50%; float: left; ">
-                                <img src="./img/wd.png" style="width:100%;height:100%;">
-                            </div>
-                            <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
-                        </div>
-            
-                        <div style=" border: 1px solid black; width: 20%; float: left; height: 80%; background-color: yellowgreen;  margin-left: 4%; margin-top: 2%;  ">
-                            <div style=" width: 100%; height: 50%;font-size: 2em;text-align: center;padding-top: 10%;">温度传感器2</div>
-                            <div style=" width: 50%; height: 50%; float: left; ">
-                                <img src="./img/wd.png" style="width:100%;height:100%;">
-                            </div>
-                            <div style=" width: 50%; height: 50%; float: left;text-align: center;padding-top: 10%;font-size: 2em;">38℃</div>
-                        </div>-->
+    <body id="activity_pane">
+        <div style=" width: 100%;" class='top' id="parentdiv">
         </div>
     </body>
 </html>

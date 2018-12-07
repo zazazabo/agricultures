@@ -324,6 +324,7 @@
                 }
                 console.log(obj);
             }
+            
             function readSensor() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var o = $("#form1").serializeObject();
@@ -696,6 +697,7 @@
                     var e = $(d).attr("id");
                     $(d).html(langs1[e][lang]);
                 }
+                
                 $("#l_comaddr2").combobox({
                     url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
                     formatter: function (row) {

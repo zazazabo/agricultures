@@ -42,144 +42,371 @@
                 return false;
             }
             function editsubmit() {
+
                 var obj = $("#form2").serializeObject();
-                obj.p_Longitude = obj.longitudem26d + "." + obj.longitudem26m + "." + obj.longitudem26s;
-                obj.p_latitude = obj.latitudem26d + "." + obj.latitudem26m + "." + obj.latitudem26s;
-                var url = "";
+
+
                 if (obj.p_type == "0") {
-                    url = "loop.planForm.editlooptime.action";
-                }
-                if (obj.p_type == "1") {
-                    url = "loop.planForm.editloopjw.action";
-                }
-
-                $.ajax({async: false, url: url, type: "get", datatype: "JSON", data: obj,
-                    success: function (data) {
-                        var arrlist = data.rs;
-                        if (arrlist.length == 1) {
-                            addlogon(u_name, "修改", o_pid, "回路策略", "修改回路方案");
-                            var url = "loop.planForm.getLoopPlan.action";
-                            var obj1 = {p_type: obj.p_type, pid: "${param.pid}"};
-                            var opt = {url: url, silent: true, query: obj1};
-                            $("#table_loop").bootstrapTable('refresh', opt);
+                    for (var i = 0; i < 5; i++) {
+                        var ptimeval = "timeval" + (i + 1).toString();
+                        var ptime = "time" + (i + 1).toString();
+                        var timeval = obj[ptimeval];
+                        var time = obj[ptime];
+                        if (isNumber(timeval) == false) {
+                            layerAler("控制值是一个数字 ");
+                            return false;
                         }
-                    },
-                    error: function () {
-                        alert("提交失败！");
+
+                        var obj1 = {"time": time, "value": parseInt(timeval)};
+                        var str = "p_time" + (i + 1).toString();
+                        obj[str] = JSON.stringify(obj1);
                     }
-                });
-            }
-
-            function editloopplan() {
-                var selects = $('#table_loop').bootstrapTable('getSelections');
-                if (selects.length == 0) {
-                    layerAler(langs1[73][lang]);//请选择表格数据
-                    return false;
-                } else if (selects.length > 1) {
-                    layerAler(langs1[74][lang]); //只能编辑单行数据
-                    return false;
-                }
-
-
-                $("#p_type_").combobox('readonly', true);
-
-//
-                var select = selects[0];
-                console.log(select);
-                $("#p_name_").val(select.p_name);
-                $('#p_intime_').timespinner('setValue', select.p_intime);
-                $('#p_outtime_').timespinner('setValue', select.p_outtime);
-                $("#hidden_id").val(select.id);
-                if (select.p_type == "0") {
-                    $("#tr_time_hide").show();
-                    $("#tr_scene_hide").hide();
-                    $('#p_type_').combobox('select', '0');
-
-                } else if (select.p_type == "1") {
-                    $("#tr_time_hide").hide();
-                    $("#tr_scene_hide").show();
-                    $('#p_type_').combobox('select', "1");
-                    var long = select.p_Longitude;
-                    var lati = select.p_latitude;
-                    var l1 = long.split(".");
-                    var l2 = lati.split(".");
-                    $("#longitudem26d_").val(l1[0]);
-                    $("#longitudem26m_").val(l1[1]);
-                    $("#longitudem26s_").val(l1[2]);
-
-                    $("#latitudem26d_").val(l2[0]);
-                    $("#latitudem26m_").val(l2[1]);
-                    $("#latitudem26s_").val(l2[2]);
-
-
-                }
-                $('#dialog-edit').dialog('open');
-                return false;
-//                $("#modal_plan_loop").modal();
-
-            }
-
-            function deleteloopplan() {
-                var selects = $('#table_loop').bootstrapTable('getSelections');
-                for (var i = 0; i < selects.length; i++) {
-                    var select = selects[i];
-                    var code = select.p_code;
-                    $.ajax({async: false, url: "loop.planForm.deleteloop.action", type: "get", datatype: "JSON", data: {id: select.id},
+                    var ret = false;
+                    $.ajax({async: false, url: "loop.planForm.editLoopTimePlan.action", type: "get", datatype: "JSON", data: obj,
                         success: function (data) {
                             var arrlist = data.rs;
                             if (arrlist.length == 1) {
-                                addlogon(u_name, "删除", o_pid, "回路策略", "删除回路方案");
-                                $('#table_loop').bootstrapTable('refresh');
-                            }
+                                var tables = $(".bootstrap-table");
+                                for (var i = 0; i < tables.length; i++) {
+                                    $(tables[i]).hide();
+                                }
+                                var index = parseInt(obj.p_type);
+                                $(tables[index]).show();
+                                $("#table" + obj.p_type).bootstrapTable('refresh');
 
+
+                                ret = true;
+                            }
                         },
                         error: function () {
                             alert("提交失败！");
                         }
                     });
                 }
+                if (obj.p_type == 1) {
+                    for (var i = 0; i < 5; i++) {
+                        var pscene = "scen" + (i + 1).toString();
+                        var pval = "val" + (i + 1).toString();
+                        var scene = obj[pscene];
+                        var val = obj[pval];
+                        if (isNumber(val) == false || isNumber(scene) == false) {
+                            layerAler("场景与控制值是数字类型 ");
+                            return false;
+                        }
+
+                        var obj1 = {"scene": parseInt(scene), "value": parseInt(val)};
+                        var str = "p_scene" + (i + 1).toString();
+                        obj[str] = JSON.stringify(obj1);
+                    }
+
+                    obj.pid = obj.pid;
+                    var ret = false;
+                    $.ajax({async: false, url: "loop.planForm.editLoopScenePlan.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+                                var tables = $(".bootstrap-table");
+                                for (var i = 0; i < tables.length; i++) {
+                                    $(tables[i]).hide();
+                                }
+                                var index = parseInt(obj.p_type);
+                                $(tables[index]).show();
+                                $("#table" + obj.p_type).bootstrapTable('refresh');
+                                ret = true;
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                } else if (obj.p_type == 2) {
+                    for (var i = 0; i < 4; i++) {
+                        var pinfo = "info" + (i + 1).toString();
+                        var pinfoval = "infoval" + (i + 1).toString();
+                        var info = obj[pinfo];
+                        var val = obj[pinfoval];
+                        if (isNumber(info) == false || isNumber(val) == false) {
+                            layerAler("信息点与控制值是数字类型 ");
+                            return false;
+                        }
+
+                        var obj1 = {"info": parseInt(info), "value": parseInt(val)};
+                        var str = "p_info" + (i + 1).toString();
+                        obj[str] = JSON.stringify(obj1);
+                    }
+                    var obj2 = {"num": parseInt(obj.infonum), "offset": parseInt(obj.offset)};
+                    obj.p_info = JSON.stringify(obj2);
+                    
+                    var ret = false;
+                    $.ajax({async: false, url: "loop.planForm.editLoopInfoPlan.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+                                var tables = $(".bootstrap-table");
+                                for (var i = 0; i < tables.length; i++) {
+                                    $(tables[i]).hide();
+                                }
+                                var index = parseInt(obj.p_type);
+                                $(tables[index]).show();
+                                $("#table" + obj.p_type).bootstrapTable('refresh');
+                                ret = true;
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                }
+                return false;
+            }
+
+            function editloopplan() {
+                var v = $(".bootstrap-table");
+                var v0 = $(v[0]).css('display');
+                var v1 = $(v[1]).css('display');
+                var v2 = $(v[2]).css('display');
+                var b = "";
+                if (v0 == "block") {
+                    b = "#table0";
+                }
+                if (v1 == "block") {
+                    b = "#table1";
+                }
+                if (v2 == "block") {
+                    b = "#table2";
+                }
+                var selects = $(b).bootstrapTable('getSelections');
+                if (selects.length == 0) {
+                    layerAler('请选择表格数据');  //请选择表格数据
+                    return false;
+                } else if (selects.length > 1) {
+                    layerAler('只能编辑单行数据');  //只能编辑单行数据
+                    return false;
+                }
+                var select = selects[0];
+                var code = select.p_code;
+                $("#hidden_id").val(select.id);
+                $("#p_type2").combobox('readonly', true);
+                $("#p_type2").combobox('select', select.p_type);
+
+                if (select.p_type == "0") {
+                    console.log('时间方式');
+                    var obj1 = eval('(' + select.p_time1 + ')');
+                    var obj2 = eval('(' + select.p_time2 + ')');
+                    var obj3 = eval('(' + select.p_time3 + ')');
+                    var obj4 = eval('(' + select.p_time4 + ')');
+                    var obj5 = eval('(' + select.p_time5 + ')');
+
+                    var ooo = [obj1, obj2, obj3, obj4, obj5];
+                    $("#p_name1").val(select.p_name);
+                    for (var i = 0; i < ooo.length; i++) {
+                        var istr = (i + 1).toString();
+                        var time = "#time" + istr + istr;
+                        var val = "#timeval" + istr + istr;
+                        $(time).timespinner('setValue', ooo[i].time);
+                        $(val).val(ooo[i].value);
+                    }
+
+
+                } else if (select.p_type == "1") {
+                    var obj1 = eval('(' + select.p_scene1 + ')');
+                    var obj2 = eval('(' + select.p_scene2 + ')');
+                    var obj3 = eval('(' + select.p_scene3 + ')');
+                    var obj4 = eval('(' + select.p_scene4 + ')');
+                    var obj5 = eval('(' + select.p_scene5 + ')');
+
+                    var ooo = [obj1, obj2, obj3, obj4, obj5];
+                    $("#p_name1").val(select.p_name);
+                    for (var i = 0; i < ooo.length; i++) {
+                        var istr = (i + 1).toString();
+                        var scene = "#scen" + istr + istr;
+                        var val = "#val" + istr + istr;
+                        $(scene).val(ooo[i].scene);
+                        $(val).val(ooo[i].value);
+                    }
+                } else if (select.p_type == "2") {
+                    var obj1 = eval('(' + select.p_info1 + ')');
+                    var obj2 = eval('(' + select.p_info2 + ')');
+                    var obj3 = eval('(' + select.p_info3 + ')');
+                    var obj4 = eval('(' + select.p_info4 + ')');
+                    var obj5 = eval('(' + select.p_info + ')');
+//
+                    var ooo = [obj1, obj2, obj3, obj4];
+                    $("#p_name1").val(select.p_name);
+                    for (var i = 0; i < ooo.length; i++) {
+                        var istr = (i + 1).toString();
+                        var info = "#info" + istr + istr;
+                        var val = "#infoval" + istr + istr;
+                        $(info).val(ooo[i].info);
+                        $(val).val(ooo[i].value);
+                    }
+                    $("#infonum1").combobox('setValue', obj5.num);
+                    $("#offset1").val(obj5.offset);
+
+                }
+
+
+
+                $('#dialog-edit').dialog('open');
+                return false;
+
+            }
+
+            function deleteloopplan() {
+                var v = $(".bootstrap-table");
+                var v0 = $(v[0]).css('display');
+                var v1 = $(v[1]).css('display');
+                var v2 = $(v[2]).css('display');
+                var b = "";
+                if (v0 == "block") {
+                    b = "#table0";
+                }
+                if (v1 == "block") {
+                    b = "#table1";
+                }
+                if (v2 == "block") {
+                    b = "#table2";
+                }
+                var selects = $(b).bootstrapTable('getSelections');
+
+                layer.confirm('您确定要删除吗？', {//您确定要删除吗？
+                    btn: ['确定', '取消按钮'], //确定、取消按钮
+                    icon: 3,
+                    offset: 'center',
+                    title: '提示'   //提示
+                }, function (index) {
+                    addlogon(u_name, "删除", o_pid, "策略", "删除回路方案");
+                    for (var i = 0; i < selects.length; i++) {
+                        var select = selects[i];
+                        $.ajax({async: false, url: "loop.planForm.deletePlan.action", type: "get", datatype: "JSON", data: {id: select.id},
+                            success: function (data) {
+                                var arrlist = data.rs;
+                                if (arrlist.length == 1) {
+                                    $(b).bootstrapTable('refresh');
+                                }
+
+                            },
+                            error: function () {
+                                alert("提交失败！");
+                            }
+                        });
+                    }
+                    layer.close(index);
+                });
+
             }
 
             function checkPlanLoopAdd() {
                 var obj = $("#formadd").serializeObject();
-                obj.p_Longitude = obj.longitudem26m + "." + obj.longitudem26s + "." + obj.latitudem26d;
-                obj.p_latitude = obj.latitudem26d + "." + obj.latitudem26m + "." + obj.latitudem26s;
-                var url = "";
-                if (obj.p_type == 1) {
-
-                    if (obj.longitudem26m == "" || obj.longitudem26s == "" || obj.latitudem26d == "") {
-                        layerAler("经度不能为空");
-                        return;
-                    }
-
-                    if (obj.latitudem26d == "" || obj.latitudem26m == "" || obj.latitudem26s == "") {
-                        layerAler("纬度不能为空");
-                        return;
-                    }
-                    url = "loop.planForm.addloopjw.action";
-                }
-                if (obj.p_type == 0) {
-                    if (obj.p_intime == "" || obj.p_outtime == "") {
-                        layerAler("断开和闭合时间不能为空");
-                        return false;
-                    }
-                    url = "loop.planForm.addlooptime.action";
-                }
-                console.log("表单对象", obj);
+                var a = {};
                 var ret = false;
-                addlogon(u_name, "添加", o_pid, "回路策略", "添加回路方案");
-                $.ajax({async: false, url: url, type: "get", datatype: "JSON", data: obj,
-                    success: function (data) {
-                        var arrlist = data.rs;
-                        if (arrlist.length == 1) {
-                            ret = false;
+                if (obj.p_type == "0") {
+                    for (var i = 0; i < 5; i++) {
+                        var ptimeval = "timeval" + (i + 1).toString();
+                        var ptime = "time" + (i + 1).toString();
+                        var timeval = obj[ptimeval];
+                        var time = obj[ptime];
+                        if (isNumber(timeval) == false) {
+                            layerAler("控制值是一个数字 ");
+                            return false;
                         }
-                    },
-                    error: function () {
-                        alert("提交失败！");
+
+                        var obj1 = {"time": time, "value": parseInt(timeval)};
+                        var str = "p_time" + (i + 1).toString();
+                        a[str] = JSON.stringify(obj1);
                     }
-                });
-//                return ret;
+
+                    a.p_type = 0;
+                    a.p_attr = 0;
+                    a.pid = obj.pid;
+                    a.p_name = obj.p_name;
+                    console.log(a);
+                    var ret = false;
+                    $.ajax({async: false, url: "loop.planForm.addLoopTimePlan.action", type: "get", datatype: "JSON", data: a,
+                        success: function (data) {
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+                                ret = true;
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                } else if (obj.p_type == "1") {
+                    for (var i = 0; i < 5; i++) {
+                        var pscene = "scen" + (i + 1).toString();
+                        var pval = "val" + (i + 1).toString();
+                        var scene = obj[pscene];
+                        var val = obj[pval];
+                        if (isNumber(val) == false || isNumber(scene) == false) {
+                            layerAler("场景与控制值是数字类型 ");
+                            return false;
+                        }
+
+                        var obj1 = {"scene": parseInt(scene), "value": parseInt(val)};
+                        var str = "p_scene" + (i + 1).toString();
+                        a[str] = JSON.stringify(obj1);
+                    }
+
+                    a.p_type = 1;
+                    a.p_attr = 0;
+                    a.pid = obj.pid;
+                    console.log(a);
+                    var ret = false;
+                    $.ajax({async: false, url: "loop.planForm.addLoopScenePlan.action", type: "get", datatype: "JSON", data: a,
+                        success: function (data) {
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+                                ret = true;
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
+
+                } else if (obj.p_type == "2") {
+
+
+                    for (var i = 0; i < 4; i++) {
+                        var pinfo = "info" + (i + 1).toString();
+                        var pinfoval = "infoval" + (i + 1).toString();
+                        var info = obj[pinfo];
+                        var val = obj[pinfoval];
+                        if (isNumber(info) == false || isNumber(val) == false) {
+                            layerAler("信息点与控制值是数字类型 ");
+                            return false;
+                        }
+
+                        var obj1 = {"info": parseInt(info), "value": parseInt(val)};
+                        var str = "p_info" + (i + 1).toString();
+                        a[str] = JSON.stringify(obj1);
+                    }
+
+                    var obj2 = {"num": parseInt(obj.infonum), "offset": parseInt(obj.offset)};
+                    a.p_info = JSON.stringify(obj2);
+
+                    a.p_type = 2;
+                    a.p_attr = 0;
+                    a.pid = obj.pid;
+                    a.p_name=obj.p_name;
+                    console.log(a);
+                    var ret = false;
+                    $.ajax({async: false, url: "loop.planForm.addLoopInfoPlan.action", type: "get", datatype: "JSON", data: a,
+                        success: function (data) {
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+                                ret = true;
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                }
+                return  ret;
             }
 
             $(function () {
@@ -192,6 +419,8 @@
                 $("#add").attr("disabled", true);
                 $("#update").attr("disabled", true);
                 $("#del").attr("disabled", true);
+
+
                 var obj = {};
                 obj.code = ${param.m_parent};
                 obj.roletype = ${param.role};
@@ -221,12 +450,11 @@
                 });
 
 
-
                 $("#dialog-add").dialog({
                     autoOpen: false,
                     modal: true,
                     width: 600,
-                    height: 450,
+                    height: 350,
                     position: ["top", "top"],
                     buttons: {
                         添加: function () {
@@ -241,10 +469,11 @@
                     autoOpen: false,
                     modal: true,
                     width: 600,
-                    height: 250,
+                    height: 350,
                     position: "top",
                     buttons: {
                         修改: function () {
+
                             editsubmit();
                             //$(this).dialog("close");
                         }, 关闭: function () {
@@ -254,132 +483,323 @@
                 });
 
 
+                for (var i = 0; i < 5; i++) {
+                    var ii = "#time" + (i + 1).toString();
+                    $(ii).timespinner('setValue', '00:00');
+                }
 
-
-
-
-
-//                $('#intime').timespinner('setValue', '00:00');
-//                $('#outtime').timespinner('setValue', '23:00');
-
-
-                $("#scenetype").hide();
-
+                $("#scentable").hide();
+                $("#infotable").hide();
                 $('#p_type').combobox({
                     onSelect: function (record) {
                         if (record.value == "0") {
-                            $("#tr_scene_hide_add").hide();
-                            $("#tr_time_hide_add").show();
+                            $("#scentable").hide();
+                            $("#infotable").hide();
+                            $("#timetable").show();
                         }
                         if (record.value == "1")
                         {
-                            $("#tr_scene_hide_add").show();
-                            $("#tr_time_hide_add").hide();
+                            $("#scentable").show();
+                            $("#infotable").hide();
+                            $("#timetable").hide();
+                        } else if (record.value == "2") {
+                            $("#scentable").hide();
+                            $("#timetable").hide();
+                            $("#infotable").show();
+                            console.log("aaaaaaaaaaaa");
+
                         }
-                        console.log(record);
+                    }
+                });
+
+                $('#p_type2').combobox({
+                    onSelect: function (record) {
+                        if (record.value == "0") {
+                            $("#scentable1").hide();
+                            $("#infotable1").hide();
+                            $("#timetable1").show();
+                        }
+                        if (record.value == "1")
+                        {
+                            $("#scentable1").show();
+                            $("#infotable1").hide();
+                            $("#timetable1").hide();
+                        } else if (record.value == "2") {
+                            $("#scentable1").hide();
+                            $("#timetable1").hide();
+                            $("#infotable1").show();
+
+                        }
                     }
                 });
 
 
-                $("#p_type_query").combobox({
-                    onSelect: function (record) {
-                        var url = "loop.planForm.getLoopPlan.action";
-                        var obj = {p_type: record.value};
-                        var opt = {
-                            url: url,
-                            silent: true,
-                            query: obj
-                        };
-
-                        $("#table_loop").bootstrapTable('refresh', opt);
 
 
-//                        if (record.value == "0") {
-//                            $("#table_loop").bootstrapTable('hideColumn', 'p_Longitude');
-//                            $("#table_loop").bootstrapTable('hideColumn', 'p_latitude');
-//                            $("#table_loop").bootstrapTable('showColumn', 'p_outtime');
-//                            $("#table_loop").bootstrapTable('showColumn', 'p_intime');
-//                        }
-//                        if (record.value == "1")
-//                        {
-//                            $("#table_loop").bootstrapTable('hideColumn', 'p_outtime');
-//                            $("#table_loop").bootstrapTable('hideColumn', 'p_intime');
-//
-//                            $("#table_loop").bootstrapTable('showColumn', 'p_Longitude');
-//                            $("#table_loop").bootstrapTable('showColumn', 'p_latitude');
-//                        }
-//                        console.log(record);
-                    }
-                })
-                $("#p_type_query").combobox('select', '0');
-                var p_type = $("#p_type_query").combobox('getValue');
-//                console.log(p_type);
-                var url = "loop.planForm.getLoopPlan.action";
-                $('#table_loop').bootstrapTable({
-                    url: url,
+
+
+                $('#table0').bootstrapTable({
+                    url: 'loop.planForm.getPlanList.action',
                     clickToSelect: true,
                     columns: [
-                        {
-                            title: '单选',
-                            field: 'select',
-                            //复选框
-                            checkbox: true,
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: 'p_name',
-                            title: langs1[69][lang], //方案名称
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: 'p_code',
-                            title: langs1[70][lang], //方案编号
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: 'p_intime',
-                            title: langs1[71][lang], //闭合时间
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: 'p_outtime',
-                            title: langs1[72][lang], //断开时间
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        },
-//                        {
-//                            field: 'p_Longitude',
-//                            title: '经度',
-//                            width: 25,
-//                            align: 'center',
-//                            valign: 'middle'
-//                        }, {
-//                            field: 'p_latitude',
-//                            title: '纬度',
-//                            width: 25,
-//                            align: 'center',
-//                            valign: 'middle'
-//                        }
-                        {
-                            field: 'p_attr',
-                            title: langs1[68][lang], //方案类型
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle',
-                            formatter: function (value, row, index, field) {
-                                if (row.p_type == "0") {
-                                    return "时间方案";
-                                } else if (row.p_type == "1") {
-                                    return "经纬度方案";
-                                }
+                        [
+                            {
+                                title: '单选',
+                                field: 'select',
+                                //复选框
+                                checkbox: true,
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+
+                            },
+                            {
+                                field: 'p_name',
+                                title: '方案名称', //方案名称
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+                            },
+                            {
+                                field: 'p_code',
+                                title: '方案编码', //方案编码
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+                            },
+                            {
+                                field: 'p_time',
+                                title: '时间一', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_time',
+                                title: '时间二', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_time',
+                                title: '时间三', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_time',
+                                title: '时间四', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_time',
+                                title: '时间五', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
 
                             }
-                        }],
+                        ], [
+                            {
+                                field: 'p_time1',
+                                title: '时间', //时间
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.time;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val1',
+                                title: '控制值', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_time1)) {
+                                        var obj = eval('(' + row.p_time1 + ')');
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+
+
+                                    }
+
+                                }
+
+                            }, {
+                                field: 'p_time2',
+                                title: '时间', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.time;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val2',
+                                title: '控制值', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_time2)) {
+                                        var obj = eval('(' + row.p_time2 + ')');
+
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }, {
+                                field: 'p_time3',
+                                title: '时间', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.time;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val3',
+                                title: '控制值', //调光
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_time3)) {
+                                        var obj = eval('(' + row.p_time3 + ')');
+
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }, {
+                                field: 'p_time4',
+                                title: '时间', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.time;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val4',
+                                title: '控制值', //调光控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_time4)) {
+                                        var obj = eval('(' + row.p_time4 + ')');
+
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }, {
+                                field: 'p_time5',
+                                title: '时间', //时间
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.time;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val5',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_time5)) {
+                                        var obj = eval('(' + row.p_time5 + ')');
+
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        ]
+                    ],
                     singleSelect: false,
                     sortName: 'id',
                     locale: 'zh-CN', //中文支持,
@@ -402,14 +822,635 @@
                             search: params.search,
                             skip: params.offset,
                             limit: params.limit,
-                            type_id: "1",
                             p_attr: "0",
-                            p_type: p_type,
-                            pid: "${param.pid}"
+                            p_type: "0",
+                            type_id: "1",
+                            pid: "${param.pid}"   
                         };      
                         return temp;  
                     },
                 });
+
+
+
+                $('#table1').bootstrapTable({
+                    url: 'loop.planForm.getPlanList.action',
+                    clickToSelect: true,
+                    columns: [
+                        [
+                            {
+                                title: '单选',
+                                field: 'select',
+                                //复选框
+                                checkbox: true,
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+
+                            },
+                            {
+                                field: 'p_name',
+                                title: '方案名称', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+                            },
+                            {
+                                field: 'p_code',
+                                title: '方案编号', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+                            },
+                            {
+                                field: 'p_scene',
+                                title: '场景一', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_scene',
+                                title: '场景二', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_scene',
+                                title: '场景三', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_scene',
+                                title: '场景四', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_scene',
+                                title: '场景五', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            }
+                        ], [
+                            {
+                                field: 'p_scene1',
+                                title: '场景号', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+
+                                        return obj.scene;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val1',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_scene1)) {
+                                        var obj = eval('(' + row.p_scene1 + ')');
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+
+
+                                    }
+
+                                }
+
+                            }, {
+                                field: 'p_scene2',
+                                title: '场景号', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.scene;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val2',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_scene2)) {
+                                        var obj = eval('(' + row.p_scene2 + ')');
+
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }, {
+                                field: 'p_scene3',
+                                title: '场景号', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.scene;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val3',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_scene3)) {
+                                        var obj = eval('(' + row.p_scene3 + ')');
+
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }, {
+
+                                field: 'p_scene4',
+                                title: '场景号', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.scene;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val4',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_scene4)) {
+                                        var obj = eval('(' + row.p_scene4 + ')');
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }, {
+                                field: 'p_scene5',
+                                title: '场景号', //场景号
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.scene;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val5',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_scene5)) {
+                                        var obj = eval('(' + row.p_scene5 + ')');
+
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }
+                        ]
+                    ],
+                    singleSelect: false,
+                    sortName: 'id',
+                    locale: 'zh-CN', //中文支持,
+                    showColumns: true,
+                    sortOrder: 'desc',
+                    pagination: true,
+                    sidePagination: 'server',
+                    pageNumber: 1,
+                    pageSize: 5,
+                    showRefresh: true,
+                    showToggle: true,
+                    // 设置默认分页为 50
+                    pageList: [5, 10, 15, 20, 25],
+                    onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
+//                        console.info("加载成功");
+                    },
+                    //服务器url
+                    queryParams: function (params)  {   //配置参数     
+                        var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
+                            search: params.search,
+                            skip: params.offset,
+                            limit: params.limit,
+                            p_attr: 0,
+                            p_type: 1,
+                            type_id: "1",
+                            pid: "${param.pid}"  
+                        };      
+                        return temp;  
+                    },
+                });
+
+
+                $('#table2').bootstrapTable({
+                    url: 'loop.planForm.getPlanList.action',
+                    clickToSelect: true,
+                    columns: [
+                        [
+                            {
+                                title: '单选',
+                                field: 'select',
+                                //复选框
+                                checkbox: true,
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+
+                            },
+                            {
+                                field: 'p_name',
+                                title: '方案名称', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+                            },
+                            {
+                                field: 'p_code',
+                                title: '方案编号', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                rowspan: 2,
+                                colspan: 1
+                            },
+                            {
+                                field: 'p_infonum',
+                                title: '信息点号', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_infonum',
+                                title: '一', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_infonum',
+                                title: '二', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_infonum',
+                                title: '三', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            },
+                            {
+                                field: 'p_infonum',
+                                title: '四', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 2,
+                                rowspan: 1
+
+                            }
+                        ], [
+                            {
+                                field: 'p_info',
+                                title: '信息点', //场景号
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    if (isJSON(value)) {
+
+                                        var obj = eval('(' + value + ')');
+                                        return obj.num.toString();
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_info',
+                                title: '偏差值', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        if (obj.offset != null) {
+                                            return obj.offset.toString();
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                field: 'p_info1',
+                                title: '数值', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.info;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val1',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_info1)) {
+                                        var obj = eval('(' + row.p_info1 + ')');
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+
+                            }, {
+                                field: 'p_info2',
+                                title: '数值', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.info;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val2',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_info2)) {
+                                        var obj = eval('(' + row.p_info2 + ')');
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }, {
+                                field: 'p_info3',
+                                title: '数值', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.info;
+                                    }
+
+                                }
+                            },
+                            {
+                                field: 'p_val3',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_info3)) {
+                                        var obj = eval('(' + row.p_info3 + ')');
+
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }, {
+
+                                field: 'p_info4',
+                                title: '数值', //
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    if (isJSON(value)) {
+                                        var obj = eval('(' + value + ')');
+                                        return obj.info;
+                                    }
+                                }
+                            },
+                            {
+                                field: 'p_val4',
+                                title: '控制值', //调光控制控制值
+                                width: 25,
+                                align: 'center',
+                                valign: 'middle',
+                                colspan: 1,
+                                formatter: function (value, row, index, field) {
+                                    // console.log(row);
+                                    if (isJSON(row.p_info4)) {
+                                        var obj = eval('(' + row.p_info4 + ')');
+                                        if (obj.value != null) {
+                                            return obj.value.toString();
+                                        }
+                                    }
+
+                                }
+                            }
+                        ]
+                    ],
+                    singleSelect: false,
+                    sortName: 'id',
+                    locale: 'zh-CN', //中文支持,
+                    showColumns: true,
+                    sortOrder: 'desc',
+                    pagination: true,
+                    sidePagination: 'server',
+                    pageNumber: 1,
+                    pageSize: 5,
+                    showRefresh: true,
+                    showToggle: true,
+                    // 设置默认分页为 50
+                    pageList: [5, 10, 15, 20, 25],
+                    onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
+//                        console.info("加载成功");
+                    },
+                    //服务器url
+                    queryParams: function (params)  {   //配置参数     
+                        var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
+                            search: params.search,
+                            skip: params.offset,
+                            limit: params.limit,
+                            p_attr: 0,
+                            p_type: 2,
+                            type_id: "1",
+                            pid: "${param.pid}"  
+                        };      
+                        return temp;  
+                    },
+                });
+
+
+                var tables = $(".bootstrap-table");
+                for (var i = 0; i < tables.length; i++) {
+                    $(tables[i]).hide();
+                    if (i == 0) {
+                        $(tables[i]).show();
+                    }
+                }
+
+
+                $.ajax({async: false, url: "sensor.sensorform.getInfoNumList.action", type: "get", datatype: "JSON", data: {},
+                    success: function (data) {
+                        $("#infonum").combobox('loadData', data);
+                        $("#infonum1").combobox('loadData', data);
+//                        console.log(data);
+
+//                        for (var i = 0; i < 5; i++) {
+//                            var str = (i + 1).toString();
+//                            $("#info" + str).combobox('loadData', data);
+//                            $("#info" + str + str).combobox('loadData', data);
+//                        }
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+
+
+
+                $("#p_type_query").combobox({
+                    onSelect: function (record) {
+                        var v = $(".bootstrap-table");
+                        for (var i = 0; i < v.length; i++) {
+                            $(v[i]).hide();
+                        }
+                        var index = parseInt(record.value);
+                        console.log(index);
+                        $(v[index]).show();
+
+                    }
+                })
             })
 
         </script>
@@ -423,55 +1464,46 @@
             <button class="btn btn-success ctrol" onclick="showDialog()" data-toggle="modal" data-target="#modal_add22" id="add" >
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
                 <!--添加-->
-                <span id="65" name="xxx">添加</span>
+                <span >添加</span>
             </button>
             <button class="btn btn-primary ctrol" type="button"   onclick="editloopplan();" id="update" >
                 <span class="glyphicon glyphicon-pencil"></span>&nbsp;
                 <!--编辑-->
-                <span id="66" name="xxx">编辑</span>
+                <span >编辑</span>
             </button>
             <button class="btn btn-danger ctrol" onclick="deleteloopplan();" id="del">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;
                 <!--删除-->
-                <span id="67" name="xxx">删除</span>
+                <span >删除</span>
             </button>
 
             <span style="margin-left:20px;">
                 <!--方案类型-->
-                <span id="68" name="xxx">方案类型</span>
+                <span >方案类型</span>
                 &nbsp;</span>
             <span class="menuBox">
 
                 <select class="easyui-combobox" data-options="editable:false" id="p_type_query" name="p_type_query" style="width:150px; height: 30px">
                     <option value="0"> 时间</option>
-                    <!--<option value="1">经纬度</option>-->           
+                    <option value="1">场景</option>    
+                    <option value="2">信息点</option>  
                 </select>
-
-                <!--                <select name="p_type_query" id="p_type_query" class="input-sm" style="width:150px;">
-                                    <option value="0">时间</option>
-                                    <option value="1">经纬度</option>
-                                </select>-->
             </span>  
 
         </div>
+
+        <div class="clearfix"></div>
         <!--        <div class="bootstrap-table">
                     <div class="fixed-table-container" style="height: 350px; padding-bottom: 0px;">-->
-        <table id="table_loop" style="width:100%;" class="text-nowrap table table-hover table-striped">
+        <!--        <table id="table_loop" style="width:100%;" class="text-nowrap table table-hover table-striped">
+                </table> -->
+
+        <table id="table0" style="width:100%; " class="text-nowrap table table-hover table-striped">
         </table> 
-        <!--            </div>
-                </div>-->
-
-
-        <!--</div>-->
-
-
-
-
-        <!-- 添加 -->
-
-
-        <!--修改回路方案-->
-
+        <table id="table1" style="width:100%;" class="text-nowrap table table-hover table-striped">
+        </table>  
+        <table id="table2" style="width:100%; " class="text-nowrap table table-hover table-striped">
+        </table> 
 
         <div id="dialog-add"  class="bodycenter"  style=" display: none" title="回路方案添加">
             <form action="" method="POST" id="formadd" onsubmit="return checkPlanLoopAdd()">      
@@ -502,35 +1534,69 @@
                         </tr>
                     </tbody>
                 </table>
+                <p>
                 <table id="timetable">
                     <tbody>
-
                         <tr >
                             <td>
-                                闭合时间
-                                <span style="margin-left:20px;" >闭合时间</span>&nbsp;
-                                <input id="intime" class="form-control"  name="intime" style="width:150px;display: inline;" placeholder="请输入闭合时间" type="text">
-                                <input id="intime" name="p_intime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
+                                <span style="margin-left:20px;" >&emsp;时间一</span>&nbsp;
+                                <input id="time1" name="time1" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值一</span>&nbsp;
+                                <input id="timeval1" class="form-control"  name="timeval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
-                            <td></td>
                             <td>
-                                断开时间
-                                <span style="margin-left:20px;" >断开时间</span>&nbsp;
-                                <input id="outtime" name="p_outtime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
+
                             </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;时间二</span>&nbsp;
+                                <input id="time2" name="time2" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值二</span>&nbsp;
+                                <input id="timeval2" class="form-control"  name="timeval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
                             </td>
-                        </tr>                                   
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;时间三</span>&nbsp;
+                                <input id="time3" name="time3" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值三</span>&nbsp;
+                                <input id="timeval3" class="form-control"  name="timeval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;时间四</span>&nbsp;
+                                <input id="time4" name="time4" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值四</span>&nbsp;
+                                <input id="timeval4" class="form-control"  name="timeval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;时间五</span>&nbsp;
+                                <input id="time5" name="time5" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值五</span>&nbsp;
+                                <input id="timeval5" class="form-control"  name="timeval5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>                        
+
 
                     </tbody>
                 </table>
-                <table scentable>
+                <table id="scentable" >
                     <tbody>
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景一</span>&nbsp;
                                 <input id="scen1" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />
-                                <span style="margin-left:10px;">值一</span>&nbsp;
-                                <input id="val1" class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="值1" type="text" />
+                                <span style="margin-left:10px;">控制值一</span>&nbsp;
+                                <input id="val1" class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
                             <td>
 
@@ -538,8 +1604,8 @@
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景二</span>&nbsp;
                                 <input id="scen2" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />
-                                <span style="margin-left:10px;"  >值二</span>&nbsp;
-                                <input id="val2" class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="值2" type="text" />
+                                <span style="margin-left:10px;"  >控制值二</span>&nbsp;
+                                <input id="val2" class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
                             </td>
                         </tr>
 
@@ -547,8 +1613,8 @@
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景三</span>&nbsp;
                                 <input id="scen3" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />
-                                <span style="margin-left:10px;">值三</span>&nbsp;
-                                <input id="val3" class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="值3" type="text" />
+                                <span style="margin-left:10px;">控制值三</span>&nbsp;
+                                <input id="val3" class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
                             </td>
                             <td>
 
@@ -556,8 +1622,8 @@
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景四</span>&nbsp;
                                 <input id="scen4" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />
-                                <span style="margin-left:10px;"  >值四</span>&nbsp;
-                                <input id="val4" class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="值4" type="text" />
+                                <span style="margin-left:10px;"  >控制值四</span>&nbsp;
+                                <input id="val4" class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
                             </td>
                         </tr>
 
@@ -565,8 +1631,8 @@
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景五</span>&nbsp;
                                 <input id="scen5" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />
-                                <span style="margin-left:10px;">值五</span>&nbsp;
-                                <input id="val5" class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="值5" type="text" />
+                                <span style="margin-left:10px;">控制值五</span>&nbsp;
+                                <input id="val5" class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
                             </td>
                             <td>
 
@@ -575,80 +1641,278 @@
 
                             </td>
                         </tr>
+                    </tbody>
+                </table>
+                <table id="infotable">
+                    <tbody>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >信息点号</span>&nbsp;
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum" name="infonum" style="width:70px; height: 30px">
+                                </select>
+                                <span style="margin-left:10px;">偏差值</span>&nbsp;
+                                <input id="offset" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info1" name="info1" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info1" name="info1" style="width:70px; height: 30px">
+                                                                     <input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
+                                <input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info2" name="info2" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info2" name="info2" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
+                                <input id="infoval2" class="form-control"  name="infoval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info3" name="info3" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info3" name="info3" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
+                                <input id="infoval3" class="form-control"  name="infoval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info4" name="info4" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info4" name="info4" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
+                                <input id="infoval4" class="form-control"  name="infoval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
+                            </td>
+                        </tr>                      
+
+
+
                     </tbody>
                 </table>
             </form>      
         </div>
 
         <div id="dialog-edit"  class="bodycenter" style=" display: none"  title="回路方案修改">
-            <input type="hidden" name="pid" value="${param.pid}"/>
-            <form action="" method="POST" id="form2" onsubmit="return modifyLoopName()">  
+
+            <form action="" method="POST" id="form2" >  
+                <input type="hidden" name="pid" value="${param.pid}"/>
                 <input type="hidden" id="hidden_id" name="id" />
-                <input type="hidden" id="p_code"  />
                 <table>
                     <tbody>
                         <tr>
                             <td>
                                 <span style="margin-left:20px;">
                                     <!--方案类型-->
-                                    <span id="68" name="xxx">方案类型</span>
+                                    方案类型
                                     &nbsp;</span>
                                 <span class="menuBox">
-
-
-                                    <select class="easyui-combobox" data-options="editable:false" id="p_type_" name="p_type" style="width:150px; height: 34px">
+                                    <select class="easyui-combobox" data-options="editable:false" id="p_type2" name="p_type" style="width:150px; height: 30px">
                                         <option value="0">时间</option>
-                                        <option value="1">经纬度</option>           
+                                        <option value="1">场景</option>     
+                                        <option value="2">信息点</option> 
                                     </select>
-
                                 </span>  
                             </td>
                             <td></td>
                             <td>
                                 <!--方案名称-->
-                                <span style="margin-left:20px;" id="69" name="xxx">方案名称</span>&nbsp;
-                                <input id="p_name_" class="form-control"  name="p_name" style="width:150px;display: inline;" placeholder="请输入方案名" type="text"></td>
+                                <span style="margin-left:20px;" >方案名称</span>&nbsp;
+                                <input id="p_name1" class="form-control"  name="p_name" style="width:150px;display: inline;" placeholder="请输入方案名" type="text"></td>
 
                             </td>
                         </tr>
+                    </tbody>
+                </table>
+                <p>
+                <table id="timetable1">
+                    <tbody>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;时间一</span>&nbsp;
+                                <input id="time11" name="time1" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值一</span>&nbsp;
+                                <input id="timeval11" class="form-control"  name="timeval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
+                            </td>
+                            <td>
 
-                        <tr id="tr_time_hide">
-                            <td>
-                                <span style="margin-left:20px;" id="71" name="xxx"></span>&nbsp;
-                                <!--<input id="intime_edit" class="form-control"  name="intime_edit" style="width:150px;display: inline;" placeholder="请输入闭合时间" type="text">-->
-                                <input id="p_intime_" name="p_intime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
-
                             </td>
-                            <td></td>
                             <td>
-                                <span style="margin-left:20px;" id="72" name="xxx"></span>&nbsp;
-                                <!--<input id="outtime_edit" class="form-control" name="outtime_edit" style="width:150px;display: inline;" placeholder="请输入断开时间" type="text">-->
-                                <input id="p_outtime_" name="p_outtime" style=" height: 34px; width: 150px;  "  class="easyui-timespinner">
-                            </td>
-                            </td>
-                        </tr>                                   
-
-                        <tr id="tr_scene_hide" >
-                            <td>
-                                <span style="margin-left:20px;">区域经度</span>&nbsp;
-                                <input id="longitudem26d_" class="form-control" name="longitudem26d" style="width:51px;display: inline;" type="text">&nbsp;°
-                                <input id="longitudem26m_" class="form-control" name="longitudem26m" style="width:45px;display: inline;" type="text">&nbsp;'
-                                <input id="longitudem26s_" class="form-control" name="longitudem26s" style="width:45px;display: inline;" type="text">&nbsp;"
-                            </td>
-                            <td></td>
-                            <td>
-                                <span style="margin-left:20px;">区域纬度&nbsp;</span>
-                                <input id="latitudem26d_" class="form-control" name="latitudem26d" style="width:51px;display: inline;" type="text">&nbsp;°
-                                <input id="latitudem26m_" class="form-control" name="latitudem26m" style="width:45px;display: inline;" type="text">&nbsp;'
-                                <input id="latitudem26s_" class="form-control" name="latitudem26s" style="width:45px;display: inline;" type="text">&nbsp;"
+                                <span style="margin-left:20px;" >&emsp;时间二</span>&nbsp;
+                                <input id="time22" name="time2" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值二</span>&nbsp;
+                                <input id="timeval22" class="form-control"  name="timeval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
                             </td>
                         </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;时间三</span>&nbsp;
+                                <input id="time33" name="time3" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值三</span>&nbsp;
+                                <input id="timeval33" class="form-control"  name="timeval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
+                            </td>
+                            <td>
 
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;时间四</span>&nbsp;
+                                <input id="time44" name="time4" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值四</span>&nbsp;
+                                <input id="timeval44" class="form-control"  name="timeval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;时间五</span>&nbsp;
+                                <input id="time55" name="time5" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <span style="margin-left:5px;">控制值五</span>&nbsp;
+                                <input id="timeval55" class="form-control"  name="timeval5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>                        
 
 
                     </tbody>
                 </table>
+                <table id="scentable1" >
+                    <tbody>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景一</span>&nbsp;
+                                <input id="scen11" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />
+                                <span style="margin-left:10px;">控制值一</span>&nbsp;
+                                <input id="val11" class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
+                            </td>
+                            <td>
 
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景二</span>&nbsp;
+                                <input id="scen22" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />
+                                <span style="margin-left:10px;"  >控制值二</span>&nbsp;
+                                <input id="val22" class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
+                            </td>
+                        </tr>
+
+                        <tr id="">
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景三</span>&nbsp;
+                                <input id="scen33" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />
+                                <span style="margin-left:10px;">控制值三</span>&nbsp;
+                                <input id="val33" class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景四</span>&nbsp;
+                                <input id="scen44" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />
+                                <span style="margin-left:10px;"  >控制值四</span>&nbsp;
+                                <input id="val44" class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
+                            </td>
+                        </tr>
+
+                        <tr id="">
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;场景五</span>&nbsp;
+                                <input id="scen55" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />
+                                <span style="margin-left:10px;">控制值五</span>&nbsp;
+                                <input id="val55" class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table id="infotable1">
+                    <tbody>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >信息点号</span>&nbsp;
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum1" name="infonum" style="width:70px; height: 30px">
+                                </select>
+                                <span style="margin-left:10px;">偏差值</span>&nbsp;
+                                <input id="offset1" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info11" name="info1" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info1" name="info1" style="width:70px; height: 30px">
+                                                                     <input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
+                                <input id="infoval11" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info22" name="info2" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info2" name="info2" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
+                                <input id="infoval22" class="form-control"  name="infoval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info33" name="info3" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info3" name="info3" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
+                                <input id="infoval33" class="form-control"  name="infoval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <span style="margin-left:20px;" >&emsp;&emsp;数值</span>&nbsp;
+                                <input  class="form-control" id="info44" name="info4" style="width:70px;display: inline;" placeholder="值" type="text" />
+                                <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info4" name="info4" style="width:70px; height: 30px">
+                                                                </select>-->
+                                <span style="margin-left:10px;">控制值</span>&nbsp;
+                                <input id="infoval44" class="form-control"  name="infoval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
+                            </td>
+                        </tr>                      
+                    </tbody>
+                </table>        
             </form>
         </div>
 

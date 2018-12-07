@@ -212,6 +212,11 @@
 
                 }
             }
+              function formartcomaddr1(value, row, index) {
+                var val = value;
+                var v1 = row.online == 1 ? "&nbsp;<img style='float:right' src='img/online1.png'>" : "&nbsp;<img style='float:right' src='img/off.png'>";
+                return  val + v1;
+            }
         </script>
     </head>
     <body id="panemask">
@@ -228,7 +233,7 @@
                     <thead >
                         <tr >
                             <th data-width="25"    data-select="false" data-align="center" data-formatter='formartcomaddr'  data-checkbox="true"  ></th>
-                            <th data-width="100" data-field="comaddr" data-align="center"    >网关地址</th>
+                            <th data-width="100" data-field="comaddr" data-align="center" data-formatter='formartcomaddr1'   >网关地址</th>
                             <!--<th data-width="100" data-field="name" data-align="center"    >网关名称</th>-->
                         </tr>
                     </thead>       

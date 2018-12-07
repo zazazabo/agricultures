@@ -274,6 +274,12 @@
 
 
                             layerAler(str);
+                            var opt = {
+                                url: "loop.loopForm.getLoopList.action",
+                                silent: true,
+                                query: obj
+                            };
+                            $("#gravidaTable").bootstrapTable('refresh', opt);
 
 
 

@@ -7,7 +7,7 @@
                     <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
                 </xflt>
             </xsql>
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_loop where show=1 AND deplayment=1 AND @CONDITION  " var="looprs">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select * from t_loop where show=1 AND l_deplayment=1 AND @CONDITION  " var="looprs">
                 <xflt id="CONDITION" nrp="" tpl="@pid">
                     <xfltpara id="pid" nrp="1=1" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
                 </xflt>

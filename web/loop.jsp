@@ -316,7 +316,7 @@
                 vv.push(0x10);
                 var info = parseInt(ele.l_info);
                 console.log(info);
-       
+
                 var infonum = (3000 + info * 20) | 0x1000;
                 vv.push(infonum >> 8 & 0xff); //起始地址
                 vv.push(infonum & 0xff);
@@ -588,6 +588,21 @@
                                 if (isJSON(value)) {
                                     var obj = eval('(' + value + ')');
                                     return obj.name;
+                                }
+                            }
+                        }, {
+                            field: 'show',
+                            title: '是否首页显示', //是否首页显示
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                if (value == 1) {
+                                    var str = "<span class='label label-success'>" + '是' + "</span>";
+                                    return  str;
+                                } else {
+                                    var str = "<span class='label label-warning'>" + '否' + "</span>";  //未部署
+                                    return  str;
                                 }
                             }
                         }, {
@@ -1038,15 +1053,63 @@
                         }
                     }
                 });
+            });
 
-//                $("#l_worktype").combobox(
-//                        onLoadSuccess:function (data) {
-//                            console.log(data);
-//                        }
-//                );
+            //添加到首页显示
+            function addshow() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    if (selects[i].deplayment == 0) {
+                        layerAler('设备未部署不能添加到首页'); //请勾选表格数据
+                        return;
+                    }
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    var id = selects[i].id;
+                    $.ajax({async: false, url: "homePage.loop.addshow.action", type: "get", datatype: "JSON", data: {id: id},
+                        success: function (data) {
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                    layerAler("添加成功！");
+                    $("#gravidaTable").bootstrapTable('refresh');
+                }
 
 
-            })
+            }
+
+            function removeshow() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    var id = selects[i].id;
+                    $.ajax({async: false, url: "homePage.loop.removeshow.action", type: "get", datatype: "JSON", data: {id: id},
+                        success: function (data) {
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                    layerAler("移除成功！");
+                    $("#gravidaTable").bootstrapTable('refresh');
+                }
+
+
+            }
 
 
 
@@ -1211,6 +1274,12 @@
             </button>
             <button class="btn btn-danger ctrol" onclick="deleteloop()"  id="shanchu">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;删除
+            </button>
+            <button class="btn btn-success ctrol" onclick="addshow()">  
+                <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;添加首页显示
+            </button>
+            <button class="btn btn-danger ctrol" onclick="removeshow()">
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;移除首页显示
             </button>
             <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;

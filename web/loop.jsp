@@ -454,6 +454,63 @@
                 $('#dialog-edit').dialog('open');
 
             }
+            
+            
+            //添加到首页显示
+            function addshow() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    if (selects[i].l_deplayment != 1) {
+                        layerAler('设备未部署不能添加到首页'); //请勾选表格数据
+                        return;
+                    }
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    var id = selects[i].id;
+                    $.ajax({async: false, url: "homePage.loop.addshow.action", type: "get", datatype: "JSON", data: {id: id},
+                        success: function (data) {
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                    layerAler("添加成功！");
+                    $("#gravidaTable").bootstrapTable('refresh');
+                }
+
+
+            }
+            //移除首页显示
+            function removeshow() {
+                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+
+                for (var i = 0; i < selects.length; i++) {
+                    var id = selects[i].id;
+                    $.ajax({async: false, url: "homePage.loop.removeshow.action", type: "get", datatype: "JSON", data: {id: id},
+                        success: function (data) {
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+                    layerAler("移除成功！");
+                    $("#gravidaTable").bootstrapTable('refresh');
+                }
+
+
+            }
 
 
 
@@ -531,6 +588,21 @@
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
                                 return value;
+                            }
+                        }, {
+                            field: 'show',
+                            title: '是否首页显示', //控制方式
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                               if(value =="1"){
+                                   var str = "<span class='label label-success'>" + "是" + "</span>";  //是
+                                   return  str;
+                               }else{
+                                   var str = "<span class='label label-warning'>" + "否" + "</span>";  //否
+                                    return  str;
+                               }
                             }
                         }, {
                             field: 'l_deployment',
@@ -1080,6 +1152,12 @@
             </button>
             <button class="btn btn-danger ctrol" id="shanchu">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;删除
+            </button>
+            <button class="btn btn-success ctrol" onclick="addshow()">  
+                <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;添加首页显示
+            </button>
+            <button class="btn btn-danger ctrol" onclick="removeshow()">
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;移除首页显示
             </button>
             <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;

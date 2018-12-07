@@ -46,6 +46,8 @@
 
             .kg{ border: 1px solid black; width: 13%; float: left; height: 256px;    margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60); }
 
+            .hl{ border: 1px solid black; width: 13%; float: left; height: 256px;    margin-left: 3%; margin-top: 2%; background:rgba(254,164,0,0.6); filter:alpha(opacity=60); }
+
             img{ width:100%;height:100%;}
 
         </style>
@@ -62,6 +64,7 @@
                 $.ajax({async: false, url: "homePage.homePage.getSensorList.action", type: "get", datatype: "JSON", data: {},
                     success: function (data) {
                         var value = data.rs;
+                        var loop = data.looprs;
                         for (var i = 0; i < value.length; i++) {
                             var v1 = value[i];
                             var strid = "infonum" + v1.infonum;
@@ -95,7 +98,11 @@
                                 val = numvalue + str;
                             }
                             $("#" + strid).html(str2 + "<br/>" + val);
-                            ;
+                        }
+
+                        for (var j = 0; j < loop.length; j++) {
+                            
+
                         }
                     },
                     error: function () {
@@ -108,6 +115,7 @@
                 $.ajax({url: "homePage.homePage.getSensorList.action", type: "POST", datatype: "JSON", data: {pid: pid},
                     success: function (data) {
                         var arrlist = data.rs;
+                        var loops = data.looprs;
                         if (arrlist.length > 0) {
                             for (var i = 0; i < arrlist.length; i++) {
                                 var sensor = arrlist[i];
@@ -157,7 +165,7 @@
                                 if (pd == 1) {
                                     val = str;
                                 } else {
-                                    val = numvalue+ "<br>" + str;
+                                    val = numvalue + "<br>" + str;
                                 }
 //                                $(div3).html(str2 + "<br/>" + val);
 //                                $(bodydiv).append(div1);
@@ -168,7 +176,7 @@
                                 div1.innerHTML = str2;
                                 var div2 = document.createElement("div");
                                 $(div2).addClass("div2");
-                                div2.innerHTML =val;
+                                div2.innerHTML = val;
                                 var div3 = document.createElement("div");
                                 $(div3).addClass("div3");
                                 $(div3).append(img);
@@ -180,6 +188,10 @@
                                 $(bodydiv).append(div3);
                                 $(bodydiv).append(div4);
                                 $("#parentdiv").append(bodydiv);
+                            }
+                            
+                            for(var j = 0;j<loops.length;j++){
+                                 var loop = loops[i];
                             }
                         }
                     },

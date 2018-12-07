@@ -112,7 +112,7 @@
                     sidePagination: 'server',
                     pageNumber: 1,
                     pageSize: 50,
-                    showRefresh: true,
+                    showRefresh: false,
                     showToggle: true,
                     // 设置默认分页为 50
                     pageList: [50, 100, 150, 200, 250],

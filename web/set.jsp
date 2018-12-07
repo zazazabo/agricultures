@@ -30,6 +30,11 @@
             }
 
 
+            var str1="运行方式" + (s1&0x1?==1:"手动":"自动") + "运行模式:"  + (s1>>1&0x1==0x1?"经纬度":"时间表") + "回路继电器状态:" +（s1>>2&0x1==1?"闭合":"断开");
+
+  var str2="运行方式" + (s1&0x1?==1:"手动":"自动") + "运行模式:"  + (s1>>1&0x1==0x1?"经纬度":"时间表");
+
+
             function readTrueTimeCB(obj) {
                 if (obj.status == "success") {
                     var data = Str2BytesH(obj.data);

@@ -329,7 +329,7 @@
                             $(this).combobox('select', data[0].id)
                         }
                     }
-                })
+                });
 
                 var bb = $(window).height() - 20;
                 $('#gravidaTable').bootstrapTable({

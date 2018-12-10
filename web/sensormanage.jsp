@@ -821,7 +821,7 @@
 
 
 
-                $("#addexcel").attr("disabled", true);
+              //  $("#addexcel").attr("disabled", true);
 
                 $('#l_comaddr').combobox({
                     url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",

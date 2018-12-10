@@ -149,20 +149,21 @@ body,html{
     min-width: 20px;
     width: auto;
     height: 20px;
-    padding: 3px;
+    padding: 4px;
     border-radius: 50%;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
     position: absolute;
-    top: 5px;
-    right: 1px;
-    background: #92c742;
+/*    top: 5px;*/
+/*    right: 1px;*/
+/*    background: #92c742;*/
     text-align: center;
     line-height: 20px;
     color: white;
     z-index: 100;
+    margin-left: 2px;
 }
 .controlMessage .imgM {
     padding: 20px 15px 0 8px;

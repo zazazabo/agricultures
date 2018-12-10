@@ -602,7 +602,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号一</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info1" name="info1" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info1" name="info1" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -622,7 +622,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号二</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info2" name="info2" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info2" name="info2" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -643,7 +643,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号三</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info3" name="info3" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info3" name="info3" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -664,7 +664,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号四</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info4" name="info4" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info4" name="info4" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -684,7 +684,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号五</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info5" name="info5" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info5" name="info5" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -706,7 +706,7 @@
             </form>                        
         </div>
 
-        <div id="dialog-edit"  class="bodycenter" style=" display: none"  title="灯具方案修改">
+        <div id="dialog-edit"  class="bodycenter" style=" display: none"  title="场景方案修改">
             <form action="" method="POST" id="form2" onsubmit="return modifyLoopName()">  
                 <input type="hidden" id="hidden_id" name="id">  
                 <input type="hidden" name="pid" value="${param.pid}"/>
@@ -747,7 +747,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号一</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info11" name="info1" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info11" name="info1" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -767,7 +767,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号二</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info22" name="info2" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info22" name="info2" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -788,7 +788,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号三</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info33" name="info3" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info33" name="info3" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -809,7 +809,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号四</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info44" name="info4" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info44" name="info4" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
@@ -829,7 +829,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;信息点号五</span>&nbsp;
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info55" name="info5" style="width:70px; height: 30px">
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info55" name="info5" style="width:100px; height: 30px">
                                 </select>
                             </td>
 

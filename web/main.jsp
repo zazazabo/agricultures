@@ -425,9 +425,11 @@
                         if (data.rs[0].number == 0) {
                             $("#alarmNumber").html("0");
                             $("#alarmNumber").css("color", "white");
+                            $("#imageId").attr("src","./img/green.png");
                         } else {
                             $("#alarmNumber").html(data.rs[0].number);
-                            $("#alarmNumber").css("color", "red");
+                            $("#alarmNumber").css("color", "black");
+                            $("#imageId").attr("src","./img/red.png");
 
                         }
                     },
@@ -620,8 +622,8 @@
                             </select>
                         </li>
                         <li class="one imgM" id ="imgM" onclick="imgM()" title="告警信息" style=" margin-right: 20px;">
-                            <img src="img/xx.png" class="alarmLi">
-                            <div class="alarmNub alarmLi" id="alarmNumber">0</div>
+                            <img src="img/red.png" class="alarmLi" style=" width: 30px; height: 30px;" id="imageId">
+                            <div class="alarmNub alarmLi" id="alarmNumber" style=" font-size: 16px;">0</div>
                         </li>
                         <li class="one" style=" margin-right: 20px;">
 
@@ -776,7 +778,7 @@
                             <span style="margin-left:10px;">                                     
                                 <span id="25" name="xxx">网关地址</span>
                                 &nbsp;</span>
-                            <input id="comaddrlist" data-options='editable:false,valueField:"id", textField:"text"' class="easyui-combobox"/>
+                            <input id="comaddrlist" data-options='editable:false,valueField:"id", textField:"text"' class="easyui-combobox" style=" width: 150px; height: 30px;"/>
                         </td>
                         <!--                        <td>
                                                     <span style="margin-left:20px;" id="292" name="xxx">

@@ -17,7 +17,7 @@
 
 
         <style type="text/css">
-            body {background:url(./img/jdbj.jpg) top center no-repeat; background-size:cover;}
+            body {background:url(./img/jdbj.jpg) top center no-repeat; background-size:cover; -moz-background-size:100% 100%;}
             .top{
                 /*                display: flex;*/
                 justify-content: space-around;
@@ -93,25 +93,25 @@
                                 if (numvalue != 0) {
                                     numvalue = numvalue / 10;
                                 }
-                                val = numvalue +"<br>"+ str;
+                                val = numvalue + "<br>" + str;
                             }
                             $("#" + strid).innerHTML = val;
                         }
 
                         for (var j = 0; j < loops.length; j++) {
                             var loop = loops[j];
-                            var lid = "loop"+loop.id;
-                            var limg = "limg"+loop.id;
+                            var lid = "loop" + loop.id;
+                            var limg = "limg" + loop.id;
                             var str = "开";
-                            if(loop.l_switch==1){
+                            if (loop.l_switch == 1) {
                                 str = "开";
-                                $("#"+limg).attr("src","./img/l.png");
-                            }else{
+                                $("#" + limg).attr("src", "./img/l.png");
+                            } else {
                                 str = "关";
-                                $("#"+limg).attr("src","./img/h.png");
+                                $("#" + limg).attr("src", "./img/h.png");
                             }
                             $("#" + lid).html(str);
-                            
+
 
                         }
                     },
@@ -121,24 +121,25 @@
                 });
             }
             $(function () {
-                var pid = parent.parent.getpojectId();
+               var pid = parent.parent.getpojectId();
+               var slen = 0;
                 $.ajax({url: "homePage.homePage.getSensorList.action", type: "POST", datatype: "JSON", data: {pid: pid},
                     success: function (data) {
                         var arrlist = data.rs;
                         var loops = data.looprs;
-                        
-                        if(loops.length>0){
-                             for(var j = 0;j<loops.length;j++){
+                        slen = arrlist.length + loops.length;
+                        if (loops.length > 0) {
+                            for (var j = 0; j < loops.length; j++) {
                                 var loop = loops[j];
                                 var bodydiv2 = document.createElement("div");
                                 var img2 = document.createElement("img");
                                 $(img2).attr("id", "limg" + loop.id);
                                 str = "关"; //状态
                                 $(bodydiv2).addClass("hl");
-                                if(loop.l_switch ==1){
+                                if (loop.l_switch == 1) {
                                     str = "开";
                                     img2.src = "./img/l.png";
-                                }else{
+                                } else {
                                     str = "关";
                                     img2.src = "./img/h.png";
                                 }
@@ -160,11 +161,11 @@
                                 $(bodydiv2).append(div33);
                                 $(bodydiv2).append(div44);
                                 $("#parentdiv").append(bodydiv2);
-                                 
+
                             }
                         }
-                        
-                         if (arrlist.length > 0) {
+
+                        if (arrlist.length > 0) {
                             for (var i = 0; i < arrlist.length; i++) {
                                 var sensor = arrlist[i];
                                 var bodydiv = document.createElement("div");
@@ -240,8 +241,14 @@
                         layerAler("提交失败");
                     }
                 });
-                //getinfo();
+              
                 setInterval('getinfo()', 10000);
+                
+                if(slen<=12){
+                    //$("#activity_pane").style.height = 700px;
+                    document.getElementById("activity_pane").style.height=850 +"px";
+                }
+                
             });
 
         </script>

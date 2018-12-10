@@ -152,11 +152,6 @@
                     <th><spn name="xxxx" id="283">标识</spn></th>
                 </tr>
                 <tr>
-                    <td><span name="xxxx" id="401">传感器</span>:</td>
-                    <td style=" color: yellow;">-----------------</td>
-                    <td><img src="img/lyello.png" style=" margin-left:-7px;"></td>
-                </tr>
-                <tr>
                     <td><span name="xxxx" id="298">传感器在线</span>:</td>
                     <td style=" color: green;">-----------------</td>
                     <td><img src="img/yl.png" style=" margin-left:-7px;"></td>
@@ -257,11 +252,11 @@
 
         <script type="text/javascript">
             //创建网关在线图标
-            var wggreenicon = new BMap.Icon('./img/wgreen.png', new BMap.Size(27, 32), {//20，30是图片大小
+            var wggreenicon = new BMap.Icon('./img/wlx.png', new BMap.Size(27, 32), {//20，30是图片大小
                 //anchor: new BMap.Size(0, 0)      //这个是信息窗口位置（可以改改看看效果）
             });
             //创建网关离线图标
-            var wghuiicon = new BMap.Icon('./img/wlx.png', new BMap.Size(27, 32), {//20，30是图片大小
+            var wghuiicon = new BMap.Icon('./img/wzx.png', new BMap.Size(27, 32), {//20，30是图片大小
                 //anchor: new BMap.Size(0, 0)      //这个是信息窗口位置（可以改改看看效果）
             });
             //创建传感器离线图标

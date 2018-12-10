@@ -647,7 +647,16 @@
         <xhandle desc="判断网关地址是否已存在" id="iscomaddr" rtn="rs" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select comaddr from t_baseinfo where @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@comaddr">
-                    <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="comaddr=':comaddr'">
+                    <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="comaddr=':comaddr'">
+                    </xfltpara>
+                   
+                </xflt>
+            </xsql> 
+        </xhandle> 
+        <xhandle desc="判断网关是否在线" id="comaddrzx" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select online from t_baseinfo where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr">
+                    <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="comaddr=':comaddr'">
                     </xfltpara>
                    
                 </xflt>
@@ -655,7 +664,7 @@
         </xhandle> 
             
         <xhandle desc="添加网关" id="addbase" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="model,comaddr,name,Longitude,latitude,area,pid,multpower,presence,connecttype" tpe="DDL" tpl="insert into t_baseinfo(model,comaddr,name,Longitude,latitude,area,pid,multpower,presence,connecttype) values(':model',':comaddr',':name',':Longitude',':latitude',':area',':pid',':multpower',':presence',':connecttype') " var="rs">
+            <xsql id="a1" para="model,comaddr,name,Longitude,latitude,pid" tpe="DDL" tpl="insert into t_baseinfo(model,comaddr,name,Longitude,latitude,pid) values(':model',':comaddr',':name',':Longitude',':latitude',':pid') " var="rs">
             </xsql>
         </xhandle>    
     </xform>

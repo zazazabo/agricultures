@@ -255,7 +255,7 @@
                                 o.pos = 2000;
                                 $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
                                     success: function (data) {
-                                        var rs=data.rs;
+                                        var rs = data.rs;
                                         if (rs.length > 0) {
                                             $("#dialog-add").dialog("close");
                                             layerAler("添加成功");
@@ -324,7 +324,7 @@
                 }
                 console.log(obj);
             }
-            
+
             function readSensor() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var o = $("#form1").serializeObject();
@@ -402,29 +402,29 @@
                 vv.push(0x10);
                 var info = parseInt(ele.infonum);
                 console.log(info);
-                var infonum = (2000 + info * 10) | 0x1000;  
+                var infonum = (2000 + info * 10) | 0x1000;
                 vv.push(infonum >> 8 & 0xff); //起始地址
                 vv.push(infonum & 0xff);
                 vv.push(0);           //寄存器数目 2字节  
-                vv.push(4);           
+                vv.push(4);
                 vv.push(8);           //字节数目长度  1字节
 
 
                 vv.push(info >> 8 & 0xff);  //信息点
-                vv.push(info & 0xff); 
+                vv.push(info & 0xff);
 
                 var site = parseInt(ele.sitenum); //站点
                 vv.push(site >> 8 & 0xff);
                 vv.push(site & 0xff);
-                
+
                 var reg = parseInt(ele.dreg);
                 vv.push(reg >> 8 & 0xff)   //寄存器变量值
                 vv.push(reg & 0xff);
-                
+
                 var worktype = parseInt(ele.worktype);
                 vv.push(worktype >> 8 & 0xff)   //寄存器变量值
                 vv.push(worktype & 0xff);
-                
+
                 var data = buicode2(vv);
                 dealsend2("10", data, "deploySensorCB", o.l_comaddr, 1, ele.id, info);
                 $('#panemask').showLoading({
@@ -450,29 +450,29 @@
                 vv.push(0x10);
                 var info = parseInt(ele.infonum);
                 console.log(info);
-                var infonum = (2000 + info * 10) | 0x1000;  
+                var infonum = (2000 + info * 10) | 0x1000;
                 vv.push(infonum >> 8 & 0xff); //起始地址
                 vv.push(infonum & 0xff);
                 vv.push(0);           //寄存器数目 2字节  
-                vv.push(4);           
+                vv.push(4);
                 vv.push(8);           //字节数目长度  1字节
 
 
                 vv.push(0);  //信息点
-                vv.push(0); 
+                vv.push(0);
 
-            
+
                 vv.push(0); //站点
                 vv.push(0);
-                
+
 
                 vv.push(0)   //寄存器变量值
                 vv.push(0);
-                
+
 
                 vv.push(0)   //寄存器变量值
                 vv.push(0);
-                
+
                 var data = buicode2(vv);
                 dealsend2("10", data, "deploySensorCB", o.l_comaddr, 0, ele.id, info);
                 $('#panemask').showLoading({
@@ -507,9 +507,9 @@
                             alert("提交失败！");
                         }
                     });
-                    layerAler("添加成功！");
-                    $("#gravidaTable").bootstrapTable('refresh');
                 }
+                layerAler("添加成功！");
+                $("#gravidaTable").bootstrapTable('refresh');
 
 
             }
@@ -531,9 +531,9 @@
                             alert("提交失败！");
                         }
                     });
-                    layerAler("移除成功！");
-                    $("#gravidaTable").bootstrapTable('refresh');
                 }
+                layerAler("移除成功！");
+                $("#gravidaTable").bootstrapTable('refresh');
 
 
             }
@@ -541,6 +541,39 @@
 
 
             $(function () {
+
+                $("#add").attr("disabled", true);
+                $("#shanchu").attr("disabled", true);
+                $("#xiugai1").attr("disabled", true);
+                $("#addexcel").attr("disabled", true);
+                var obj = {};
+                obj.code = ${param.m_parent};
+                obj.roletype = ${param.role};
+                $.ajax({async: false, url: "login.usermanage.power.action", type: "get", datatype: "JSON", data: obj,
+                    success: function (data) {
+                        var rs = data.rs;
+                        if (rs.length > 0) {
+                            for (var i = 0; i < rs.length; i++) {
+                                if (rs[i].code == "500201" && rs[i].enable != 0) {
+                                    $("#add").attr("disabled", false);
+                                    $("#addexcel").attr("disabled", false);
+                                    continue;
+                                }
+                                if (rs[i].code == "500202" && rs[i].enable != 0) {
+                                    $("#xiugai1").attr("disabled", false);
+                                    continue;
+                                }
+                                if (rs[i].code == "500203" && rs[i].enable != 0) {
+                                    $("#shanchu").attr("disabled", false);
+                                    continue;
+                                }
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
 
                 $('#gravidaTable').bootstrapTable({
                     // url: 'lamp.lampform.getlampList.action',
@@ -697,7 +730,7 @@
                     var e = $(d).attr("id");
                     $(d).html(langs1[e][lang]);
                 }
-                
+
                 $("#l_comaddr2").combobox({
                     url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
                     formatter: function (row) {
@@ -821,7 +854,7 @@
 
 
 
-              //  $("#addexcel").attr("disabled", true);
+                //  $("#addexcel").attr("disabled", true);
 
                 $('#l_comaddr').combobox({
                     url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
@@ -963,8 +996,12 @@
             <button type="button" id="btn_download" class="btn btn-primary" onClick ="$('#gravidaTable').tableExport({type: 'excel', escape: 'false'})">
                 导出Excel
             </button>
-            <button   type="button" onclick="addshow()" class="btn btn-success ctrol">添加到首页显示</button>
-            <button  type="button" onclick="removeshow()" class="btn btn-success ctrol">移除首页显示</button>
+            <button class="btn btn-success ctrol"  onclick="addshow()">
+                <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;添加到首页显示
+            </button>
+            <button class="btn btn-danger ctrol" onclick="removeshow();">
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;移除首页显示
+            </button>
         </div>
 
         <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped">
@@ -1093,7 +1130,7 @@
                                     <option value="" ></option>
                                     <option value="1" >温度</option>
                                     <option value="2" >湿度</option>  
-                                     <option value="3" >开关</option> 
+                                    <option value="3" >开关</option> 
                                 </select>
 
                             </td>                           

@@ -509,6 +509,39 @@
             }
 
             $(function () {
+                
+                $("#add").attr("disabled",true);
+                $("#shanchu").attr("disabled",true);
+                $("#update").attr("disabled",true);
+                $("#addexcel").attr("disabled",true);
+                var obj = {};
+                obj.code = ${param.m_parent};
+                obj.roletype = ${param.role};
+                $.ajax({async: false, url: "login.usermanage.power.action", type: "get", datatype: "JSON", data: obj,
+                    success: function (data) {
+                        var rs = data.rs;
+                        if (rs.length > 0) {
+                            for (var i = 0; i < rs.length; i++) {
+                                if (rs[i].code == "500301" && rs[i].enable != 0) {
+                                    $("#add").attr("disabled", false);
+                                    $("#addexcel").attr("disabled",false);
+                                    continue;
+                                }
+                                if (rs[i].code == "500302" && rs[i].enable != 0) {
+                                    $("#update").attr("disabled", false);
+                                    continue;
+                                }
+                                if (rs[i].code == "500303" && rs[i].enable != 0) {
+                                    $("#shanchu").attr("disabled", false);
+                                    continue;
+                                }
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
 
 
                 $('#gravidaTable').bootstrapTable({

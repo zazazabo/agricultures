@@ -159,12 +159,45 @@
                             offset: 'center'
                         });
                     }
-                })
+                });
 
                 return false;
             }
 
             $(function () {
+                $("#add").attr("disabled", true);
+                $("#shanchu").attr("disabled", true);
+                $("#xiugai1").attr("disabled", true);
+                $("#addexcel").attr("disabled", true);
+                var obj = {};
+                obj.code = ${param.m_parent};
+                obj.roletype = ${param.role};
+                $.ajax({async: false, url: "login.usermanage.power.action", type: "get", datatype: "JSON", data: obj,
+                    success: function (data) {
+                        var rs = data.rs;
+                        if (rs.length > 0) {
+                            for (var i = 0; i < rs.length; i++) {
+                                if (rs[i].code == "500101" && rs[i].enable != 0) {
+                                    $("#add").attr("disabled", false);
+                                    $("#addexcel").attr("disabled", false);
+                                    continue;
+                                }
+                                if (rs[i].code == "500102" && rs[i].enable != 0) {
+                                    $("#xiugai1").attr("disabled", false);
+                                    continue;
+                                }
+                                if (rs[i].code == "500103" && rs[i].enable != 0) {
+                                    $("#shanchu").attr("disabled", false);
+                                    continue;
+                                }
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
                 var aaa = $("span[name=xxx]");
                 for (var i = 0; i < aaa.length; i++) {
                     var d = aaa[i];
@@ -183,44 +216,32 @@
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            title: langs1[345][lang], //序号
+                            title: "序号", //序号
                             field: '序号',
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            title: langs1[25][lang], //网关地址
-                            field: '网关地址',
+                            title: "网关名称",
+                            field: '网关名称',
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            title: langs1[314][lang],
-                            field: '名称', //网关名称
+                            title: "网关编号",
+                            field: '网关编号', //网关名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            title: langs1[59][lang], //经度
+                            title: "经度", //经度
                             field: '经度',
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: '纬度', //纬度
-                            title: langs1[60][lang],
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: '倍率',
-                            title: langs1[346][lang], //倍率
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: '安装位置',
-                            title: langs1[347][lang], //安装位置
+                            title: "纬度",
                             width: 25,
                             align: 'center',
                             valign: 'middle'
@@ -246,7 +267,7 @@
                                     }), // 以二进制流方式读取得到整份excel表格对象
                                     persons = []; // 存储获取到的数据
                         } catch (e) {
-                            alert(langs1[348][lang]);  //文件类型不正确
+                            alert("文件类型不正确");  //文件类型不正确
                             return;
                         }
                         // 表格的表格范围，可用于判断表头是否数量是否正确
@@ -259,10 +280,11 @@
                                 // break; // 如果只取第一张表，就取消注释这行
                             }
                         }
-                        var headStr = '序号,名称,网关地址,经度,纬度,倍率,安装位置';
+                        var headStr = '序号,网关名称,网关编号,经度,纬度';
+                        var headStr2 = '序号,网关名称,网关编号';
                         for (var i = 0; i < persons.length; i++) {
-                            if (Object.keys(persons[i]).join(',') !== headStr) {
-                                alert(langs1[366][lang]); //导入文件格式不正确
+                            if (Object.keys(persons[i]).join(',') !== headStr && Object.keys(persons[i]).join(',') !== headStr2) {
+                                alert("导入文件格式不正确"); //导入文件格式不正确
                                 persons = [];
                             }
                         }
@@ -431,10 +453,9 @@
                     layerAler(langs1[350][lang]);  //请选择您要保存的数据
                     return;
                 }
-                addlogon(u_name, "添加", o_pid, "网关管理", "导入excel文件");
                 var pid = parent.parent.getpojectId();
                 for (var i = 0; i <= selects.length - 1; i++) {
-                    var comaddr = selects[i].网关地址;
+                    var comaddr = selects[i].网关编号;
                     var obj = {};
                     obj.comaddr = comaddr;
                     $.ajax({async: false, url: "login.gateway.iscomaddr.action", type: "POST", datatype: "JSON", data: obj,
@@ -442,16 +463,12 @@
                             var arrlist = data.rs;
                             if (arrlist.length == 0) {
                                 var adobj = {};
-                                adobj.model = "LC001";
+                                adobj.model = "L-30MT-ES2";
                                 adobj.comaddr = comaddr;
-                                adobj.name = selects[i].名称;
+                                adobj.name = selects[i].网关名称;
                                 adobj.Longitude = selects[i].经度;
                                 adobj.latitude = selects[i].纬度;
-                                adobj.area = selects[i].安装位置;
                                 adobj.pid = pid;
-                                adobj.multpower = selects[i].倍率;
-                                adobj.presence = 0;
-                                adobj.connecttype = 0;
                                 $.ajax({url: "login.gateway.addbase.action", async: false, type: "get", datatype: "JSON", data: adobj,
                                     success: function (data) {
                                         var arrlist = data.rs;
@@ -459,6 +476,7 @@
                                             var ids = [];//定义一个数组
                                             var xh = selects[i].序号;
                                             ids.push(xh);//将要删除的id存入数组
+                                            addlogon(u_name, "添加", o_pid, "网关管理", "添加网关["+selects[i].网关名称+"]");
                                             $("#warningtable").bootstrapTable('remove', {field: '序号', values: ids});
                                         }
                                     },
@@ -476,6 +494,7 @@
                     });
 
                 }
+                $("#gravidaTable").bootstrapTable('refresh'); 
             }
 
 
@@ -519,9 +538,9 @@
                                         }
                                     });
                                 }
-                                
-                                
-                                       //添加回路
+
+
+                                //添加回路
                                 for (var i = 0; i < 16; i++) {
                                     var z = i + 4100;
                                     var j = i >= 8 ? 10 + (i - 8) : i;
@@ -529,8 +548,8 @@
                                     ooo.l_site = 1;
                                     ooo.l_name = "Y" + j.toString();
                                     ooo.l_comaddr = obj.comaddr;
-                                    ooo.l_pos=z;
-                                    ooo.l_port=j;
+                                    ooo.l_pos = z;
+                                    ooo.l_port = j;
                                     $.ajax({url: "loop.loopForm.addLoop.action", async: false, type: "get", datatype: "JSON", data: ooo,
                                         success: function (data) {
                                             var arrlist = data.rs;
@@ -542,7 +561,7 @@
                                         }
                                     });
                                 }
-                                
+
 
                                 $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
                                     success: function (data) {
@@ -557,8 +576,8 @@
                                     }
                                 })
 
-                         
-     
+
+
                             }
                             return  false;
                         }
@@ -588,13 +607,13 @@
             <button class="btn btn-danger ctrol" onclick="deleteGateway()" id="shanchu">
                 <span class="glyphicon glyphicon-trash">&nbsp;删除</span>
             </button>
+            <button type="button" id="btn_download" class="btn btn-primary" onClick ="$('#wgmb').tableExport({type: 'excel', escape: 'false'})">
+                <span>导出Excel模板</span>
+            </button>
             <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
                 <span class="glyphicon glyphicon-plus-sign">&nbsp;导入Excel</span>
             </button>
-            <!--            <button class="btn btn-success ctrol" onClick ="$('#tb_departments').tableExport({type: 'excel', escape: 'false'})" id="outexcel" >
-                            <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;导出Excel
-                        </button>-->
-            <button type="button" id="download" id="btn_download" class="btn btn-primary" onClick ="$('#gravidaTable').tableExport({type: 'excel', escape: 'false'})">
+            <button type="button" id="btn_download" class="btn btn-primary" onClick ="$('#gravidaTable').tableExport({type: 'excel', escape: 'false'})">
                 <span name="xxx" id="110">导出Excel</span>
             </button>
 
@@ -731,6 +750,26 @@
             <input type="file" id="excel-file" style=" height: 40px;">
             <table id="warningtable"></table>
 
+        </div>
+
+
+        <div  style=" top:-60%;position:absolute; z-index:9999;background-color:#FFFFFF;">
+            <table id="wgmb" style=" border: 1px">
+                <tr>
+                    <td>序号</td>
+                    <td>网关名称</td>
+                    <td>网关编号</td>
+                    <td>经度</td>
+                    <td>纬度</td>
+                </tr>
+                <tr>
+                    <td>如1、2、3</td>
+                    <td>网关名称</td>
+                    <td>网地址不可重复</td>
+                    <td>可以不输入</td>
+                    <td>可以不输入</td>
+                </tr>
+            </table>
         </div>
 
 

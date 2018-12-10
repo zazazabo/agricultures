@@ -82,8 +82,6 @@
                                 } else if (row.type == 3) {
                                     return  "开/关";
                                 }
-//                                var groupe = value.toString();
-//                                return  groupe;
                             }
                         }, {
                             field: 'onlinetime',
@@ -92,15 +90,30 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
+                                var str = "";
                                 var time1 = value.substring(0, 16);
                                 var time2 = row.dtime.substring(0, 16);
-                                console.log("1:" + time1 + "//2:" + time2);
                                 var stime = TimeDifference(time1, time2);
-                                if (stime <= 15) {
-                                    return "<img  src='img/online1.png'/>"; 
-                                } else {
-                                     return "<img  src='img/off.png'/>"; 
-                                }
+                                var obj = {};
+                                obj.comaddr = row.l_comaddr; //selects[0];
+                                $.ajax({url: "login.gateway.comaddrzx.action", async: false, type: "get", datatype: "JSON", data: obj,
+                                    success: function (data) {
+                                        var arrlist = data.rs;
+                                        if (arrlist[0].online == 1) {
+                                            if (stime <= 15) {
+                                                str = "<img  src='img/online1.png'/>";
+                                            } else {
+                                                str = "<img  src='img/off.png'/>";
+                                            }
+                                        } else {
+                                            str = "<img  src='img/off.png'/>";
+                                        }
+                                    },
+                                    error: function () {
+                                        alert("提交添加失败！请刷新");
+                                    }
+                                });
+                                return  str;
                             }
                         }],
                     clickToSelect: true,
@@ -212,7 +225,7 @@
 
                 }
             }
-              function formartcomaddr1(value, row, index) {
+            function formartcomaddr1(value, row, index) {
                 var val = value;
                 var v1 = row.online == 1 ? "&nbsp;<img style='float:right' src='img/online1.png'>" : "&nbsp;<img style='float:right' src='img/off.png'>";
                 return  val + v1;

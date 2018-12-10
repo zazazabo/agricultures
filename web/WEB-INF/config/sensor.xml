@@ -80,7 +80,7 @@
 
         
         <xhandle desc="" id="getInfoNumList" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT DISTINCT infonum as id,infonum as text FROM t_sensor where deplayment = 1 " var="list">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT DISTINCT infonum as id,name as text FROM t_sensor where deplayment = 1 " var="list">
   
             </xsql>
         </xhandle>  

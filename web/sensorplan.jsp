@@ -45,14 +45,12 @@
                     $("#num" + i.toString()).attr('readonly', true);
                 }
 
-                var u = $("#p_type").combobox('getValue');
-                $("#p_type1").combobox('setValue', u);
+
 
                 $("#p_name1").val("");
                 $('#dialog-add').dialog('open');
                 return false;
             }
-
 
 
             function addscenPlan() {
@@ -103,7 +101,6 @@
                         alert("提交失败！");
                     }
                 });
-
 
             }
 
@@ -176,7 +173,6 @@
 
             function editscenPlan() {
 
-
                 var selects = $("#table0").bootstrapTable('getSelections');
                 if (selects.length == 0) {
                     layerAler('请选择表格数据');  //请选择表格数据
@@ -191,7 +187,7 @@
 
                  $("#p_name1").val(select.p_name);
                   $("#hidden_id").val(select.id);
-
+                  $("#p_scenenum1").combobox('setValue',select.p_scenenum);
                  if (select.p_type == "1") {
 
                for (var i = 0; i < 5; i++) {
@@ -370,7 +366,7 @@
 
 
                 $('#table0').bootstrapTable({
-                    url: 'lamp.planForm.getLampPlan.action',
+                    url: 'loop.planForm.getLoopPlan.action',
                     clickToSelect: true,
                     columns: [
                         [
@@ -550,12 +546,12 @@
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;
                 <span name="xxx" id="67">删除</span>
             </button>
-            <span style="margin-left:20px;" name="xxx" id="68">方案类型</span>&nbsp;
+<!--             <span style="margin-left:20px;" name="xxx" id="68">方案类型</span>&nbsp;
             <span class="menuBox">
                 <select class="easyui-combobox" data-options="editable:false" id="p_type" name="p_type" style="width:150px; height: 30px; margin-left: 3px;">
                     <option value="1">场景</option>           
                 </select>
-            </span> 
+            </span>  -->
         </div>
 
         <table id="table0" style="width:100%; " class="text-nowrap table table-hover table-striped">
@@ -579,7 +575,21 @@
                             </td>
                             <td></td>
                             <td>
-
+  <!--                                  <span style="margin-left: 20px;" >
+                                    场景号
+                                </span>
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum" name="p_scenenum" style="width:70px; height: 30px">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                </select> -->
                             </td>
                         </tr>
 
@@ -711,7 +721,21 @@
                             </td>
                             <td></td>
                             <td>
-
+<!--                                 <span style="margin-left: 20px;"  >
+                                    场景号
+                                </span>
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum1" name="p_scenenum" style="width:70px; height: 30px">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                </select> -->
                             </td>
                         </tr>
 

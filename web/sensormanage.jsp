@@ -13,6 +13,8 @@
         <script type="text/javascript" src="SheetJS-js-xlsx/dist/xlsx.core.min.js"></script>
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript" src="js/getdate.js"></script>
+        <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
         <script>
             var lang = '${param.lang}';//'zh_CN';
             var langs1 = parent.parent.getLnas();
@@ -537,9 +539,6 @@
 
 
             }
-
-
-
             $(function () {
 
                 $("#add").attr("disabled", true);
@@ -574,7 +573,6 @@
                         alert("提交失败！");
                     }
                 });
-
                 $('#gravidaTable').bootstrapTable({
                     // url: 'lamp.lampform.getlampList.action',
                     showExport: true, //是否显示导出
@@ -593,7 +591,7 @@
                             title: '传感器名称', //灯具名称
                             width: 25,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
                         }, {
                             field: 'model',
                             title: '型号', //灯具名称
@@ -606,6 +604,7 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle',
+                            sortable:true,
                             formatter: function (value, row, index, field) {
                                 if (value != null) {
                                     return value.toString();
@@ -665,6 +664,7 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle',
+                            sortable:true,
                             formatter: function (value, row, index, field) {
                                 if (value == "1") {
                                     var str = "<span class='label label-success'>" + "是" + "</span>"; //已部署
@@ -690,40 +690,44 @@
                                     return  str;
                                 }
                             }
-                        }],
+                        }
+                    ],
+
                     clickToSelect: true,
                     singleSelect: false,
                     sortName: 'id',
                     locale: 'zh-CN', //中文支持,
                     showColumns: true,
-                    sortOrder: 'desc',
+                    sortOrder: 'asc',
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 50,
+                    pageSize: 20,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
                     pageList: [50, 100],
-                    onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
+                    sortable: true, //是否启用排序 
+                            onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
-                    },
+                            },
+
                     //服务器url
                     queryParams: function (params)  {   //配置参数     
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
                             search: params.search,
                             skip: params.offset,
                             limit: params.limit,
+                            sort:params.sort,
+                            sortOrder:params.order,
                             type_id: "1",
-                            pid: "${param.pid}",
+                            pid: "${param.pid}"
                         };
                          l_comaddr:'';    
                         return temp;  
-                    },
+                    }
                 });
-
-
-
+               
                 var aaa = $("span[name=xxx]");
                 for (var i = 0; i < aaa.length; i++) {
                     var d = aaa[i];
@@ -904,11 +908,73 @@
 //                {
 //
 //                });
-
-
-
+                
 
             });
+
+            function  sy() {
+                var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
+
+                $("#gravidaTable").find(":checkbox:checked").each(function () {
+                    var $tr = $(this).parents("tr");
+                    var id = $(this).parents("tr").find("td:first").html();
+                    console.log(id);
+                    if ($tr.index() == 0) {
+                        layerAler("数据已是第一行");
+                        return;
+                    } else {
+                        $tr.fadeOut().fadeIn();
+                        $tr.prev().before($tr);
+                        var lindex = 0;
+                        if (number > 1) {
+                            lindex = (number - 1) * 20 + $tr.index();
+                        } else {
+                            lindex = $tr.index();
+                        }
+//                        $.ajax({async: false, url: "sensor.sensorform.modifySensor.action", type: "get", datatype: "JSON", data: o,
+//                            success: function (data) {
+//                                var a = data.rs;
+//                                if (a.length == 1) {
+//                                    search();
+//                                }
+//                            },
+//                            error: function () {
+//                                alert("提交失败！");
+//                            }
+//                        });
+
+                    }
+                });
+
+            }
+
+            function xy() {
+                $("#gravidaTable").find(":checkbox:checked").each(function () {
+                    var $tr = $(this).parents("tr");
+                    $tr.fadeOut().fadeIn();
+                    $tr.next().after($tr);
+                    console.log($tr.index());
+                });
+                //下移
+                /*var $tr = $(this).parents("tr"); 
+                 if ($tr.index() != len - 1) { 
+                 $tr.fadeOut().fadeIn(); 
+                 $tr.next().after($tr); 
+                 } */
+            }
+
+            function bc() {
+                var allTableData = $("#gravidaTable").bootstrapTable('getData');
+                console.log(allTableData.length);
+//                for (var i = 0; i < allTableData.length; i++) {
+//
+//                }
+
+            }
+//            $.extend($.fn.dataTableExt.oStdClasses,{
+//                "sWrapper":"dataTables_wrapper form-inline"
+//            });
+            
         </script>
 
         <style>
@@ -989,10 +1055,13 @@
             <button class="btn btn-danger ctrol" onclick="deleteSensor();" id="shanchu">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;删除
             </button>
+            <button type="button" id="btn_download" class="btn btn-primary" onClick ="$('#cgqmb').tableExport({type: 'excel', escape: 'false'})">
+                导出Excel模板
+            </button>
             <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
                 导入Excel
-            </button>
+            </button>          
             <button type="button" id="btn_download" class="btn btn-primary" onClick ="$('#gravidaTable').tableExport({type: 'excel', escape: 'false'})">
                 导出Excel
             </button>
@@ -1002,9 +1071,18 @@
             <button class="btn btn-danger ctrol" onclick="removeshow();">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;移除首页显示
             </button>
+            <button class="btn btn-success ctrol" onclick="sy()">
+                &nbsp;上移
+            </button>
+            <button class="btn btn-success ctrol" onclick="xy()">
+                &nbsp;下移
+            </button>
+            <button class="btn btn-success ctrol" onclick="bc()">
+                &nbsp;保存
+            </button>
         </div>
 
-        <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped">
+        <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped table-bordered">
         </table>
 
 
@@ -1059,8 +1137,11 @@
                             <td></td>
                             <td>
                                 <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                <input id="worktype" class="form-control" value="0"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
-
+                                <!--                                <input id="worktype" class="form-control" value="0"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">-->
+                                <select class="easyui-combobox" id="worktype" name="worktype" style="width:150px; height: 30px">
+                                    <option value="0" >模拟量</option>
+                                    <option value="1" >开关量</option>  
+                                </select>
                             </td>
 
                         </tr>                  
@@ -1146,6 +1227,29 @@
             <input type="file" id="excel-file" style=" height: 40px;">
             <table id="warningtable"></table>
 
+        </div>
+
+        <div  style=" top:-60%;position:absolute; z-index:9999;background-color:#FFFFFF;">
+            <table id="cgqmb" style=" border: 1px">
+                <tr>
+                    <td>序号</td>
+                    <td>网关编号</td>
+                    <td>站号</td>
+                    <td>传感器名</td>
+                    <td>数据位置</td>
+                    <td>工作模式</td>
+                    <td>型号</td>
+                </tr>
+                <tr>
+                    <td>如1、2、3</td>
+                    <td>网关编号不可重复</td>
+                    <td>站号下网关不可重复</td>
+                    <td>传感器名</td>
+                    <td>数据位置</td>
+                    <td>工作模式 0代表模拟量、1代表开关量，填入0 或1 即可</td>
+                    <td>型号</td>
+                </tr>
+            </table>
         </div>
     </body>
 </html>

@@ -2,7 +2,7 @@
 <xforms>
     <xform desc="" id="sensorform">
         <xhandle desc="查询传感表" id="getSensorList" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name AS commname,*FROM  t_sensor tl,t_baseinfo AS tb WHERE tl.l_comaddr = tb.comaddr AND    @CONDITION  " var="bootstrap">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name AS commname,*FROM  t_sensor tl,t_baseinfo AS tb WHERE tl.l_comaddr = tb.comaddr AND  @CONDITION" var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr  AND @deplayment AND @pid">
                     <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>
                     <xfltpara id="deplayment" nrp="1=1" para="deplayment" sql="deplayment = :deplayment"></xfltpara>

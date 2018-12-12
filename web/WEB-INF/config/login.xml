@@ -3,7 +3,7 @@
 
     <xform desc="login" id="loginform">
         <xhandle desc="登陆" id="loginhand" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_user WHERE   @CONDITION " var="rs">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_user WHERE   @CONDITION and prohibit = 0 " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@name AND @password ">
                     <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'">
                     </xfltpara>
@@ -267,7 +267,7 @@
             </xsql>
         </xhandle> 
         <xhandle desc="获取人员列表" id="query" rtnype="JSON">
-            <xsql desc="查询该用户的子用户" id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_user    WHERE   @CONDITION   " var="bootstrap">
+            <xsql desc="查询该用户的子用户" id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_user    WHERE   @CONDITION  prohibit = 0   " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@u_parent_id">
                     <xfltpara id="u_parent_id" nrp="1=1" para="u_parent_id" sql="u_parent_id = ':u_parent_id'"> 
                     </xfltpara>           
@@ -293,7 +293,7 @@
             </xsql>
         </xhandle> 
         <xhandle desc="添加用户" id="addUser" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="name,sex,phone,department,email,password,pid,m_code,u_parent_id" tpe="DDL" tpl="insert into t_user(name,sex,phone,department,email,password,m_code,u_parent_id,pid) values(':name',':sex',':phone',':department',':email',':password',':m_code',':u_parent_id',':pid') " var="rs">
+            <xsql id="a1" para="name,sex,phone,department,email,password,pid,m_code,u_parent_id" tpe="DDL" tpl="insert into t_user(name,sex,phone,department,email,password,m_code,u_parent_id,pid,prohibit) values(':name',':sex',':phone',':department',':email',':password',':m_code',':u_parent_id',':pid',0) " var="rs">
             </xsql>
         </xhandle>
         <xhandle desc="修改用户" id="editUser" rtn="rs" rtnype="JSON">
@@ -321,7 +321,7 @@
             </xsql>
         </xhandle> 
         <xhandle desc="获取当前用户下的子角色" id="rolemenu" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT DISTINCT roletype as id,name as text FROM t_role where @CONDITION " var="list">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT DISTINCT roletype as id,name as text FROM t_role where @CONDITION" var="list">
                 <xflt id="CONDITION" nrp="" tpl="@parent_id ">
                     <xfltpara id="parent_id" nrp="1=1" para="parent_id" sql="parent_id = ':parent_id' ">
                     </xfltpara>
@@ -329,7 +329,7 @@
             </xsql>
         </xhandle>  
         <xhandle desc="查看用户是否存在子用户" id="loopsunuser" rtn="rs" rtnype="JSON">
-            <xsql id="a1" tpe="SQL" tpl="select * from t_user where  @CONDITION " var="rs">
+            <xsql id="a1" tpe="SQL" tpl="select * from t_user where  @CONDITION and prohibit = 0 " var="rs">
                 <xflt id="CONDITION" tpl="@u_parent_id ">
                     <xfltpara id="u_parent_id" nrp="1=1" para="id" sql="u_parent_id =  :id ">
                     </xfltpara>
@@ -337,7 +337,7 @@
             </xsql>
         </xhandle>   
         <xhandle desc="删除用户表" id="deleteUser" rtn="rs" rtnype="JSON">
-            <xsql id="a1" tpe="DDL" tpl="delete from t_user where @CONDITION " var="rs">
+            <xsql id="a1" tpe="DDL" tpl="update t_user set prohibit = 1 where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@id ">
                     <xfltpara id="id" nrp="1=1" para="id" sql="id =  :id ">
                     </xfltpara>
@@ -388,11 +388,13 @@
                 </xflt>        
             </xsql>  
             <xsql desc="获取用户名" id="a2" list="true" page="true" tpe="SQL" tpl=" SELECT * FROM t_role AS tr where @CONDITION " var="rsname">
-                <xflt id="CONDITION" nrp="" tpl="@name">
+                <xflt id="CONDITION" nrp="" tpl="@name AND @parent_id">
                     <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'">
+                    </xfltpara>
+                    <xfltpara id="parent_id" nrp="1=1" para="roletype" sql="parent_id = ':roletype'">
                     </xfltpara>                                  
                 </xflt>        
-            </xsql>   
+            </xsql> 
             
             
             <xsql desc="获取最大角色编码" id="a2" list="true" page="true" tpe="SQL" tpl="  SELECT MAX(roletype) AS maxtype FROM t_role AS tr " var="rsmax">      

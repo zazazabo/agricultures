@@ -163,14 +163,11 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                                if (value == null) {
-                                    return "关";
-                                }
-                                if (value == "0") {
-                                    return "关";
-                                } else if (value == "1") {
-                                    return "开";
-                                }
+                               if(value ==1){
+                                   return "闭合";
+                               }else{
+                                   return "断开"; 
+                               }
                             }
                         }],
                     clickToSelect: true,
@@ -274,14 +271,6 @@
                                 }
                             });
 
-
-
-
-
-
-
-
-
                             layerAler(str);
                             var opt = {
                                 url: "loop.loopForm.getLoopList.action",
@@ -316,6 +305,7 @@
                     return;
                 }
                 var ele = selects[0];
+                addlogon(u_name, "设置", o_pid, "回路监控", "设置回路【"+ele.l_name+"】状态");
                 var o = {};
                 o.l_comaddr = ele.l_comaddr;
                 console.log(ele);

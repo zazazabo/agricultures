@@ -130,37 +130,37 @@
                         },
                         {
                             field: 'name',
-                            title: langs1[223][lang],  //用户名
+                            title: langs1[223][lang], //用户名
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'department',
-                            title: langs1[224][lang],   //部门
+                            title: langs1[224][lang], //部门
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'phone',
-                            title: langs1[136][lang],  //电话
+                            title: langs1[136][lang], //电话
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'sex',
-                            title:langs1[225][lang] ,    //性别
+                            title: langs1[225][lang], //性别
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'email',
-                            title:langs1[137][lang],//邮箱
+                            title: langs1[137][lang], //邮箱
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
                             field: 'pid',
-                            title: langs1[226][lang],  //管理项目
+                            title: langs1[226][lang], //管理项目
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -227,6 +227,7 @@
                         layerAler(langs1[227][lang]); // 用户名不能为空
                         return false;
                     }
+
                     var nobj = {};
                     nobj.name = obj.name;
                     var isok = true;
@@ -245,14 +246,17 @@
                     if (isok) {
                         var pid = $("#sel_menu2").val(); //项目
                         var pids = "";
-                        for (var i = 0; i < pid.length; i++) {
-                            if (i == pid.length - 1) {
-                                pids += pid[i];
-                            } else {
-                                pids += pid[i] + ",";
-                            }
+                        if (pid != "" && pid != null) {
+                            for (var i = 0; i < pid.length; i++) {
+                                if (i == pid.length - 1) {
+                                    pids += pid[i];
+                                } else {
+                                    pids += pid[i] + ",";
+                                }
 
+                            }
                         }
+
 
                         obj.pid = pids;
                         obj.u_parent_id = userid;  //用户的父id
@@ -264,7 +268,7 @@
                                     layerAler(langs1[144][lang]); //添加成功
                                     $("#gravidaTable").bootstrapTable('refresh');
                                     $("#pjj").modal('hide'); //手动关闭
-                                    addlogon(u_name, "添加", o_pid, "用户管理", "添加用户");
+                                    addlogon(u_name, "添加", o_pid, "用户管理", "添加用户【" + obj.name + "】");
                                 }
                             },
                             error: function () {
@@ -314,7 +318,7 @@
             }
             //修改
             function editaction() {
-              
+
                 var pid = $("#sel_menu1").val(); //项目
                 var pids = "";
                 for (var i = 0; i < pid.length; i++) {
@@ -340,7 +344,7 @@
                             layerAler(langs1[143][lang]); //修改成功
                             $("#gravidaTable").bootstrapTable('refresh');
                             $("#pjj2").modal('hide'); //手动关闭
-                            addlogon(u_name, "修改", o_pid, "用户管理", "修改用户信息");
+                            addlogon(u_name, "修改", o_pid, "用户管理", "修改用户【" + formobj.name_edit + "】信息");
                         }
                     },
                     error: function () {
@@ -353,10 +357,10 @@
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var num = selects.length;
                 if (num == 0) {
-                   layerAler(langs1[73][lang]); //请勾选表格数据
+                    layerAler(langs1[73][lang]); //请勾选表格数据
                     return;
                 }
-                layer.confirm(langs1[145][lang], {  //确定要删除吗？
+                layer.confirm(langs1[145][lang], {//确定要删除吗？
                     btn: [langs1[146][lang], langs1[147][lang]]//确定、取消按钮
                 }, function (index) {
                     var select = selects[0];

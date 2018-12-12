@@ -423,8 +423,8 @@
                 $.ajax({url: "login.main.fualtCount.action", async: false, type: "get", datatype: "JSON", data: obj,
                     success: function (data) {
                         if (data.rs[0].number == 0) {
-                            $("#alarmNumber").html("0");
-                            $("#alarmNumber").css("color", "white");
+                            $("#alarmNumber").html("");
+//                            $("#alarmNumber").css("color", "white");
                             $("#imageId").attr("src","./img/green.png");
                         } else {
                             $("#alarmNumber").html(data.rs[0].number);

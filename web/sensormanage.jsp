@@ -591,7 +591,7 @@
                             title: '传感器名称', //灯具名称
                             width: 25,
                             align: 'center',
-                            valign: 'middle',
+                            valign: 'middle'
                         }, {
                             field: 'model',
                             title: '型号', //灯具名称
@@ -605,6 +605,7 @@
                             align: 'center',
                             valign: 'middle',
                             sortable:true,
+                            sortOrder:"desc",
                             formatter: function (value, row, index, field) {
                                 if (value != null) {
                                     return value.toString();
@@ -655,6 +656,8 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle',
+                            sortable:true,
+                            sortOrder:"desc",
                             formatter: function (value, row, index, field) {
                                 return  value.toString();
                             }
@@ -695,10 +698,10 @@
 
                     clickToSelect: true,
                     singleSelect: false,
-                    sortName: 'id',
+                    sortName: 'infonum',
                     locale: 'zh-CN', //中文支持,
                     showColumns: true,
-                    sortOrder: 'asc',
+                    sortOrder: 'desc',
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
@@ -713,12 +716,14 @@
                             },
 
                     //服务器url
-                    queryParams: function (params)  {   //配置参数     
+                    queryParams: function (params)  {   //配置参数   
+                        //
+                        var v1=params.sort + " "  + params.order; 
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
                             search: params.search,
                             skip: params.offset,
                             limit: params.limit,
-                            sort:params.sort,
+                            sort:v1,    //排序字段 和 （desc、ase）
                             sortOrder:params.order,
                             type_id: "1",
                             pid: "${param.pid}"

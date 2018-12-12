@@ -207,6 +207,7 @@
                                                             success: function (data) {
                                                                 var parentid = data.ups;
                                                                 parentid = parentid[0].u_parent_id;
+                                                                pobj.id = parentid;
                                                                 if (parentid != 0) {
                                                                     var ppobj = {};
                                                                     ppobj.id = parentid;
@@ -311,75 +312,147 @@
                             if (arrlist.length > 0) {
                                 layerAler(langs1[264][lang]);  //该项目下存在网关，不可删除
                             } else {
-                                $.ajax({async: false, url: "login.project.getpidUser.action", type: "get", datatype: "JSON", data: {pid: selects[0].code},
-                                    success: function (data) {
-                                        var arrlist = data.rs;
-                                        if (arrlist.length > 1) {
-                                            layerAler(langs1[265][lang]);   //该项目下拥有管理人员，不可删除
-                                        } else {
-                                            addlogon(u_name, "删除", o_pid, "项目管理", "删除【"+selects[0].name+"】项目");
-                                            $.ajax({async: false, url: "login.project.delete.action", type: "POST", datatype: "JSON", data: {id: selects[0].id},
-                                                success: function (data) {
-                                                    var arrlist = data.rs;
-                                                    if (arrlist.length > 0) {
-                                                        var code = selects[0].code;
-                                                        var pid = getuserporject(uid);
-                                                        var pinfo = getprojectInfo(pid);
-                                                        $('#gravidaTable').bootstrapTable('load', pinfo);
-                                                        $.ajax({async: false, url: "login.project.getpidUser.action", type: "get", datatype: "JSON", data: {pid: code},
+                                if (uid == selects[0].uid) {
+                                    addlogon(u_name, "删除", o_pid, "项目管理", "删除项目");
+                                    $.ajax({async: false, url: "login.project.delete.action", type: "POST", datatype: "JSON", data: {id: selects[0].id},
+                                        success: function (data) {
+                                            var arrlist = data.rs;
+                                            if (arrlist.length > 0) {
+                                                var code = selects[0].code;
+                                                var pid = getuserporject(uid);
+                                                var pinfo = getprojectInfo(pid);
+                                                $('#gravidaTable').bootstrapTable('load', pinfo);
+                                                $.ajax({async: false, url: "login.project.getpidUser.action", type: "get", datatype: "JSON", data: {pid: code},
+                                                    success: function (data) {
+                                                        var arrlist = data.rs;
+                                                        for (var i = 0; i < arrlist.length; i++) {
+                                                            var pids = arrlist[i].pid.split(",");
+                                                            console.log(i + ":" + pids);
+                                                            for (var j = 0; j < pids.length; j++) {
+                                                                if (pids[j] == code) {
+                                                                    pids.splice(j, 1);
+                                                                }
+                                                            }
+                                                            console.log(i + ":" + pids);
+                                                            var newcode = "";
+                                                            for (var k = 0; k < pids.length; k++) {
+                                                                if (k == 0) {
+                                                                    newcode += pids[k];
+                                                                } else {
+                                                                    newcode += ",";
+                                                                    newcode += pids[k];
+                                                                }
+                                                            }
+                                                            console.log(i + "new:" + newcode);
+                                                            var uobj = {};
+                                                            console.log("id:" + arrlist[i].id);
+                                                            uobj.id = arrlist[i].id;
+                                                            uobj.pid = newcode;
+                                                            $.ajax({async: false, url: "login.project.upduserpid.action", type: "get", datatype: "JSON", data: uobj,
+                                                                success: function (data) {
+                                                                    // var arrlist = data.rs;
+                                                                    var pid = getuserporject(uid);
+                                                                    parent.parent.porject(pid);  //首页刷新项目列表
+                                                                },
+                                                                error: function () {
+                                                                    alert("提交失败！");
+                                                                }
+                                                            });
+
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        alert("提交失败！");
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function () {
+                                            layerAler("提交失败");
+                                        }
+                                    });
+                                } else {
+                                    var pobj = {};
+                                    pobj.id = selects[0].uid;
+                                    var parentid = 0;
+                                    var ok = 0;
+                                    do {
+                                        $.ajax({async: false, url: "login.project.selectparent.action", type: "get", datatype: "JSON", data: pobj,
+                                            success: function (data) {
+                                                var parentids = data.ups;
+                                                parentid = parentids[0].u_parent_id;
+                                                pobj.id = parentid;
+                                                if (parentid != 0) {
+                                                    if (uid == parentid) {
+                                                        addlogon(u_name, "删除", o_pid, "项目管理", "删除项目");
+                                                        $.ajax({async: false, url: "login.project.delete.action", type: "POST", datatype: "JSON", data: {id: selects[0].id},
                                                             success: function (data) {
                                                                 var arrlist = data.rs;
-                                                                for (var i = 0; i < arrlist.length; i++) {
-                                                                    var pids = arrlist[i].pid.split(",");
-                                                                    console.log(i + ":" + pids);
-                                                                    for (var j = 0; j < pids.length; j++) {
-                                                                        if (pids[j] == code) {
-                                                                            pids.splice(j, 1);
-                                                                        }
-                                                                    }
-                                                                    console.log(i + ":" + pids);
-                                                                    var newcode = "";
-                                                                    for (var k = 0; k < pids.length; k++) {
-                                                                        if (k == 0) {
-                                                                            newcode += pids[k];
-                                                                        } else {
-                                                                            newcode += ",";
-                                                                            newcode += pids[k];
-                                                                        }
-                                                                    }
-                                                                    console.log(i + "new:" + newcode);
-                                                                    var uobj = {};
-                                                                    console.log("id:" + arrlist[i].id);
-                                                                    uobj.id = arrlist[i].id;
-                                                                    uobj.pid = newcode;
-                                                                    $.ajax({async: false, url: "login.project.upduserpid.action", type: "get", datatype: "JSON", data: uobj,
+                                                                if (arrlist.length > 0) {
+                                                                    var code = selects[0].code;
+                                                                    var pid = getuserporject(uid);
+                                                                    var pinfo = getprojectInfo(pid);
+                                                                    $('#gravidaTable').bootstrapTable('load', pinfo);
+                                                                    $.ajax({async: false, url: "login.project.getpidUser.action", type: "get", datatype: "JSON", data: {pid: code},
                                                                         success: function (data) {
-                                                                            // var arrlist = data.rs;
+                                                                            var arrlist = data.rs;
+                                                                            for (var i = 0; i < arrlist.length; i++) {
+                                                                                var pids = arrlist[i].pid.split(",");
+                                                                                console.log(i + ":" + pids);
+                                                                                for (var j = 0; j < pids.length; j++) {
+                                                                                    if (pids[j] == code) {
+                                                                                        pids.splice(j, 1);
+                                                                                    }
+                                                                                }
+                                                                                console.log(i + ":" + pids);
+                                                                                var newcode = "";
+                                                                                for (var k = 0; k < pids.length; k++) {
+                                                                                    if (k == 0) {
+                                                                                        newcode += pids[k];
+                                                                                    } else {
+                                                                                        newcode += ",";
+                                                                                        newcode += pids[k];
+                                                                                    }
+                                                                                }
+                                                                                console.log(i + "new:" + newcode);
+                                                                                var uobj = {};
+                                                                                console.log("id:" + arrlist[i].id);
+                                                                                uobj.id = arrlist[i].id;
+                                                                                uobj.pid = newcode;
+                                                                                $.ajax({async: false, url: "login.project.upduserpid.action", type: "get", datatype: "JSON", data: uobj,
+                                                                                    success: function (data) {
+                                                                                        // var arrlist = data.rs;
+                                                                                        var pid = getuserporject(uid);
+                                                                                        parent.parent.porject(pid);  //首页刷新项目列表
+                                                                                    },
+                                                                                    error: function () {
+                                                                                        alert("提交失败！");
+                                                                                    }
+                                                                                });
+
+                                                                            }
                                                                         },
                                                                         error: function () {
                                                                             alert("提交失败！");
                                                                         }
                                                                     });
-
                                                                 }
                                                             },
                                                             error: function () {
-                                                                alert("提交失败！");
+                                                                layerAler("提交失败");
                                                             }
                                                         });
+                                                        ok = 1;
+                                                        parentid = 0;
                                                     }
-                                                },
-                                                error: function () {
-                                                    layerAler("提交失败");
                                                 }
-                                            });
-
-                                        }
-                                    },
-                                    error: function () {
-                                        alert("提交失败！");
+                                            }
+                                        });
+                                    } while (parentid != 0);
+                                    if (ok == 0) {
+                                        layerAler("子用户不可删除父用户创建的项目");
                                     }
-                                });
+                                }
                             }
                         },
                         error: function () {

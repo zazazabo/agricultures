@@ -37,17 +37,18 @@
             }
 
             .wd{
-                border: 1px solid black; width: 13%; float: left; height: 256px;   margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60);
+                border: 1px solid black; width: 13%; float: left; height: 256px;   margin-left: 3%; margin-top: 2%;
             }
 
             .sd{
-                border: 1px solid black; width: 13%; float: left; height: 256px;   background:rgba(255,165,0,0.6); filter:alpha(opacity=60);  margin-left: 3%; margin-top: 2%; 
+                border: 1px solid black; width: 13%; float: left; height: 256px;margin-left: 3%; margin-top: 2%; 
             }
 
-            .kg{ border: 1px solid black; width: 13%; float: left; height: 256px;    margin-left: 3%; margin-top: 2%; background:rgba(255,165,0,0.6); filter:alpha(opacity=60); }
+            .kg{ border: 1px solid black; width: 13%; float: left; height: 256px;    margin-left: 3%; margin-top: 2%;}
 
-            .hl{ border: 1px solid black; width: 13%; float: left; height: 256px;    margin-left: 3%; margin-top: 2%; background:rgba(144, 238 ,144,0.6); filter:alpha(opacity=60); }
-
+            .hl{ border: 1px solid black; width: 13%; float: left; height: 256px;background:rgba(144, 238 ,144,0.6); filter:alpha(opacity=60); margin-left: 3%; margin-top: 2%;  }
+            .lx{background:rgba(96, 96 ,96,0.6); filter:alpha(opacity=60);}
+            .cgqzx{background:rgba(255,165,0,0.6); filter:alpha(opacity=60);}
             img{ width:100%;height:100%;}
 
         </style>
@@ -79,9 +80,9 @@
 
                             } else if (v1.type == 3) {
                                 if (v1.numvalue != null && v1.numvalue != "" && v1.numvalue != 0) {
-                                    str = "开";
+                                    str = "闭合";
                                 } else {
-                                    str = "关";
+                                    str = "断开";
                                 }
                                 pd = 1;
                             }
@@ -102,12 +103,12 @@
                             var loop = loops[j];
                             var lid = "loop" + loop.id;
                             var limg = "limg" + loop.id;
-                            var str = "开";
+                            var str = "闭合";
                             if (loop.l_switch == 1) {
-                                str = "开";
+                                str = "闭合";
                                 $("#" + limg).attr("src", "./img/l.png");
                             } else {
-                                str = "关";
+                                str = "断开";
                                 $("#" + limg).attr("src", "./img/h.png");
                             }
                             $("#" + lid).html(str);
@@ -119,6 +120,17 @@
                         alert("提交失败！");
                     }
                 });
+            }
+            
+             //计算时间差
+            function TimeDifference(time1, time2)
+            {
+
+                time1 = new Date(time1.replace(/-/g, '/'));
+                time2 = new Date(time2.replace(/-/g, '/'));
+                var ms = Math.abs(time1.getTime() - time2.getTime());
+                return ms / 1000 / 60;
+
             }
             $(function () {
                var pid = parent.parent.getpojectId();
@@ -134,13 +146,13 @@
                                 var bodydiv2 = document.createElement("div");
                                 var img2 = document.createElement("img");
                                 $(img2).attr("id", "limg" + loop.id);
-                                str = "关"; //状态
+                                str = "断开"; //状态
                                 $(bodydiv2).addClass("hl");
                                 if (loop.l_switch == 1) {
-                                    str = "开";
+                                    str = "闭合";
                                     img2.src = "./img/l.png";
                                 } else {
-                                    str = "关";
+                                    str = "断开";
                                     img2.src = "./img/h.png";
                                 }
                                 var div11 = document.createElement("div");
@@ -173,6 +185,14 @@
                                 var str = "";
                                 var str2 = "";  //湿度温度描述
                                 var pd = 0;
+                                var time1 = sensor.onlinetime.substring(0, 16);
+                                var time2 = sensor.dtime.substring(0, 16);
+                                var stime = TimeDifference(time1, time2);
+                                if(stime>15){
+                                    $(bodydiv).addClass("lx");  //离线
+                                }else{
+                                    $(bodydiv).addClass("cgqzx");  //在线 
+                                }
                                 if (sensor.type == 1) {   //温度
                                     $(bodydiv).addClass("wd");
                                     img.src = "./img/wd.png";
@@ -186,10 +206,10 @@
                                 } else if (sensor.type == 3) {
                                     $(bodydiv).addClass("kg");
                                     if (sensor.numvalue != null && sensor.numvalue != "" && sensor.numvalue != 0) {
-                                        str = "开";
+                                        str = "闭合";
                                         img.src = "./img/k.png";
                                     } else {
-                                        str = "关";
+                                        str = "断开";
                                         img.src = "./img/g.png";
                                     }
                                     pd = 1;

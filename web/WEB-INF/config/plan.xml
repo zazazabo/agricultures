@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xforms>
+
+    <xform desc="场景方案" id="planForm">
+       
+
+
+        <xhandle desc="传感器场景方案2" id="getAllScennum" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan AS tp WHERE tp.p_attr=1 AND tp.p_type=1 AND p_show=1 AND  @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+
+
+
+
+
+    </xform>
+</xforms>

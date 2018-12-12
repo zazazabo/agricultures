@@ -108,7 +108,7 @@
             function editscenPlan_finish() {
                 var a = $("#form2").serializeObject();
                 addlogon(u_name, "修改", o_pid, "传感器场景策略", "修改传感器场景方案");
-       
+
                 var ooo = $("#form2").serializeObject();
                 for (var i = 0; i < 5; i++) {
                     var ii = (i + 1).toString();
@@ -165,8 +165,8 @@
 
 
 
-                    //sensor.planForm.editSensorScenePlan.action
-                
+                //sensor.planForm.editSensorScenePlan.action
+
                 return false;
 
             }
@@ -185,24 +185,24 @@
                 console.log(select);
                 // var code = select.p_code;
 
-                 $("#p_name1").val(select.p_name);
-                  $("#hidden_id").val(select.id);
-                  $("#p_scenenum1").combobox('setValue',select.p_scenenum);
-                 if (select.p_type == "1") {
+                $("#p_name1").val(select.p_name);
+                $("#hidden_id").val(select.id);
+                $("#p_scenenum1").combobox('setValue', select.p_scenenum);
+                if (select.p_type == "1") {
 
-               for (var i = 0; i < 5; i++) {
-                        var index= (i+1).toString();
-                        var scene="p_scene" + (i+1).toString();
-                        var val=select[scene];
-                        var obj = eval('(' + val + ')');   
+                    for (var i = 0; i < 5; i++) {
+                        var index = (i + 1).toString();
+                        var scene = "p_scene" + (i + 1).toString();
+                        var val = select[scene];
+                        var obj = eval('(' + val + ')');
 
-                       $("#info" + index + index).combobox('setValue',obj.info.toString());
-                        $("#up" + index + index).spinner("setValue",obj.up.toString()); 
-                        $("#down" + index + index).spinner("setValue",obj.down.toString());    
-                    
-                   }
+                        $("#info" + index + index).combobox('setValue', obj.info.toString());
+                        $("#up" + index + index).spinner("setValue", obj.up.toString());
+                        $("#down" + index + index).spinner("setValue", obj.down.toString());
 
-                 }
+                    }
+
+                }
                 $('#dialog-edit').dialog('open');
                 return false;
                 //$("#MODAL_EDIT").modal();
@@ -211,7 +211,7 @@
             function deleteplan() {
 
                 var selects = $("#table0").bootstrapTable('getSelections');
-                if (selects.length==0) {
+                if (selects.length == 0) {
                     layerAler("请选择表格数据");
                     return;
                 }
@@ -224,24 +224,26 @@
                     title: '提示'   //提示
                 }, function (index) {
 
-                        $.ajax({async: false, url: "loop.planForm.deletePlan.action", type: "get", datatype: "JSON", data: {id: select.id},
-                            success: function (data) {
-                                var arrlist = data.rs;
-                                if (arrlist.length == 1) {
-                                    $("#table0").bootstrapTable('refresh');
-                                }
-
-                            },
-                            error: function () {
-                                alert("提交失败！");
+                    $.ajax({async: false, url: "loop.planForm.deletePlan.action", type: "get", datatype: "JSON", data: {id: select.id},
+                        success: function (data) {
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+                                $("#table0").bootstrapTable('refresh');
                             }
-                        });
-                    
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
                     layer.close(index);
                 });
 
 
             }
+
+            var infolist = {};
 
             $(function () {
                 var aaa = $("span[name=xxx]");
@@ -285,6 +287,13 @@
 
                 $.ajax({async: false, url: "sensor.sensorform.getInfoNumList.action", type: "get", datatype: "JSON", data: {},
                     success: function (data) {
+//                        infolist=data;
+                        for (var i = 0; i < data.length; i++) {
+                            var o = data[i];
+                            infolist[o.id] = o.text;
+                        }
+                        console.log(infolist);
+
                         for (var i = 0; i < 10; i++) {
                             $("#info" + (i + 1).toString()).combobox('loadData', data);
                             $("#info" + (i + 1).toString() + (i + 1).toString()).combobox('loadData', data);
@@ -391,15 +400,15 @@
                                 rowspan: 2,
                                 colspan: 1
                             },
-                            {
-                                field: 'p_code',
-                                title: '方案编号', //方案编号
-                                width: 25,
-                                align: 'center',
-                                valign: 'middle',
-                                rowspan: 2,
-                                colspan: 1
-                            },
+//                            {
+//                                field: 'p_code',
+//                                title: '方案编号', //方案编号
+//                                width: 25,
+//                                align: 'center',
+//                                valign: 'middle',
+//                                rowspan: 2,
+//                                colspan: 1
+//                            },
                             {
                                 field: 'p_scene',
                                 title: '场景', //
@@ -422,7 +431,10 @@
 
                                     if (isJSON(row.p_scene1)) {
                                         var obj = eval('(' + row.p_scene1 + ')');
-                                        var str = "信息点号:" + obj.info.toString() + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+
+//                                        console.log(infolist);
+                                        var o22 = obj.info.toString();
+                                        var str = infolist[o22] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
                                         return str;
                                     }
                                 }
@@ -436,7 +448,8 @@
                                 formatter: function (value, row, index, field) {
                                     if (isJSON(row.p_scene2)) {
                                         var obj = eval('(' + row.p_scene2 + ')');
-                                        var str = "信息点号:" + obj.info.toString() + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                        var o22 = obj.info.toString();
+                                        var str = infolist[o22] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
                                         return str;
                                     }
                                 }
@@ -450,7 +463,8 @@
                                 formatter: function (value, row, index, field) {
                                     if (isJSON(row.p_scene3)) {
                                         var obj = eval('(' + row.p_scene3 + ')');
-                                        var str = "信息点号:" + obj.info.toString() + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                        var o22 = obj.info.toString();
+                                        var str = infolist[o22] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
                                         return str;
                                     }
                                 }
@@ -464,7 +478,8 @@
                                 formatter: function (value, row, index, field) {
                                     if (isJSON(row.p_scene4)) {
                                         var obj = eval('(' + row.p_scene4 + ')');
-                                        var str = "信息点号:" + obj.info.toString() + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                        var o22 = obj.info.toString();
+                                        var str = infolist[o22] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
                                         return str;
                                     }
                                 }
@@ -478,7 +493,8 @@
                                 formatter: function (value, row, index, field) {
                                     if (isJSON(row.p_scene5)) {
                                         var obj = eval('(' + row.p_scene5 + ')');
-                                        var str = "信息点号:" + obj.info.toString() + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                        var o22 = obj.info.toString();
+                                        var str = infolist[o22] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
                                         return str;
                                     }
                                 }
@@ -546,12 +562,12 @@
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;
                 <span name="xxx" id="67">删除</span>
             </button>
-<!--             <span style="margin-left:20px;" name="xxx" id="68">方案类型</span>&nbsp;
-            <span class="menuBox">
-                <select class="easyui-combobox" data-options="editable:false" id="p_type" name="p_type" style="width:150px; height: 30px; margin-left: 3px;">
-                    <option value="1">场景</option>           
-                </select>
-            </span>  -->
+            <!--             <span style="margin-left:20px;" name="xxx" id="68">方案类型</span>&nbsp;
+                        <span class="menuBox">
+                            <select class="easyui-combobox" data-options="editable:false" id="p_type" name="p_type" style="width:150px; height: 30px; margin-left: 3px;">
+                                <option value="1">场景</option>           
+                            </select>
+                        </span>  -->
         </div>
 
         <table id="table0" style="width:100%; " class="text-nowrap table table-hover table-striped">
@@ -575,21 +591,21 @@
                             </td>
                             <td></td>
                             <td>
-  <!--                                  <span style="margin-left: 20px;" >
-                                    场景号
-                                </span>
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum" name="p_scenenum" style="width:70px; height: 30px">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                </select> -->
+                                <!--                                  <span style="margin-left: 20px;" >
+                                                                  场景号
+                                                              </span>
+                                                              <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum" name="p_scenenum" style="width:70px; height: 30px">
+                                                                          <option value="0">0</option>
+                                                                          <option value="1">1</option>
+                                                                          <option value="2">2</option>
+                                                                          <option value="3">3</option>
+                                                                          <option value="4">4</option>
+                                                                          <option value="5">5</option>
+                                                                          <option value="6">6</option>
+                                                                          <option value="7">7</option>
+                                                                          <option value="8">8</option>
+                                                                          <option value="9">9</option>
+                                                              </select> -->
                             </td>
                         </tr>
 
@@ -721,21 +737,21 @@
                             </td>
                             <td></td>
                             <td>
-<!--                                 <span style="margin-left: 20px;"  >
-                                    场景号
-                                </span>
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum1" name="p_scenenum" style="width:70px; height: 30px">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                </select> -->
+                                <!--                                 <span style="margin-left: 20px;"  >
+                                                                    场景号
+                                                                </span>
+                                                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum1" name="p_scenenum" style="width:70px; height: 30px">
+                                                                            <option value="0">0</option>
+                                                                            <option value="1">1</option>
+                                                                            <option value="2">2</option>
+                                                                            <option value="3">3</option>
+                                                                            <option value="4">4</option>
+                                                                            <option value="5">5</option>
+                                                                            <option value="6">6</option>
+                                                                            <option value="7">7</option>
+                                                                            <option value="8">8</option>
+                                                                            <option value="9">9</option>
+                                                                </select> -->
                             </td>
                         </tr>
 

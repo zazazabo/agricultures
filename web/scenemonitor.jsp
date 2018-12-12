@@ -32,13 +32,12 @@
             $(function () {
 
                 var aaa = $("span[name=xxx]");
+
                 for (var i = 0; i < aaa.length; i++) {
                     var d = aaa[i];
                     var e = $(d).attr("id");
                     $(d).html(langs1[e][lang]);
                 }
-
-
 
                 $('#gayway').on('check.bs.table', function (row, element) {
                     var l_comaddr = element.comaddr;
@@ -46,12 +45,26 @@
                     obj.l_comaddr = l_comaddr;
                     obj.pid = "${param.pid}";
                     console.log(obj);
+
+
+
 //                    var opt = {
 //                        url: "loop.loopForm.getLoopList.action",
 //                        silent: true,
 //                        query: obj
 //                    };
 //                    $("#gravidaTable").bootstrapTable('refresh', opt);
+                });
+
+                $('#scenenum').combobox({
+                    url: "sensor.planForm.getSensorPlanBynum1.action?pid=${param.pid}",
+                    onLoadSuccess: function (data) {
+                        if (Array.isArray(data) && data.length > 0) {
+                            $(this).combobox('select', data[0].id);
+                        }
+                    }, onSelect: function (record) {
+                        $("#scennum").val(record.text);
+                    }
                 });
 
             })
@@ -68,7 +81,23 @@
                         silent: true,
                         query: obj
                     };
-                    $("#gravidaTable").bootstrapTable('refresh', opt);
+
+
+                    var vv = [];
+                    vv.push(1);
+                    vv.push(3);
+                    var infonum = 3800 | 0x1000;
+                    vv.push(infonum >> 8 & 0xff);
+                    vv.push(infonum & 0xff);
+
+                    vv.push(0);
+                    vv.push(2); //寄存器数目 2字节   
+
+                    var data = buicode2(vv);
+                    console.log(data);
+                    dealsend2("03", data, "readinfoCB", l_comaddr, 0, 0, 3800);
+
+
                     return {disabled: false, checked: true//设置选中
                     };
 
@@ -116,7 +145,7 @@
                     layerAler('请勾选网关');  //请勾选网关
                 }
                 var l_comaddr = s2[0].comaddr;
-                    
+
                 var obj = $("#form1").serializeObject();
 
                 var o = {};
@@ -132,7 +161,7 @@
                 vv.push(4);           //字节数目长度  1字节 10
 
 
-                var val2 = parseInt(obj.value1);
+                var val2 = parseInt(obj.scenenum);
                 vv.push(val2 >> 8 & 0xff);   //场景值
                 vv.push(val2 & 0xff);
 
@@ -145,7 +174,7 @@
 
 
 
-   
+
 
                 var data = buicode2(vv);
                 console.log(data);
@@ -167,7 +196,7 @@
                     }
                     console.log(v);
                     if (data[1] == 0x10) {
-                        var infonum = 3801  | 0x1000;
+                        var infonum = 3801 | 0x1000;
                         console.log(infonum);
                         var high = infonum >> 8 & 0xff;
                         var low = infonum & 0xff;
@@ -188,7 +217,7 @@
                     layerAler('请勾选网关');  //请勾选网关
                 }
                 var l_comaddr = s2[0].comaddr;
-                    
+
                 var obj = $("#form1").serializeObject();
 
                 var o = {};
@@ -231,9 +260,38 @@
                     v = v + sprintf("%02x", data[i]) + " ";
                 }
                 console.log(v);
-                if (data[1] == 0x03) {
+//                var infonum = obj.val | 0x1000;
+//                var high = infonum >> 8 & 0xff;
+//                var low = infonum & 0xff;
+//
+//                if (data[2] == high&&data[3]==low) {
+//                        alert("读取成功");
+//
+//
+//                }
 
-                }
+                var sceneval = data[3] * 256 + data[4];
+
+                var ooo = {p_scenenum: sceneval, pid: "${param.pid}"};
+                console.log(ooo);
+                $.ajax({async: false, url: "sensor.planForm.getSensorPlanBynum.action", type: "get", datatype: "JSON", data: ooo,
+                    success: function (data) {
+                        var arrlist = data.rs;
+                        if (arrlist.length == 1) {
+                            var dataobj = arrlist[0];
+                            console.log(arrlist[0]);
+                            $("#value2").val(dataobj.p_name);
+                        }
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+
+
+
+
             }
 
             function readinfo() {
@@ -242,12 +300,8 @@
                     layerAler('请勾选网关');  //请勾选网关
                 }
                 var l_comaddr = s2[0].comaddr;
-                    
+
                 var obj = $("#form1").serializeObject();
-
-
-
-                var vv = new Array();
                 var vv = [];
                 vv.push(1);
                 vv.push(3);
@@ -301,11 +355,22 @@
                                         <!-- 合闸开关-->
                                         场景控制
                                         &nbsp;</span>
-       <input id="value1" name="value1" style="width:100px; height: 30px;" class="form-control" type="text" >
-                             <!--        <select class="easyui-combobox" id="switch" name="switch" style="width:100px; height: 30px">
-                                        <option value="0">断开</option>
-                                        <option value="1">闭合</option>           
-                                    </select> -->
+                                    <select id="scenenum" class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info11" name="scenenum" style="width:100px; height: 30px">
+                                    </select>
+
+
+
+
+
+
+
+
+
+                                    <!--<input id="value1" name="value1" style="width:100px; height: 30px;" class="form-control" type="text" >-->
+                                    <!--        <select class="easyui-combobox" id="switch" name="switch" style="width:100px; height: 30px">
+                                               <option value="0">断开</option>
+                                               <option value="1">闭合</option>           
+                                           </select> -->
 
                                     <button type="button" id="btnswitch" onclick="switchloop()" class="btn btn-success btn-sm">
                                         设置
@@ -329,7 +394,8 @@
                                     </button>
 
                                 </td>
-                                <td>
+                                <td >
+                                    <input  id="value2" name="value2" style="width:100px; margin-left: 10px; height: 30px;" class="form-control" type="text" >
                                     <!--<button  type="button" onclick="tourloop()" class="btn btn-success btn-sm"><span name="xxx" id="454">读取回路状态</span></button>-->
                                     &nbsp;
                                 </td>

@@ -136,7 +136,7 @@
                     }
                     var obj2 = {"num": parseInt(obj.infonum), "offset": parseInt(obj.offset)};
                     obj.p_info = JSON.stringify(obj2);
-                    
+
                     var ret = false;
                     $.ajax({async: false, url: "loop.planForm.editLoopInfoPlan.action", type: "get", datatype: "JSON", data: obj,
                         success: function (data) {
@@ -391,7 +391,7 @@
                     a.p_type = 2;
                     a.p_attr = 0;
                     a.pid = obj.pid;
-                    a.p_name=obj.p_name;
+                    a.p_name = obj.p_name;
                     console.log(a);
                     var ret = false;
                     $.ajax({async: false, url: "loop.planForm.addLoopInfoPlan.action", type: "get", datatype: "JSON", data: a,
@@ -409,6 +409,7 @@
                 return  ret;
             }
 
+            var sceneninfo = {};
             $(function () {
                 var aaa = $("span[name=xxx]");
                 for (var i = 0; i < aaa.length; i++) {
@@ -534,6 +535,37 @@
                 });
 
 
+                $.ajax({async: false, url: "sensor.sensorform.getInfoNumList.action", type: "get", datatype: "JSON", data: {},
+                    success: function (data) {
+                        $("#infonum").combobox('loadData', data);
+                        $("#infonum1").combobox('loadData', data);
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+
+                $.ajax({async: false, url: "sensor.planForm.getSensorPlanBynum1.action", type: "get", datatype: "JSON", data: {pid:"${param.pid}"},
+                    success: function (data) {
+                        console.log(data);
+                        for (var i = 0; i < data.length; i++) {
+                            var o = data[i];
+                            sceneninfo[o.id] = o.text;
+                        }
+                        console.log(sceneninfo);
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+
+
+
+
+
+
 
 
 
@@ -555,6 +587,7 @@
                                 colspan: 1
 
                             },
+
                             {
                                 field: 'p_name',
                                 title: '方案名称', //方案名称
@@ -564,15 +597,15 @@
                                 rowspan: 2,
                                 colspan: 1
                             },
-                            {
-                                field: 'p_code',
-                                title: '方案编码', //方案编码
-                                width: 25,
-                                align: 'center',
-                                valign: 'middle',
-                                rowspan: 2,
-                                colspan: 1
-                            },
+//                            {
+//                                field: 'p_code',
+//                                title: '方案编码', //方案编码
+//                                width: 25,
+//                                align: 'center',
+//                                valign: 'middle',
+//                                rowspan: 2,
+//                                colspan: 1
+//                            },
                             {
                                 field: 'p_time',
                                 title: '时间一', //
@@ -859,15 +892,15 @@
                                 rowspan: 2,
                                 colspan: 1
                             },
-                            {
-                                field: 'p_code',
-                                title: '方案编号', //
-                                width: 25,
-                                align: 'center',
-                                valign: 'middle',
-                                rowspan: 2,
-                                colspan: 1
-                            },
+//                            {
+//                                field: 'p_code',
+//                                title: '方案编号', //
+//                                width: 25,
+//                                align: 'center',
+//                                valign: 'middle',
+//                                rowspan: 2,
+//                                colspan: 1
+//                            },
                             {
                                 field: 'p_scene',
                                 title: '场景一', //
@@ -1151,15 +1184,15 @@
                                 rowspan: 2,
                                 colspan: 1
                             },
-                            {
-                                field: 'p_code',
-                                title: '方案编号', //
-                                width: 25,
-                                align: 'center',
-                                valign: 'middle',
-                                rowspan: 2,
-                                colspan: 1
-                            },
+//                            {
+//                                field: 'p_code',
+//                                title: '方案编号', //
+//                                width: 25,
+//                                align: 'center',
+//                                valign: 'middle',
+//                                rowspan: 2,
+//                                colspan: 1
+//                            },
                             {
                                 field: 'p_infonum',
                                 title: '信息点号', //
@@ -1419,22 +1452,7 @@
                 }
 
 
-                $.ajax({async: false, url: "sensor.sensorform.getInfoNumList.action", type: "get", datatype: "JSON", data: {},
-                    success: function (data) {
-                        $("#infonum").combobox('loadData', data);
-                        $("#infonum1").combobox('loadData', data);
-//                        console.log(data);
 
-//                        for (var i = 0; i < 5; i++) {
-//                            var str = (i + 1).toString();
-//                            $("#info" + str).combobox('loadData', data);
-//                            $("#info" + str + str).combobox('loadData', data);
-//                        }
-                    },
-                    error: function () {
-                        alert("提交失败！");
-                    }
-                });
 
 
 
@@ -1527,7 +1545,7 @@
                             <td></td>
                             <td>
                                 <!--方案名称-->
-                                <span style="margin-left:20px;" id="69" name="xxx">方案名称</span>&nbsp;
+                                <span style="margin-left:20px;" >方案名称</span>&nbsp;
                                 <input id="p_name" class="form-control"  name="p_name" style="width:150px;display: inline;" placeholder="请输入方案名" type="text"></td>
 
                             </td>

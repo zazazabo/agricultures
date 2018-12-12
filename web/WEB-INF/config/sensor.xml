@@ -65,7 +65,7 @@
         <xhandle desc="添加传感器" id="addsensor" rtn="rs" rtnype="JSON">
             <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr,type" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,type,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',:type,0) " var="rs"></xsql> 
         </xhandle>
-          <xhandle desc="添加传感器不带类型" id="addsensor1" rtn="rs" rtnype="JSON">
+        <xhandle desc="添加传感器不带类型" id="addsensor1" rtn="rs" rtnype="JSON">
             <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
         </xhandle>      
         
@@ -87,15 +87,15 @@
 
        
     </xform>
-        <xform desc="场景方案" id="planForm">
+    <xform desc="场景方案" id="planForm">
             
-     <xhandle desc="添加场景场景方案" id="addSensorScenePlan" rtn="rs" rtnype="JSON">
+        <xhandle desc="添加场景场景方案" id="addSensorScenePlan" rtn="rs" rtnype="JSON">
             <xsql id="a1" para="pid,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name" tpe="DDL" tpl="insert into t_plan(pid,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name) values(':pid',:p_attr,:p_type,':p_scene1',':p_scene2',':p_scene3',':p_scene4',':p_scene5',':p_name') " var="rs"></xsql>
         </xhandle>
 
 
 
-       <xhandle desc="修改场景方案" id="editSensorScenePlan" rtnype="JSON">
+        <xhandle desc="修改场景方案" id="editSensorScenePlan" rtnype="JSON">
             <xsql id="a1" para="p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name" tpe="DDL" tpl="update t_plan set p_scene1=':p_scene1',p_scene2=':p_scene2',p_scene3=':p_scene3',p_scene4=':p_scene4',p_scene5=':p_scene5',p_name=':p_name' where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@id ">
                     <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
@@ -113,7 +113,7 @@
 
 
 
-  <xhandle desc="修改场景方案" id="editscenshow" rtnype="JSON">
+        <xhandle desc="修改场景方案" id="editscenshow" rtnype="JSON">
             <xsql id="a1" para="p_show,p_scenenum" tpe="DDL" tpl="update t_plan set p_show=:p_show,p_scenenum=:p_scenenum where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@p_code ">
                     <xfltpara id="p_code" nrp="1=2" para="p_code" sql="p_code=':p_code'"></xfltpara>
@@ -122,7 +122,7 @@
         </xhandle>
 
 
-  <xhandle desc="修改场景号部署" id="editscenDeployment" rtnype="JSON">
+        <xhandle desc="修改场景号部署" id="editscenDeployment" rtnype="JSON">
             <xsql id="a1" para="p_deployment" tpe="DDL" tpl="update t_plan set p_deployment=:p_deployment where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@id ">
                     <xfltpara id="id" nrp="1=2" para="id" sql="id=:id"></xfltpara>
@@ -150,5 +150,30 @@
         </xhandle>
 
 
-        </xform>
+        <xhandle desc="传感器场景方案" id="getSensorPlanBynum" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan tp where p_deployment='1' and p_attr=1 and p_type=1 and  @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@p_scenenum AND @pid">
+
+                    <xfltpara id="p_scenenum" nrp="1=2" para="p_scenenum" sql="p_scenenum = :p_scenenum">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+
+        <xhandle desc="传感器场景方案2" id="getSensorPlanBynum1" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT p_scenenum as id,p_name as text,* FROM t_plan tp where p_deployment='1' and p_attr=1 and p_type=1 and  @CONDITION  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+
+
+
+
+
+    </xform>
 </xforms>

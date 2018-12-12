@@ -105,14 +105,6 @@
 
 
 
-
-
-
-
-
-
-
-
         <xhandle desc="修改场景方案" id="editscenshow" rtnype="JSON">
             <xsql id="a1" para="p_show,p_scenenum" tpe="DDL" tpl="update t_plan set p_show=:p_show,p_scenenum=:p_scenenum where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@p_code ">

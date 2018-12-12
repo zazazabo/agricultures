@@ -92,15 +92,15 @@
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
                                 var type = parseInt(value);
-                                var str = type & 0x1 == 1 ? "自动" : "手动";
+//                                var str = type & 0x1 == 1 ? "自动" : "手动";
 
-
+                                var str="";
                                 if (type >> 1 & 0x1 == 1) {
-                                    return "时间" + "-" + str;  //断开
+                                    return "时间"
                                 } else if (type >> 2 & 0x1 == 1) {
-                                    return '场景' + "-" + str;  //闭合
+                                    return '场景' 
                                 } else if (type >> 3 & 0x1 == 1) {
-                                    return '信息点' + "-" + str;
+                                    return '信息点'
                                 } else {
                                     return  str;
                                 }
@@ -112,39 +112,48 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                                var worktype = parseInt(row.l_worktype);
-                                if (worktype >> 1 & 0x1 == 1) {
-                                    var str = row.l_val1;
-                                    var strtime = "";
-                                    for (var i = 0; i < 5; i++) {
-                                        var index = "l_val" + (i + 1).toString();
-                                        var strobj = row[index];
-                                        if (isJSON(strobj)) {
-                                            var obj = eval('(' + strobj + ')');
-                                            strtime = strtime + "时间:" + obj.time + "  " + " 值:" + obj.value + "&emsp;";
-
-                                        }
-                                    }
-                                    // strtime = strtime.substr(0, strtime.length - 1);
-                                    return strtime;
-                                } else if (worktype >> 3 & 0x1 == 1) {
-                                    var strtime = "";
-                                    for (var i = 0; i < 5; i++) {
-                                        var index = "l_val" + (i + 1).toString();
-                                        var strobj = row[index];
-                                        if (isJSON(strobj)) {
-                                            var obj = eval('(' + strobj + ')');
-                                            if (i == 0) {
-                                                strtime = strtime + "信息点号:" + obj.info + "  " + "偏差值:" + obj.value + "&emsp;";
-                                            } else
-                                            {
-                                                strtime = strtime + "信:" + obj.info + "  " + "值:" + obj.value + "&emsp;";
-                                            }
-
-                                        }
-                                    }
-                                    return  strtime;
+                                
+//                            console.log(isJSON(value))    
+                                
+                                if(isJSON(value)){
+                                     var obj = eval('(' + value + ')');
+                                     console.log(obj);
+                                     return obj.name;
                                 }
+                   
+//                                var worktype = parseInt(row.l_worktype);
+//                                if (worktype >> 1 & 0x1 == 1) {
+//                                    var str = row.l_val1;
+//                                    var strtime = "";
+//                                    for (var i = 0; i < 5; i++) {
+//                                        var index = "l_val" + (i + 1).toString();
+//                                        var strobj = row[index];
+//                                        if (isJSON(strobj)) {
+//                                            var obj = eval('(' + strobj + ')');
+//                                            strtime = strtime + "时间:" + obj.time + "  " + " 值:" + obj.value + "&emsp;";
+//
+//                                        }
+//                                    }
+//                                    // strtime = strtime.substr(0, strtime.length - 1);
+//                                    return strtime;
+//                                } else if (worktype >> 3 & 0x1 == 1) {
+//                                    var strtime = "";
+//                                    for (var i = 0; i < 5; i++) {
+//                                        var index = "l_val" + (i + 1).toString();
+//                                        var strobj = row[index];
+//                                        if (isJSON(strobj)) {
+//                                            var obj = eval('(' + strobj + ')');
+//                                            if (i == 0) {
+//                                                strtime = strtime + "信息点号:" + obj.info + "  " + "偏差值:" + obj.value + "&emsp;";
+//                                            } else
+//                                            {
+//                                                strtime = strtime + "信:" + obj.info + "  " + "值:" + obj.value + "&emsp;";
+//                                            }
+//
+//                                        }
+//                                    }
+//                                    return  strtime;
+//                                }
                                 return value;
                             }
                         }, {
@@ -172,11 +181,11 @@
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 5,
+                    pageSize: 20,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [5, 10, 15, 20, 25],
+                    pageList: [20, 40, 80, 160, 320],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },

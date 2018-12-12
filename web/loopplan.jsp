@@ -221,7 +221,8 @@
                         var istr = (i + 1).toString();
                         var scene = "#scen" + istr + istr;
                         var val = "#val" + istr + istr;
-                        $(scene).val(ooo[i].scene);
+//                        $(scene).val(ooo[i].scene);
+                        $(scene).combobox('setValue',ooo[i].scene.toString());
                         $(val).val(ooo[i].value);
                     }
                 } else if (select.p_type == "2") {
@@ -454,7 +455,7 @@
                 $("#dialog-add").dialog({
                     autoOpen: false,
                     modal: true,
-                    width: 600,
+                    width: 700,
                     height: 350,
                     position: ["top", "top"],
                     buttons: {
@@ -469,7 +470,7 @@
                 $("#dialog-edit").dialog({
                     autoOpen: false,
                     modal: true,
-                    width: 600,
+                    width: 700,
                     height: 350,
                     position: "top",
                     buttons: {
@@ -546,9 +547,15 @@
                 });
 
 
-                $.ajax({async: false, url: "sensor.planForm.getSensorPlanBynum1.action", type: "get", datatype: "JSON", data: {pid:"${param.pid}"},
+                $.ajax({async: false, url: "sensor.planForm.getSensorPlanBynum1.action", type: "get", datatype: "JSON", data: {pid: "${param.pid}"},
                     success: function (data) {
                         console.log(data);
+                       for(var i=0;i<5;i++){
+                           var scen="#scen" + (i+1).toString();
+                           var scen1="#scen" + (i+1).toString() + (i+1).toString();
+                           $(scen).combobox('loadData',data);
+                           $(scen1).combobox('loadData',data);
+                        }
                         for (var i = 0; i < data.length; i++) {
                             var o = data[i];
                             sceneninfo[o.id] = o.text;
@@ -841,11 +848,11 @@
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [5, 10, 15, 20, 25],
+                    pageList: [20, 40, 80, 160, 320],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },
@@ -1134,11 +1141,11 @@
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [5, 10, 15, 20, 25],
+                    pageList: [10, 20, 40, 80, 160],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },
@@ -1419,11 +1426,11 @@
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [5, 10, 15, 20, 25],
+                    pageList: [10, 20, 40, 80, 160],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },
@@ -1612,7 +1619,10 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景一</span>&nbsp;
-                                <input id="scen1" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />
+                                <!--<input id="scen1" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen1" name="scen1" style="width:100px; height: 30px">
+                                </select>                               
+
                                 <span style="margin-left:10px;">控制值一</span>&nbsp;
                                 <input id="val1" class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
@@ -1621,7 +1631,9 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景二</span>&nbsp;
-                                <input id="scen2" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />
+                                <!--<input id="scen2" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen2" name="scen2" style="width:100px; height: 30px">
+                                </select>  
                                 <span style="margin-left:10px;"  >控制值二</span>&nbsp;
                                 <input id="val2" class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
                             </td>
@@ -1630,7 +1642,9 @@
                         <tr id="">
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景三</span>&nbsp;
-                                <input id="scen3" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />
+                                <!--<input id="scen3" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen3" name="scen3" style="width:100px; height: 30px">
+                                </select>  
                                 <span style="margin-left:10px;">控制值三</span>&nbsp;
                                 <input id="val3" class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
                             </td>
@@ -1639,7 +1653,9 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景四</span>&nbsp;
-                                <input id="scen4" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />
+                                <!--<input id="scen4" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen4" name="scen4" style="width:100px; height: 30px">
+                                </select>  
                                 <span style="margin-left:10px;"  >控制值四</span>&nbsp;
                                 <input id="val4" class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
                             </td>
@@ -1648,7 +1664,9 @@
                         <tr id="">
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景五</span>&nbsp;
-                                <input id="scen5" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />
+                                <!--<input id="scen5" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen5" name="scen5" style="width:100px; height: 30px">
+                                </select>  
                                 <span style="margin-left:10px;">控制值五</span>&nbsp;
                                 <input id="val5" class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
                             </td>
@@ -1820,7 +1838,11 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景一</span>&nbsp;
-                                <input id="scen11" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />
+                                <!--<input id="scen11" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />-->
+
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen11" name="scen1" style="width:100px; height: 30px">
+                                </select>  
+
                                 <span style="margin-left:10px;">控制值一</span>&nbsp;
                                 <input id="val11" class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
@@ -1829,7 +1851,9 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景二</span>&nbsp;
-                                <input id="scen22" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />
+                                <!--<input id="scen22" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen22" name="scen2" style="width:100px; height: 30px">
+                                </select>  
                                 <span style="margin-left:10px;"  >控制值二</span>&nbsp;
                                 <input id="val22" class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
                             </td>
@@ -1838,7 +1862,9 @@
                         <tr id="">
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景三</span>&nbsp;
-                                <input id="scen33" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />
+                                <!--<input id="scen33" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen33" name="scen3" style="width:100px; height: 30px">
+                                </select>  
                                 <span style="margin-left:10px;">控制值三</span>&nbsp;
                                 <input id="val33" class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
                             </td>
@@ -1847,7 +1873,9 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景四</span>&nbsp;
-                                <input id="scen44" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />
+                                <!--<input id="scen44" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen44" name="scen4" style="width:100px; height: 30px">
+                                </select>  
                                 <span style="margin-left:10px;"  >控制值四</span>&nbsp;
                                 <input id="val44" class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
                             </td>
@@ -1856,7 +1884,9 @@
                         <tr id="">
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景五</span>&nbsp;
-                                <input id="scen55" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />
+                                <!--<input id="scen55" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen55" name="scen5" style="width:100px; height: 30px">
+                                </select>  
                                 <span style="margin-left:10px;">控制值五</span>&nbsp;
                                 <input id="val55" class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
                             </td>

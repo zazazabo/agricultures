@@ -94,7 +94,7 @@
     
     <xform desc="地图导航" id="map">
          <xhandle desc="查询项目下所有网关和传感器" id="getAllinfo" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where deplayment= 1 and @CONDITION " var="lamprs">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select GETDATE() as dtime, * from t_sensor where deplayment= 1 and @CONDITION " var="lamprs">
                 <xflt id="CONDITION" nrp="" tpl="@pid">
                     <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr  FROM t_baseinfo  WHERE  pid = ':pid')">
                     </xfltpara>
@@ -120,7 +120,7 @@
             </xsql>
         </xhandle>
         <xhandle desc="查询所有传感器信息" id="sensor" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where deplayment= 1 and @CONDITION " var="bootstrap">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select GETDATE() as dtime, * from t_sensor where deplayment= 1 and @CONDITION " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @name AND @pid">
                     <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>

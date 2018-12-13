@@ -42,7 +42,7 @@
                     layerAler(langs1[350][lang]);  //请选择您要保存的数据
                     return;
                 }
-                
+
             }
             function showDialog() {
 
@@ -82,19 +82,37 @@
                         }
                     }
                     layer.close(index);
-                    $("#gravidaTable").bootstrapTable('refresh');
+                    var obj = {};
+                    obj.l_comaddr = $("#l_comaddr2").val();
+                    obj.pid = "${param.pid}";
+                    var opt = {
+                        url: "sensor.sensorform.getSensorList.action",
+                        query: obj,
+                        silent: false
+                    };
+                    $("#gravidaTable").bootstrapTable('refresh', opt);
                     //此处请求后台程序，下方是成功后的前台处理……
                 });
             }
 
             function  editlamp() {
                 var o = $("#form2").serializeObject();
+                var worktype = $("#worktype1").val();
+                o.worktype = worktype;
                 addlogon(u_name, "修改", o_pid, "传感器管理", "修改传感器");
                 $.ajax({async: false, url: "sensor.sensorform.modifySensor.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
                         var a = data.rs;
                         if (a.length == 1) {
-                            search();
+                            var obj = {};
+                            obj.l_comaddr = $("#l_comaddr2").val();
+                            obj.pid = "${param.pid}";
+                            var opt = {
+                                url: "sensor.sensorform.getSensorList.action",
+                                query: obj,
+                                silent: false
+                            };
+                            $("#gravidaTable").bootstrapTable('refresh', opt);
                         }
                     },
                     error: function () {
@@ -115,12 +133,12 @@
                 $("#worktype1").combobox('setValue', s.worktype);
                 $("#dreg1").val(s.dreg);
                 $("#sitenum1").val(s.sitenum);
-                if(s.type !="" && s.type != null){
-                     $("#type").combobox('setValue', s.type);
-                }else{
-                    $("#type").combobox('setValue', 1);
+                if (s.type != "" && s.type != null) {
+                    $("#type1").combobox('setValue', s.type);
+                } else {
+                    $("#type1").combobox('setValue', 1);
                 }
-               
+
                 $("#model1").val(s.model);
                 if (s.deplayment == 1) {
                     $("#sitenum1").attr("readOnly", true);
@@ -140,13 +158,43 @@
 
             function checkSensorAdd() {
                 var o = $("#formadd").serializeObject();
-                $.ajax({async: false, url: "homePage.sensormanage.add.action", type: "get", datatype: "JSON", data: o,
+                var l_comaddr = o.l_comaddr;
+                var sitenum = o.sitenum; //站号
+                var dreg = o.dreg;   //数据位置
+                var iobj = {};
+                iobj.l_comaddr = l_comaddr;
+                iobj.sitenum = sitenum;
+                iobj.dreg = dreg;
+                $.ajax({async: false, url: "homePage.sensormanage.getIsSiten.action", type: "get", datatype: "JSON", data: iobj,
                     success: function (data) {
-                         var rs = data.rs;
-                         if(rs.length>0){
-                            layerAler("添加成功");
-                            $("#gravidaTable").bootstrapTable('refresh');
-                         }
+                        var rs = data.rs;
+                        if (rs.length > 0) {
+                            layerAler("该网关下已存在相同的站号和数据位置");
+                            return;
+                        } else {
+                            $.ajax({async: false, url: "homePage.sensormanage.add.action", type: "get", datatype: "JSON", data: o,
+                                success: function (data) {
+                                    var rs = data.rs;
+                                    if (rs.length > 0) {
+                                        layerAler("添加成功");
+                                        var obj = {};
+                                        obj.l_comaddr = $("#l_comaddr2").val();
+                                        obj.pid = "${param.pid}";
+                                        var opt = {
+                                            url: "sensor.sensorform.getSensorList.action",
+                                            query: obj,
+                                            silent: false
+                                        };
+                                        $("#gravidaTable").bootstrapTable('refresh', opt);
+                                        $("#dialog-add").dialog("close");
+                                    }
+                                },
+                                error: function () {
+                                    alert("提交失败！");
+                                }
+                            });
+
+                        }
                     },
                     error: function () {
                         alert("提交失败！");
@@ -242,8 +290,12 @@
 
             //搜索
             function  search() {
-                var obj = $("#formsearch").serializeObject();
-                console.log(obj);
+                var obj = {};
+                var busu = $("#busu").val();
+                if(busu !="-1"){
+                    obj.deplayment = busu;
+                }
+                obj.l_comaddr = $("#l_comaddr2").val();              
                 var opt = {
                     url: "sensor.sensorform.getSensorList.action",
                     silent: false,
@@ -336,8 +388,15 @@
                                 success: function (data) {
                                     var arrlist = data.rs;
                                     if (arrlist.length == 1) {
-
-                                        $("#gravidaTable").bootstrapTable('refresh');
+                                        var obj = {};
+                                        obj.l_comaddr = $("#l_comaddr2").val();
+                                        obj.pid = "${param.pid}";
+                                        var opt = {
+                                            url: "sensor.sensorform.getSensorList.action",
+                                            query: obj,
+                                            silent: false
+                                        };
+                                        $("#gravidaTable").bootstrapTable('refresh', opt);
                                     }
                                 },
                                 error: function () {
@@ -473,7 +532,15 @@
                     });
                 }
                 layerAler("添加成功！");
-                $("#gravidaTable").bootstrapTable('refresh');
+                var obj = {};
+                obj.l_comaddr = $("#l_comaddr2").val();
+                obj.pid = "${param.pid}";
+                var opt = {
+                    url: "sensor.sensorform.getSensorList.action",
+                    query: obj,
+                    silent: false
+                };
+                $("#gravidaTable").bootstrapTable('refresh', opt);
 
 
             }
@@ -497,7 +564,15 @@
                     });
                 }
                 layerAler("移除成功！");
-                $("#gravidaTable").bootstrapTable('refresh');
+                var obj = {};
+                obj.l_comaddr = $("#l_comaddr2").val();
+                obj.pid = "${param.pid}";
+                var opt = {
+                    url: "sensor.sensorform.getSensorList.action",
+                    query: obj,
+                    silent: false
+                };
+                $("#gravidaTable").bootstrapTable('refresh', opt);
 
 
             }
@@ -550,7 +625,7 @@
                             valign: 'middle'
                         }, {
                             field: 'name',
-                            title: '传感器名称', //灯具名称
+                            title: '传感器名称', //传感器名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
@@ -766,8 +841,8 @@
 
                 $("#l_comaddr2").combobox({
                     url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
-                    onLoadSuccess: function (data) {                      
-                            $(this).combobox('select', data[0].id);
+                    onLoadSuccess: function (data) {
+                        $(this).combobox('select', data[0].id);
                     },
                     onSelect: function (record) {
                         var obj = {};
@@ -878,8 +953,8 @@
 
                 $('#l_comaddr').combobox({
                     url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
-                    onLoadSuccess: function (data) {                      
-                            $(this).combobox('select', data[0].id);
+                    onLoadSuccess: function (data) {
+                        $(this).combobox('select', data[0].id);
                     }
                 });
 
@@ -1015,8 +1090,9 @@
                                 </td>
                                 <td>
                                     <select class="easyui-combobox" name="deplayment"  id="busu" style="width:150px; height: 30px">
-                                        <option value="0">未部署</option>
-                                        <option value="1">已部署</option>           
+                                        <option value ="-1">全部</option>
+                                        <option value="1">已部署</option>     
+                                        <option value="0">未部署</option> 
                                     </select>
                                 </td>
                                 <td>
@@ -1141,6 +1217,18 @@
                                 <input id="model" value="" class="form-control" name="model" style="width:150px;display: inline;" placeholder="备注" type="text">
                             </td>
                         </tr> 
+                        <tr>
+                            <td>
+                                <span style="margin-left:20px;" >&#8195;&#8195;类型</span>&nbsp;
+                                <select class="easyui-combobox" id="type" name="type" style="width:150px; height: 30px">
+                                    <option value="1" >温度</option>
+                                    <option value="2" >湿度</option>  
+                                    <option value="3" >开关</option>  
+                                </select>
+                            </td>
+                            <td></td>
+
+                        </tr> 
                     </tbody>
                 </table>
             </form>                        
@@ -1182,18 +1270,18 @@
 
                         </tr>                  
                         <tr>
-          
+
                             <td>
                                 <span style="margin-left:20px;" >&#8195;&#8195;类型</span>&nbsp;
-                                <select class="easyui-combobox" id="type" name="type" style="width:150px; height: 30px">
+                                <select class="easyui-combobox" id="type1" name="type" style="width:150px; height: 30px">
                                     <option value="1" >温度</option>
                                     <option value="2" >湿度</option>  
                                     <option value="3" >开关</option> 
                                 </select>
-                                
+
                             </td>  
                             <td></td>
-                            
+
                             <td>
                                 <span style="margin-left:10px;" >&#8195;&#8195;备注</span>&nbsp;
                                 <input id="model1"  class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">

@@ -17,7 +17,7 @@
     </xform>
     <xform desc="传感器管理" id="sensormanage">
         <xhandle desc="添加传感器" id="add" rtnype="JSON">
-            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
+            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr,type" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,type,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',':type',0) " var="rs"></xsql> 
         </xhandle>   
         <xhandle desc="添加首页显示传感" id="addshow" rtnype="JSON">
             <xsql id="a1" para="" tpe="DDL" tpl="update t_sensor set show=1 where @CONDITION " var="rs">
@@ -32,7 +32,19 @@
                     <xfltpara id="id" nrp="1=1" para="id" sql="id=':id'"></xfltpara>
                 </xflt>
             </xsql>
-        </xhandle>    
+        </xhandle>  
+         <xhandle desc="查看传感是否同一网关下站号和数据位置相同" id="getIsSiten" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor WHERE   @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @sitenum AND @dreg">
+                    <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
+                    </xfltpara>
+                     <xfltpara id="sitenum" nrp="1=1" para="sitenum" sql="sitenum = ':sitenum'">
+                    </xfltpara>
+                     <xfltpara id="dreg" nrp="1=1" para="dreg" sql="dreg = ':dreg'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>  
     </xform>
     <xform desc="回路管理" id="loop">
         <xhandle desc="添加首页显示回路" id="addshow" rtnype="JSON">

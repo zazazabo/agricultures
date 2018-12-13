@@ -31,59 +31,67 @@
         </style>
         <script>
             var infolist = {};
+
             $(function () {
 
 
 
-            $("#l_comaddr").combobox({
-            url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
+                $("#l_comaddr").combobox({
+                    url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
                     formatter: function (row) {
-                    var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
-                    var v = row.text + v1;
-                    row.id = row.id;
-                    row.text = v;
-                    var opts = $(this).combobox('options');
-                    return row[opts.textField];
+                        var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
+                        var v = row.text + v1;
+                        row.id = row.id;
+                        row.text = v;
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField];
                     },
                     onLoadSuccess: function (data) {
-                    if (Array.isArray(data) && data.length > 0) {
-                    for (var i = 0; i < data.length; i++) {
-                    data[i].text = data[i].id;
-                    }
-                    $(this).combobox('select', data[0].id);
-                    }
+                        if (Array.isArray(data) && data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                data[i].text = data[i].id;
+                            }
+                            $(this).combobox('select', data[0].id);
+                        }
 
                     },
                     onSelect: function (record) {
-                    var obj = {};
-                    obj.l_comaddr = record.id;
-                    obj.pid = "${param.pid}";
-                    var opt = {
-                    url: "loop.loopForm.getLoopList.action",
+                        var obj = {};
+                        obj.l_comaddr = record.id;
+                        obj.pid = "${param.pid}";
+                        var opt = {
+                            url: "loop.loopForm.getLoopList.action",
                             query: obj,
                             silent: false
-                    };
-                    $("#gravidaTable").bootstrapTable('refresh', opt);
+                        };
+                        $("#gravidaTable").bootstrapTable('refresh', opt);
                     }
-            });
-            $.ajax({async: false, url: "sensor.sensorform.getInfoNumList.action", type: "get", datatype: "JSON", data: {},
+                });
+
+
+
+                $.ajax({async: false, url: "sensor.sensorform.getInfoNumList.action", type: "get", datatype: "JSON", data: {},
                     success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                    var o = data[i];
-                    infolist[o.id] = o.text;
-                    }
+                        for (var i = 0; i < data.length; i++) {
+                            var o = data[i];
+                            infolist[o.id] = o.text;
+                        }
 
                     },
                     error: function () {
-                    alert("提交失败！");
+                        alert("提交失败！");
                     }
-            });
-            $('#table0').bootstrapTable({
-            url: 'sensor.planForm.getSensorPlan.action',
+                });
+
+
+
+
+                $('#table0').bootstrapTable({
+                    url: 'sensor.planForm.getSensorPlan.action',
                     clickToSelect: true,
                     columns: [
-                    {
-                    title: '单选',
+                        {
+                            title: '单选',
                             field: 'select',
                             //复选框
                             checkbox: true,
@@ -91,125 +99,125 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                            row.index = index;
-                            return value;
+                                row.index = index;
+                                return value;
                             }
 
-                    },
-                    {
-                    field: 'p_name',
+                        },
+                        {
+                            field: 'p_name',
                             title: '场景名', //信息点
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
                             formatter: function (value, row, index, field) {
-                            return value;
+                                return value;
                             }
-                    }, {
-                    field: 'p_scenenum',
+                        }, {
+                            field: 'p_scenenum',
                             title: '场景号', //信息点
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
                             formatter: function (value, row, index, field) {
-                            if (value != null) {
-                            return value.toString();
+                                if (value != null) {
+                                    return value.toString();
+                                }
                             }
-                            }
-                    }, {
-                    field: 'p_scene',
+                        }, {
+                            field: 'p_scene',
                             title: '条件1', //信息点
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
                             formatter: function (value, row, index, field) {
-                            if (isJSON(row.p_scene1)) {
-                            var obj = eval('(' + row.p_scene1 + ')');
-                            var o1 = obj.info.toString();
-                            var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
-                            return str;
+                                if (isJSON(row.p_scene1)) {
+                                    var obj = eval('(' + row.p_scene1 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
                             }
-                            }
-                    }, {
-                    field: 'p_scene',
+                        }, {
+                            field: 'p_scene',
                             title: '条件2', //信息点
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
                             formatter: function (value, row, index, field) {
-                            if (isJSON(row.p_scene2)) {
-                            var obj = eval('(' + row.p_scene2 + ')');
-                            var o1 = obj.info.toString();
-                            var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
-                            return str;
+                                if (isJSON(row.p_scene2)) {
+                                    var obj = eval('(' + row.p_scene2 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
                             }
-                            }
-                    }, {
-                    field: 'p_scene',
+                        }, {
+                            field: 'p_scene',
                             title: '条件3', //信息点
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
                             formatter: function (value, row, index, field) {
-                            if (isJSON(row.p_scene3)) {
-                            var obj = eval('(' + row.p_scene3 + ')');
-                            var o1 = obj.info.toString();
-                            var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
-                            return str;
+                                if (isJSON(row.p_scene3)) {
+                                    var obj = eval('(' + row.p_scene3 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
                             }
-                            }
-                    }, {
-                    field: 'p_scene',
+                        }, {
+                            field: 'p_scene',
                             title: '条件4', //信息点
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
                             formatter: function (value, row, index, field) {
-                            if (isJSON(row.p_scene4)) {
-                            var obj = eval('(' + row.p_scene4 + ')');
-                            var o1 = obj.info.toString();
-                            var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
-                            return str;
+                                if (isJSON(row.p_scene4)) {
+                                    var obj = eval('(' + row.p_scene4 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
                             }
-                            }
-                    }, {
-                    field: 'p_scene',
+                        }, {
+                            field: 'p_scene',
                             title: '条件5', //信息点
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
                             formatter: function (value, row, index, field) {
-                            if (isJSON(row.p_scene5)) {
-                            var obj = eval('(' + row.p_scene5 + ')');
-                            var o1 = obj.info.toString();
-                            var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
-                            return str;
+                                if (isJSON(row.p_scene5)) {
+                                    var obj = eval('(' + row.p_scene5 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
                             }
-                            }
-                    }, {
-                    field: 'p_deployment',
+                        }, {
+                            field: 'p_deployment',
                             title: '部署情况', //信息点
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
                             formatter: function (value, row, index, field) {
-                            if (row.p_deployment == "0" || row.p_deployment == null) {
-                            var str = "<span class='label label-warning'>" + '未部署' + "</span>"; //未部署
-                            return  str;
-                            } else if (row.p_deployment == "1") {
-                            var str = "<span class='label label-success'>" + '已部署' + "</span>"; //已部署
-                            return  str;
+                                if (row.p_deployment == "0" || row.p_deployment == null) {
+                                    var str = "<span class='label label-warning'>" + '未部署' + "</span>";  //未部署
+                                    return  str;
+                                } else if (row.p_deployment == "1") {
+                                    var str = "<span class='label label-success'>" + '已部署' + "</span>";  //已部署
+                                    return  str;
+                                }
                             }
-                            }
-                    }
+                        }
                     ],
                     singleSelect: false,
                     sortName: 'id',
@@ -228,8 +236,8 @@
                     },
                     //服务器url
                     queryParams: function (params)  {   //配置参数     
-                    var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
-                    search: params.search,
+                        var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
+                            search: params.search,
                             skip: params.offset,
                             limit: params.limit,
                             p_attr: 1,
@@ -237,76 +245,83 @@
                             p_show: 1,
                             type_id: "1",
                             pid: "${param.pid}"  
-                    };      
-                    return temp;  
+                        };      
+                        return temp;  
                     },
-            });
-            $('#l_plan').combobox({
-            url: "loop.planForm.getPlanlist.action?attr=1&p_type=1&pid=${param.pid}",
+                });
+
+                $('#l_plan').combobox({
+                    url: "loop.planForm.getPlanlist.action?attr=1&p_type=1&pid=${param.pid}",
                     formatter: function (row) {
-                    var v = row.p_name;
-                    row.id = row.id;
-                    row.text = v;
-                    var opts = $(this).combobox('options');
-                    return row[opts.textField];
+                        var v = row.p_name;
+                        row.id = row.id;
+                        row.text = v;
+                        var opts = $(this).combobox('options');
+                        return row[opts.textField];
                     },
                     onLoadSuccess: function (data) {
-                    if (Array.isArray(data) && data.length > 0) {
-                    for (var i = 0; i < data.length; i++) {
-                    data[i].text = data[i].p_name;
-                    }
-                    $(this).combobox('select', data[0].id);
-                    }
+                        if (Array.isArray(data) && data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                data[i].text = data[i].p_name;
+                            }
+                            $(this).combobox('select', data[0].id);
+
+                        }
                     },
                     onSelect: function (record) {
-                    console.log(record);
-                    $("#scenenum").val(record.p_scenenum);
-                    for (var i = 0; i < 5; i++) {
-                    var index = (i + 1).toString();
-                    var scene = "p_scene" + (i + 1).toString();
-                    var obj = eval('(' + record[scene] + ')');
-                    $("#info" + index).val(obj.info.toString());
-                    $("#up" + index).val(obj.up.toString());
-                    $("#down" + index).val(obj.down.toString());
-                    }
+                        console.log(record);
+                        $("#scenenum").val(record.p_scenenum);
+                        for (var i = 0; i < 5; i++) {
+                            var index = (i + 1).toString();
+                            var scene = "p_scene" + (i + 1).toString();
+                            var obj = eval('(' + record[scene] + ')');
+
+                            $("#info" + index).val(obj.info.toString());
+                            $("#up" + index).val(obj.up.toString());
+                            $("#down" + index).val(obj.down.toString());
+
+
+                        }
                     }
 
-            });
-            $("#dialog-add").dialog({
-            autoOpen: false,
+                });
+
+                $("#dialog-add").dialog({
+                    autoOpen: false,
                     modal: true,
                     width: 700,
                     height: 500,
                     position: ["top", "top"],
                     buttons: {
-                    添加: function () {
-                    addshow(1);
-                    $(this).dialog("close");
-                    $("#table0").bootstrapTable('refresh');
-                    }, 移除: function () {
-                    addshow(0);
-                    $(this).dialog("close");
-                    $("#table0").bootstrapTable('refresh');
-                    }, 关闭: function () {
-                    $(this).dialog("close");
+                        添加: function () {
+                            addshow(1);
+                            $(this).dialog("close");
+                            $("#table0").bootstrapTable('refresh');
+                        }, 移除: function () {
+                            addshow(0);
+                            $(this).dialog("close");
+                            $("#table0").bootstrapTable('refresh');
+                        }, 关闭: function () {
+                            $(this).dialog("close");
+                        }
                     }
-                    }
-            });
+                });
+
             })
 
-                    function layerAler(str) {
-                    layer.alert(str, {
+            function layerAler(str) {
+                layer.alert(str, {
                     icon: 6,
-                            offset: 'center'
-                    });
-                    }
+                    offset: 'center'
+                });
+            }
 
 
 
             function showDialog() {
 
-            $('#dialog-add').dialog('open');
-            return false;
+                $('#dialog-add').dialog('open');
+                return false;
             }
             function addshow(val) {
 
@@ -317,75 +332,118 @@
 
 
 
-            var ooo = $("#formadd").serializeObject();
-            if (ooo.l_plan == "") {
-            layerAler("请选择方案");
-            return;
-            }
+                var ooo = $("#formadd").serializeObject();
+                if (ooo.l_plan == "") {
+                    layerAler("请选择方案");
+                    return;
+                }
 
-            var scenearr = {};
-            for (var i = 0; i < 10; i++) {
-            scenearr[i.toString()] = i;
-            }
-            console.log(scenearr);
-            var o = {pid: "${param.pid}"};
-            $.ajax({async: false, url: "plan.planForm.getAllScennum.action", type: "get", datatype: "JSON", data: o,
+                var scenearr = {};
+                for (var i = 0; i < 10; i++) {
+                    scenearr[i.toString()] = i;
+                }
+                var o = {pid: "${param.pid}"};
+                $.ajax({async: false, url: "plan.planForm.getAllScennum.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
 //                        console.log(data);
-                    var arrlist = data.rs;
-                    console.log(arrlist);
-                    for (var i = 0; i < arrlist.length; i++) {
-                    var scennum = arrlist[i].p_scenenum;
-                    console.log(scennum);
-                    delete scenearr[scennum.toString()];
+                        var arrlist = data.rs;
+                        console.log(arrlist);
+
+                        for (var i = 0; i < arrlist.length; i++) {
+                            var scennum = arrlist[i].p_scenenum;
+                            console.log(scennum);
+                            delete scenearr[scennum.toString()];
+                        }
+                        var arr = [];
+                        for (var ii in scenearr) {
+                           arr.push(scenearr[ii]);
+                        }
+                        if (arr.length>0) {
+                            var aa = arr[0];
+                            var o1 = {p_code: ooo.l_plan, p_show: val, p_scenenum: aa};
+                            console.log(o1);
+                            $.ajax({async: false, url: "sensor.planForm.editscenshow.action", type: "get", datatype: "JSON", data: o1,
+                                success: function (data) {
+                                    var arrlist = data.rs;
+                                    if (arrlist.length == 1) {
+                                        $("table0").bootstrapTable('refresh');
+                                    }
+                                },
+                                error: function () {
+                                    alert("提交失败！");
+                                }
+                            });
+
+
+                        }
+
+                    },
+                    error: function () {
+                        alert("提交失败！");
                     }
+                });
 
 
-                            error: function () {
-                            alert("提交失败！");
-                            }
-                    });
+
+                return false;
+
+//                var o = {p_code: ooo.l_plan, p_show: val, p_scenenum: ooo.p_scenenum};
+//                console.log(o);
+//
+//                $.ajax({async: false, url: "sensor.planForm.editscenshow.action", type: "get", datatype: "JSON", data: o,
+//                    success: function (data) {
+//                        var arrlist = data.rs;
+//                        if (arrlist.length == 1) {
+//                            $("table0").bootstrapTable('refresh');
+//                        }
+//                    },
+//                    error: function () {
+//                        alert("提交失败！");
+//                    }
+//                });
+
+
             }
 
             function deployscenPlanCB(obj) {
 
-            $('#panemask').hideLoading();
-            if (obj.status == "success") {
-            var data = Str2BytesH(obj.data);
-            var v = "";
-            for (var i = 0; i < data.length; i++) {
-            v = v + sprintf("%02x", data[i]) + " ";
-            }
-            console.log(v);
-            if (data[1] == 0x10) {
-            var infonum = (3600 + obj.val * 20) | 0x1000;
-            console.log(infonum);
-            var high = infonum >> 8 & 0xff;
-            var low = infonum & 0xff;
-            if (data[2] == high && data[3] == low) {
-            var str = obj.type == 0 ? "移除成功" : "部署成功";
-            layerAler(str);
-            var param = obj.param;
-            var obj1 = {id: param.id, p_deployment: obj.type};
-            console.log(obj1);
-            $.ajax({async: false, url: "sensor.planForm.editscenDeployment.action", type: "get", datatype: "JSON", data: obj1,
-                    success: function (data) {
-                    var arrlist = data.rs;
-                    if (arrlist.length == 1) {
-                    $("#table0").bootstrapTable('refresh');
-                    // $("#table0").bootstrapTable('updateCell', {index: param.index, field: "p_deployment", value: obj.val});
+                $('#panemask').hideLoading();
+                if (obj.status == "success") {
+                    var data = Str2BytesH(obj.data);
+                    var v = "";
+                    for (var i = 0; i < data.length; i++) {
+                        v = v + sprintf("%02x", data[i]) + " ";
+                    }
+                    console.log(v);
+                    if (data[1] == 0x10) {
+                        var infonum = (3600 + obj.val * 20) | 0x1000;
+                        console.log(infonum);
+                        var high = infonum >> 8 & 0xff;
+                        var low = infonum & 0xff;
+                        if (data[2] == high && data[3] == low) {
+                            var str = obj.type == 0 ? "移除成功" : "部署成功";
+                            layerAler(str);
+                            var param = obj.param;
+                            var obj1 = {id: param.id, p_deployment: obj.type};
+                            console.log(obj1);
+                            $.ajax({async: false, url: "sensor.planForm.editscenDeployment.action", type: "get", datatype: "JSON", data: obj1,
+                                success: function (data) {
+                                    var arrlist = data.rs;
+                                    if (arrlist.length == 1) {
+                                        $("#table0").bootstrapTable('refresh');
+                                        // $("#table0").bootstrapTable('updateCell', {index: param.index, field: "p_deployment", value: obj.val});
+
+                                    }
+                                },
+                                error: function () {
+                                    alert("提交失败！");
+                                }
+                            });
+                        }
 
                     }
-                    },
-                    error: function () {
-                    alert("提交失败！");
-                    }
-            });
-            }
 
-            }
-
-            }
+                }
 
             }
 
@@ -394,78 +452,85 @@
             }
 
             function  removeshow() {
-            var selects = $('#table0').bootstrapTable('getSelections');
-            var vv = new Array();
-            if (selects.length == 0) {
-            layerAler('请勾选表格数据'); //请勾选表格数据
-            return;
-            }
+                var selects = $('#table0').bootstrapTable('getSelections');
+                var vv = new Array();
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
 
-            for (var i = 0; i < selects.length; i++) {
-            var ooo = selects[i];
-            var o = {p_code: ooo.p_code, p_show: 0, p_scenenum: ooo.p_scenenum};
-            $.ajax({async: false, url: "sensor.planForm.editscenshow.action", type: "get", datatype: "JSON", data: o,
-                    success: function (data) {
-                    var arrlist = data.rs;
-                    if (arrlist.length == 1) {
+                for (var i = 0; i < selects.length; i++) {
+                    var ooo = selects[i];
+                    var o = {p_code: ooo.p_code, p_show: 0, p_scenenum: ooo.p_scenenum};
 
-                    }
-                    },
-                    error: function () {
-                    alert("提交失败！");
-                    }
-            });
-            }
 
-            $("#table0").bootstrapTable('refresh');
+                    $.ajax({async: false, url: "sensor.planForm.editscenshow.action", type: "get", datatype: "JSON", data: o,
+                        success: function (data) {
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
+                }
+
+                $("#table0").bootstrapTable('refresh');
+
             }
 
             function deployscenPlan(val) {
-            var ooo = $("#form1").serializeObject();
-            console.log(ooo);
-            var selects = $('#table0').bootstrapTable('getSelections');
-            var vv = new Array();
-            if (selects.length == 0) {
-            layerAler('请勾选表格数据'); //请勾选表格数据
-            return;
-            }
-            var ele = selects[0];
-            var vv = [];
-            vv.push(1);
-            vv.push(0x10);
-            var scenenum = parseInt(ele.p_scenenum);
-            var infonum = 3600 + scenenum * 20 | 0x1000;
-            vv.push(infonum >> 8 & 0xff); //起始地址
-            vv.push(infonum & 0xff);
-            vv.push(0); //寄存器数目 2字节  
-            vv.push(20); //5
-            vv.push(40); //字节数目长度  1字节 10
-            for (var j = 0; j < 5; j++) {
-            var scene = "p_scene" + (j + 1).toString();
-            var obj = eval('(' + ele[scene] + ')');
-            if (val == 0) {
-            vv.push(0);
-            vv.push(0);
-            vv.push(0);
-            vv.push(0);
-            vv.push(0);
-            vv.push(0);
-            } else if (val == 1) {
-            vv.push(obj.info >> 8 & 0xff)   //寄存器变量值
-                    vv.push(obj.info & 0xff);
-            vv.push(obj.down >> 8 & 0xff); //下限
-            vv.push(obj.down & 0xff);
-            vv.push(obj.up >> 8 & 0xff); //上限
-            vv.push(obj.up & 0xff);
-            }
+                var ooo = $("#form1").serializeObject();
+                console.log(ooo);
 
-            vv.push(0);
-            vv.push(0)
-            }
-            var ooo1 = {id: ele.id, index: ele.index};
-            var data = buicode2(vv);
-            console.log(data);
-            dealsend2("10", data, "deployscenPlanCB", ooo.l_comaddr, val, ooo1, scenenum);
+                var selects = $('#table0').bootstrapTable('getSelections');
+                var vv = new Array();
+                if (selects.length == 0) {
+                    layerAler('请勾选表格数据'); //请勾选表格数据
+                    return;
+                }
+                var ele = selects[0];
+
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+                var scenenum = parseInt(ele.p_scenenum);
+                var infonum = 3600 + scenenum * 20 | 0x1000;
+                vv.push(infonum >> 8 & 0xff); //起始地址
+                vv.push(infonum & 0xff);
+                vv.push(0);           //寄存器数目 2字节  
+                vv.push(20);   //5
+                vv.push(40);           //字节数目长度  1字节 10
+                for (var j = 0; j < 5; j++) {
+                    var scene = "p_scene" + (j + 1).toString();
+                    var obj = eval('(' + ele[scene] + ')');
+                    if (val == 0) {
+                        vv.push(0);
+                        vv.push(0);
+                        vv.push(0);
+                        vv.push(0);
+                        vv.push(0);
+                        vv.push(0);
+                    } else if (val == 1) {
+                        vv.push(obj.info >> 8 & 0xff)   //寄存器变量值
+                        vv.push(obj.info & 0xff);
+                        vv.push(obj.down >> 8 & 0xff);   //下限
+                        vv.push(obj.down & 0xff);
+                        vv.push(obj.up >> 8 & 0xff);//上限
+                        vv.push(obj.up & 0xff);
+                    }
+
+                    vv.push(0);
+                    vv.push(0)
+                }
+                var ooo1 = {id: ele.id, index: ele.index};
+                var data = buicode2(vv);
+                console.log(data);
+                dealsend2("10", data, "deployscenPlanCB", ooo.l_comaddr, val, ooo1, scenenum);
+
             }
 
         </script>
@@ -569,7 +634,7 @@
 
                                 <!-- <input  id="info1" name="info1" readonly="true" style="width:100px; height: 30px;"  > -->
                                 <!-- <input id="scenenum"  name="scenenum"  readonly="true" class="form-control" style="width:100px;display: inline;" type="text"> -->
-                                <span style="margin-left: 20px;"  >
+<!--                                <span style="margin-left: 20px;"  >
                                     场景号
                                 </span>
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum1" name="p_scenenum" style="width:70px; height: 30px">
@@ -583,7 +648,7 @@
                                     <option value="7">7</option>
                                     <option value="8">8</option>
                                     <option value="9">9</option>
-                                </select> 
+                                </select> -->
 
                             </td>
 

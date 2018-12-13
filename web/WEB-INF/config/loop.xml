@@ -101,7 +101,7 @@
             </xsql>
         </xhandle>
        <xhandle desc="" id="getPlanlist" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.p_code as id,tl.p_code as text,* FROM t_plan tl where  @CONDITION " var="list">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.p_code as id,tl.p_code as text,* FROM t_plan tl where p_show!=1 AND  @CONDITION " var="list">
                 <xflt id="CONDITION" nrp="" tpl="@attr AND @p_type AND @pid ">
                     <xfltpara id="attr" nrp="1=2" para="attr" sql="p_attr=:attr"></xfltpara>
                     <xfltpara id="p_type" nrp="1=2" para="p_type" sql="p_type=:p_type"></xfltpara>

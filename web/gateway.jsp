@@ -501,6 +501,7 @@
             function checkAdd() {
                 var obj = $("#formadd").serializeObject();
                 console.log(obj);
+                obj.pid = parent.parent.getpojectId();
                 if (obj.comaddr == "") {
                     layerAler("请填写网关地址");
                     return;
@@ -565,7 +566,7 @@
                                     ooo.l_comaddr = comaddr;
                                     ooo.l_pos = z;
                                     ooo.l_port = j;
-                                  
+
                                     ooo.l_worktype = 2;
                                     ooo.l_plan = 1;
                                     ooo.l_val1 = 0;
@@ -573,7 +574,7 @@
                                     ooo.l_val3 = 0;
                                     ooo.l_val4 = 0;
                                     ooo.l_val5 = 0;
-                                    ooo.l_info=j
+                                    ooo.l_info = j
                                     console.log(ooo);
                                     $.ajax({url: "loop.loopForm.addLoop.action", async: false, type: "get", datatype: "JSON", data: ooo,
                                         success: function (data) {
@@ -599,10 +600,23 @@
                                             offset: 'center'
                                         });
                                     }
-                                })
+                                });
 
 
 
+                            } else {
+                                $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
+                                    success: function (data) {
+                                        namesss = true;
+                                        $("#gravidaTable").bootstrapTable('refresh');
+                                    },
+                                    error: function () {
+                                        layer.alert('系统错误，刷新后重试', {
+                                            icon: 6,
+                                            offset: 'center'
+                                        });
+                                    }
+                                });
                             }
                             return  false;
                         }
@@ -656,28 +670,7 @@
                 <input id="id" name="id" type="hidden">
                 <table>
                     <tbody>
-                        <tr>
-                            <td>
-                                <span style="margin-left:20px;" >项目列表</span>&nbsp;
-                                <input id="pid" readonly="true" class="easyui-combobox" name="pid" style="width:150px; height: 30px" data-options="editable:true,valueField:'id', textField:'text' " />
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                                <span style="margin-left:10px;" >网关型号</span>&nbsp;
 
-
-                                <span class="menuBox">
-
-                                    <!--<input id="model" class="easyui-combobox" readonly="true" name="model" style="width:150px; height: 30px" data-options="editable:false" />-->
-                                    <select class="easyui-combobox" data-options="editable:true"  id="model" name="model" style="width:150px; height: 30px">
-                                        <option value=""></option>
-                                        <option value="L-30MT-ES2">L-30MT-ES2</option>
-                                    </select>
-                                </span>
-                            </td>
-
-                        </tr>
                         <tr>
                             <td>
                                 <span style="margin-left:20px;">网关名称</span>&nbsp;
@@ -711,8 +704,17 @@
                             </td>
                             <td></td>
                             <td>
-                                <!--                                <span style="margin-left:10px;" >网关编号</span>&nbsp;
-                                                                <input id="comaddr" class="form-control" name="comaddr" style="width:150px;display: inline;" placeholder="请输入网关地址" type="text">-->
+                                <span style="margin-left:10px;" >网关型号</span>&nbsp;
+
+
+                                <span class="menuBox">
+
+                                    <!--<input id="model" class="easyui-combobox" readonly="true" name="model" style="width:150px; height: 30px" data-options="editable:false" />-->
+                                    <select class="easyui-combobox" data-options="editable:true"  id="model" name="model" style="width:150px; height: 30px">
+                                        <option value=""></option>
+                                        <option value="L-30MT-ES2">L-30MT-ES2</option>
+                                    </select>
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -724,15 +726,6 @@
             <form action="" method="POST" id="form2" onsubmit="return editComplete()">  
                 <table>
                     <tbody>
-                        <tr>
-                            <td>
-                                <span style="margin-left:20px;">网关编号</span>&nbsp;
-                                <input id="comaddr_" readonly="true"  class="form-control" name="comaddr" style="width:150px;display: inline;" placeholder="请输入网关编号" type="text">
-                            </td>
-                            <td></td>
-                            <td>
-                            </td>
-                        </tr>
                         <tr>
                             <td>
                                 <span style="margin-left:20px;">网关名称</span>&nbsp;

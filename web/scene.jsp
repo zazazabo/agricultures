@@ -37,7 +37,7 @@
 
 
                 $("#l_comaddr").combobox({
-                    url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
+                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
                     formatter: function (row) {
                         var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
                         var v = row.text + v1;
@@ -49,7 +49,7 @@
                     onLoadSuccess: function (data) {
                         if (Array.isArray(data) && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
-                                data[i].text = data[i].id;
+                                data[i].text = data[i].name;
                             }
                             $(this).combobox('select', data[0].id);
                         }
@@ -550,7 +550,7 @@
 
                         <td>
                             <span style="margin-left:10px;">
-                                网关地址
+                                网关名称
                                 &nbsp;</span>
                         </td>
                         <td>

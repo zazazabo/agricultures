@@ -169,6 +169,21 @@
                                    return "断开"; 
                                }
                             }
+                        },{
+                            field: 'l_state',
+                            title: '在线状态', //
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                               if(value ==1){
+                                  var  str = "<img  src='img/online1.png'/>";
+                                  return  str;
+                               }else{
+                                  var  str = "<img  src='img/off.png'/>";
+                                  return  str;
+                               }
+                            }
                         }],
                     clickToSelect: true,
                     singleSelect: true,

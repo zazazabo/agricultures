@@ -16,6 +16,9 @@
          
     </xform>
     <xform desc="传感器管理" id="sensormanage">
+        <xhandle desc="添加传感器" id="add" rtnype="JSON">
+            <xsql id="a1" para="model,dreg,worktype,name,sitenum,l_comaddr" tpe="DDL" tpl="insert into t_sensor(model,dreg,worktype,name,sitenum,l_comaddr,deplayment) values(':model',:dreg,:worktype,':name',':sitenum',':l_comaddr',0) " var="rs"></xsql> 
+        </xhandle>   
         <xhandle desc="添加首页显示传感" id="addshow" rtnype="JSON">
             <xsql id="a1" para="" tpe="DDL" tpl="update t_sensor set show=1 where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@id ">
@@ -56,5 +59,13 @@
                 </xflt>
             </xsql> 
         </xhandle>  
+        <xhandle desc="网关集合" id="getComaddr" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select comaddr as id,name as text,name  FROM t_baseinfo where @CONDITION " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@pid ">
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql=" pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
     </xform>
 </xforms>

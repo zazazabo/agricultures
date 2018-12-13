@@ -25,6 +25,15 @@
                 return false;
 
             }
+
+//                    $.ajax({async: false, url: "login.usermanage.power.action", type: "get", datatype: "JSON", data: obj,
+//                        success: function (data) {
+//
+//                        },
+//                        error: function () {
+//                            alert("提交失败！");
+//                        }
+//                    });
             //导入excel的添加按钮事件
             function addexcel() {
                 var selects = $('#warningtable').bootstrapTable('getSelections');
@@ -33,71 +42,7 @@
                     layerAler(langs1[350][lang]);  //请选择您要保存的数据
                     return;
                 }
-                addlogon(u_name, "添加", o_pid, "灯具管理", "导入Excel");
-                var pid = parent.parent.getpojectId();
-                for (var i = 0; i <= selects.length - 1; i++) {
-                    var comaddr = selects[i].网关地址;
-                    var lampid = selects[i].灯具编号;
-                    var obj = {};
-                    obj.pid = pid;
-                    obj.comaddr = comaddr;
-                    $.ajax({async: false, url: "login.lampmanage.getpid.action", type: "POST", datatype: "JSON", data: obj,
-                        success: function (data) {
-                            console.log("1");
-                            var arrlist = data.rs;
-                            if (arrlist.length > 0) {
-                                console.log("w:" + arrlist.length);
-                                $.ajax({async: false, url: "login.lampmanage.getfactorycode.action", type: "POST", datatype: "JSON", data: {l_factorycode: lampid},
-                                    success: function (data) {
-                                        var arrlist = data.rs;
-                                        if (arrlist.length == 0) {
-                                            console.log("d:" + arrlist.length);
-                                            var comname = selects[i].网关名称;
-                                            var lampname = selects[i].灯具名称;
-                                            var zh = selects[i].组号;
-                                            var kzfs = selects[i].控制方式;
-                                            var lng = selects[i].经度;
-                                            var lat = selects[i].纬度;
-                                            var adobj = {};
-                                            adobj.l_name = lampname;
-                                            adobj.l_worktype = kzfs;
-                                            adobj.l_comaddr = comaddr;
-                                            adobj.l_deplayment = 0;
-                                            adobj.l_factorycode = lampid;
-                                            adobj.l_groupe = zh;
-                                            adobj.lng = lng;
-                                            adobj.lat = lat;
-                                            adobj.wname = comname;
-                                            $.ajax({url: "login.lampmanage.addlamp.action", async: false, type: "get", datatype: "JSON", data: adobj,
-                                                success: function (data) {
-                                                    var arrlist = data.rs;
-                                                    if (arrlist.length == 1) {
-                                                        var ids = [];//定义一个数组
-                                                        var xh = selects[i].序号;
-                                                        console.log("xh:" + xh);
-                                                        ids.push(xh);//将要删除的id存入数组
-                                                        $("#warningtable").bootstrapTable('remove', {field: '序号', values: ids});
-                                                    }
-                                                },
-                                                error: function () {
-                                                    alert("提交添加失败！");
-                                                }
-                                            });
-                                        }
-                                    },
-                                    error: function () {
-                                        layerAler("提交失败");
-                                    }
-                                });
-
-                            }
-                        },
-                        error: function () {
-                            layerAler("提交失败");
-                        }
-                    });
-
-                }
+                
             }
             function showDialog() {
 
@@ -111,6 +56,7 @@
                     offset: 'center'
                 });
             }
+
             function deleteSensor() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var num = selects.length;
@@ -166,19 +112,24 @@
                 var s = selects[0];
                 $("#name1").val(s.name);
                 $("#hide_id").val(s.id);
-                $("#worktype1").val(s.worktype);
+                $("#worktype1").combobox('setValue', s.worktype);
                 $("#dreg1").val(s.dreg);
                 $("#sitenum1").val(s.sitenum);
-                $("#type").combobox('setValue', s.type);
+                if(s.type !="" && s.type != null){
+                     $("#type").combobox('setValue', s.type);
+                }else{
+                    $("#type").combobox('setValue', 1);
+                }
+               
                 $("#model1").val(s.model);
                 if (s.deplayment == 1) {
                     $("#sitenum1").attr("readOnly", true);
                     $("#dreg1").attr("readOnly", true);
-                    $("#worktype1").attr("readOnly", true);
+                    $("#worktype1").combobox('disable');
                 } else {
                     $("#sitenum1").attr("readOnly", false);
                     $("#dreg1").attr("readOnly", false);
-                    $("#worktype1").attr("readOnly", false);
+                    $("#worktype1").combobox('enable');
                 }
                 $('#dialog-edit').dialog('open');
 
@@ -189,93 +140,104 @@
 
             function checkSensorAdd() {
                 var o = $("#formadd").serializeObject();
-                addlogon(u_name, "添加", o_pid, "传感器管理", "添加传感器");
-                var isflesh = false;
-                if (o.model == "JXBS-3001-TH") {
-                    for (var i = 0; i < 2; i++) {
-                        o.dreg = i;
-                        $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
-                            success: function (data) {
-                                var rs = data;
-                                if (rs.total == 0) {
-                                    $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
-                                        success: function (data) {
-                                            console.log(data)
-                                            var rs = data.rs;
-                                            if (rs.length > 0) {
-                                                $("#dialog-add").dialog("close");
-                                                layerAler("添加成功");
-                                                $("#gravidaTable").bootstrapTable('refresh');
-                                            }
-                                        },
-                                        error: function () {
-                                            alert("提交添加失败！");
-                                        }
-                                    });
-                                }
-                            },
-                            error: function () {
-                                alert("提交添加失败！");
-                            }
-                        });
+                $.ajax({async: false, url: "homePage.sensormanage.add.action", type: "get", datatype: "JSON", data: o,
+                    success: function (data) {
+                         var rs = data.rs;
+                         if(rs.length>0){
+                            layerAler("添加成功");
+                            $("#gravidaTable").bootstrapTable('refresh');
+                         }
+                    },
+                    error: function () {
+                        alert("提交失败！");
                     }
-                } else if (o.model == "JXBS-3001-TR") {
-                    for (var i = 0; i < 2; i++) {
-                        o.dreg = i + 2;
-                        $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
-                            success: function (data) {
-                                var rs = data;
-                                if (rs.total == 0) {
-                                    $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
-                                        success: function (data) {
-                                            if (rs.length > 0) {
-                                                $("#dialog-add").dialog("close");
-                                                layerAler("添加成功");
-                                                $("#gravidaTable").bootstrapTable('refresh');
-                                            }
-                                        },
-                                        error: function () {
-                                            alert("提交添加失败！");
-                                        }
-                                    });
+                });
+                //addlogon(u_name, "添加", o_pid, "传感器管理", "添加传感器");
 
-
-
-                                }
-                            },
-                            error: function () {
-                                alert("提交添加失败！");
-                            }
-                        });
-                    }
-                } else {
-
-                    $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
-                        success: function (data) {
-                            var rs = data;
-                            if (rs.total == 0) {
-                                o.pos = 2000;
-                                $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
-                                    success: function (data) {
-                                        var rs = data.rs;
-                                        if (rs.length > 0) {
-                                            $("#dialog-add").dialog("close");
-                                            layerAler("添加成功");
-                                            $("#gravidaTable").bootstrapTable('refresh');
-                                        }
-                                    },
-                                    error: function () {
-                                        alert("提交添加失败！");
-                                    }
-                                });
-                            }
-                        },
-                        error: function () {
-                            alert("提交添加失败！");
-                        }
-                    });
-                }
-                return  isflesh;
+//                if (o.model == "JXBS-3001-TH") {
+//                    for (var i = 0; i < 2; i++) {
+//                        o.dreg = i;
+//                        $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
+//                            success: function (data) {
+//                                var rs = data;
+//                                if (rs.total == 0) {
+//                                    $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
+//                                        success: function (data) {
+//                                            console.log(data);
+//                                            var rs = data.rs;
+//                                            if (rs.length > 0) {
+//                                                $("#dialog-add").dialog("close");
+//                                                layerAler("添加成功");
+//                                                $("#gravidaTable").bootstrapTable('refresh');
+//                                            }
+//                                        },
+//                                        error: function () {
+//                                            alert("提交添加失败！");
+//                                        }
+//                                    });
+//                                }
+//                            },
+//                            error: function () {
+//                                alert("提交添加失败！");
+//                            }
+//                        });
+//                    }
+//                } else if (o.model == "JXBS-3001-TR") {
+//                    for (var i = 0; i < 2; i++) {
+//                        o.dreg = i + 2;
+//                        $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
+//                            success: function (data) {
+//                                var rs = data;
+//                                if (rs.total == 0) {
+//                                    $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
+//                                        success: function (data) {
+//                                            if (rs.length > 0) {
+//                                                $("#dialog-add").dialog("close");
+//                                                layerAler("添加成功");
+//                                                $("#gravidaTable").bootstrapTable('refresh');
+//                                            }
+//                                        },
+//                                        error: function () {
+//                                            alert("提交添加失败！");
+//                                        }
+//                                    });
+//
+//
+//
+//                                }
+//                            },
+//                            error: function () {
+//                                alert("提交添加失败！");
+//                            }
+//                        });
+//                    }
+//                } else {
+//
+//                    $.ajax({url: "sensor.sensorform.existsite.action", async: false, type: "get", datatype: "JSON", data: o,
+//                        success: function (data) {
+//                            var rs = data;
+//                            if (rs.total == 0) {
+//                                o.pos = 2000;
+//                                $.ajax({url: "sensor.sensorform.addsensor1.action", async: false, type: "get", datatype: "JSON", data: o,
+//                                    success: function (data) {
+//                                        var rs = data.rs;
+//                                        if (rs.length > 0) {
+//                                            $("#dialog-add").dialog("close");
+//                                            layerAler("添加成功");
+//                                            $("#gravidaTable").bootstrapTable('refresh');
+//                                        }
+//                                    },
+//                                    error: function () {
+//                                        alert("提交添加失败！");
+//                                    }
+//                                });
+//                            }
+//                        },
+//                        error: function () {
+//                            alert("提交添加失败！");
+//                        }
+//                    });
+//                }
             }
 
             //搜索
@@ -594,7 +556,7 @@
                             valign: 'middle'
                         }, {
                             field: 'model',
-                            title: '型号', //灯具名称
+                            title: '备注', //灯具名称
                             width: 25,
                             align: 'center',
                             valign: 'middle'
@@ -604,8 +566,8 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle',
-                            sortable:true,
-                            sortOrder:"desc",
+                            sortable: true,
+                            sortOrder: "desc",
                             formatter: function (value, row, index, field) {
                                 if (value != null) {
                                     return value.toString();
@@ -656,8 +618,8 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle',
-                            sortable:true,
-                            sortOrder:"desc",
+                            sortable: true,
+                            sortOrder: "desc",
                             formatter: function (value, row, index, field) {
                                 return  value.toString();
                             }
@@ -667,7 +629,7 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle',
-                            sortable:true,
+                            sortable: true,
                             formatter: function (value, row, index, field) {
                                 if (value == "1") {
                                     var str = "<span class='label label-success'>" + "是" + "</span>"; //已部署
@@ -711,20 +673,20 @@
                     // 设置默认分页为 50
                     pageList: [50, 100],
                     sortable: true, //是否启用排序 
-                            onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
+                    onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
-                            },
+                    },
 
                     //服务器url
                     queryParams: function (params)  {   //配置参数   
                         //
-                        var v1=params.sort + " "  + params.order; 
+                        var v1 = params.sort + " " + params.order; 
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
                             search: params.search,
                             skip: params.offset,
                             limit: params.limit,
-                            sort:v1,    //排序字段 和 （desc、ase）
-                            sortOrder:params.order,
+                            sort: v1, //排序字段 和 （desc、ase）
+                            sortOrder: params.order,
                             type_id: "1",
                             pid: "${param.pid}"
                         };
@@ -732,7 +694,69 @@
                         return temp;  
                     }
                 });
-               
+                $('#warningtable').bootstrapTable({
+                    columns: [
+                        {
+                            title: '单选',
+                            field: 'select',
+                            //复选框
+                            checkbox: true,
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            title: "序号", //序号
+                            field: '序号',
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            title: "网关编号",
+                            field: '网关编号',
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            title: "站号",
+                            field: '站号', //网关名称
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            title: "传感器名", //经度
+                            field: '传感器名',
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            field: '数据位置', //纬度
+                            title: "数据位置",
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            field: '工作模式', //纬度
+                            title: "工作模式",
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            field: '型号', //纬度
+                            title: "型号",
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        }
+                    ],
+                    singleSelect: false,
+                    locale: 'zh-CN', //中文支持,
+                    pagination: true,
+                    pageNumber: 1,
+                    pageSize: 40,
+                    pageList: [20, 40, 80, 160]
+
+                });
+
                 var aaa = $("span[name=xxx]");
                 for (var i = 0; i < aaa.length; i++) {
                     var d = aaa[i];
@@ -741,23 +765,9 @@
                 }
 
                 $("#l_comaddr2").combobox({
-                    url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
-                    formatter: function (row) {
-                        var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
-                        var v = row.text + v1;
-                        row.id = row.id;
-                        row.text = v;
-                        var opts = $(this).combobox('options');
-                        return row[opts.textField];
-                    },
-                    onLoadSuccess: function (data) {
-                        if (Array.isArray(data) && data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                data[i].text = data[i].id;
-                            }
+                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
+                    onLoadSuccess: function (data) {                      
                             $(this).combobox('select', data[0].id);
-                        }
-
                     },
                     onSelect: function (record) {
                         var obj = {};
@@ -797,9 +807,10 @@
                                 // break; // 如果只取第一张表，就取消注释这行
                             }
                         }
-                        var headStr = '序号,网关名称,网关地址,灯具名称,灯具编号,组号,控制方式,经度,纬度';
+                        var headStr = '序号,网关编号,站号,传感器名,数据位置,工作模式,型号';
+                        var headStr2 = '序号,网关编号,站号,传感器名,数据位置,工作模式';
                         for (var i = 0; i < persons.length; i++) {
-                            if (Object.keys(persons[i]).join(',') !== headStr) {
+                            if (Object.keys(persons[i]).join(',') !== headStr && Object.keys(persons[i]).join(',') !== headStr2) {
                                 alert(langs1[366][lang]);  //导入文件格式不正确
                                 persons = [];
                             }
@@ -823,7 +834,7 @@
                     position: ["top", "top"],
                     buttons: {
                         添加: function () {
-                            $("#formadd").submit();
+                            checkSensorAdd();
                         }, 关闭: function () {
                             $(this).dialog("close");
                         }
@@ -866,28 +877,9 @@
                 //  $("#addexcel").attr("disabled", true);
 
                 $('#l_comaddr').combobox({
-                    url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
-                    formatter: function (row) {
-                        var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
-                        var v = row.text + v1;
-                        row.id = row.id;
-                        row.text = v;
-                        var opts = $(this).combobox('options');
-                        return row[opts.textField];
-                    },
-                    onLoadSuccess: function (data) {
-                        if (Array.isArray(data) && data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                data[i].text = data[i].id;
-                            }
-
+                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
+                    onLoadSuccess: function (data) {                      
                             $(this).combobox('select', data[0].id);
-
-                        }
-                    },
-                    onSelect: function (record) {
-                        $("#comaddrname").val(record.name);
-
                     }
                 });
 
@@ -913,7 +905,7 @@
 //                {
 //
 //                });
-                
+
 
             });
 
@@ -979,7 +971,7 @@
 //            $.extend($.fn.dataTableExt.oStdClasses,{
 //                "sWrapper":"dataTables_wrapper form-inline"
 //            });
-            
+
         </script>
 
         <style>
@@ -1006,7 +998,7 @@
                             <tr>
                                 <td>
                                     <span style="margin-left:10px;">
-                                        网关编号
+                                        网关名称
                                         &nbsp;</span>
                                 </td>
                                 <td>
@@ -1099,12 +1091,12 @@
 
         <div id="dialog-add"  class="bodycenter"  style=" display: none" title="传感器添加">
 
-            <form action="" method="POST" id="formadd" onsubmit="return checkSensorAdd()">      
+            <form action="" method="POST" id="formadd">      
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                                <span style="margin-left:20px;" >网关编号</span>&nbsp;
+                                <span style="margin-left:20px;" >网关名称</span>&nbsp;
                                 <span class="menuBox">
 
                                     <input id="l_comaddr"  class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 
@@ -1113,8 +1105,8 @@
 
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" >网关名称</span>&nbsp;
-                                <input id="comaddrname" readonly="true"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text">
+                                <span style="margin-left:10px;" >传感器名</span>&nbsp;
+                                <input id="name" class="form-control"  name="name" style="width:150px;display: inline;" placeholder="传感器名" type="text">
 
                             </td>
                         </tr>
@@ -1126,9 +1118,12 @@
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" >传感器名</span>&nbsp;
-                                <input id="name" class="form-control"  name="name" style="width:150px;display: inline;" placeholder="传感器名" type="text">
-
+                                <span style="margin-left:10px;" >工作模式</span>&nbsp;
+                                <!--                                <input id="worktype" class="form-control" value="0"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">-->
+                                <select class="easyui-combobox" id="worktype" name="worktype" style="width:150px; height: 30px">
+                                    <option value="0" >模拟量</option>
+                                    <option value="1" >开关量</option>  
+                                </select>
                             </td>
 
                         </tr>    
@@ -1141,30 +1136,10 @@
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" >工作模式</span>&nbsp;
+                                <span style="margin-left:10px;" >&#8195;&#8195;备注</span>&nbsp;
                                 <!--                                <input id="worktype" class="form-control" value="0"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">-->
-                                <select class="easyui-combobox" id="worktype" name="worktype" style="width:150px; height: 30px">
-                                    <option value="0" >模拟量</option>
-                                    <option value="1" >开关量</option>  
-                                </select>
+                                <input id="model" value="" class="form-control" name="model" style="width:150px;display: inline;" placeholder="备注" type="text">
                             </td>
-
-                        </tr>                  
-                        <tr>
-
-                            <td>
-
-
-                                <span style="margin-left:20px;" >&#8195;&#8195;型号</span>&nbsp;
-                                <!--<input id="model" value="JD-SENSOR-001" class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">-->
-                                <select class="easyui-combobox" id="model" name="model" style="width:150px; height: 30px">
-                                    <option value="JXBS-3001-TH" >JXBS-3001-TH</option>
-                                    <option value="JXBS-3001-TR" >JXBS-3001-TR</option>                                          
-                                </select>
-
-
-                            </td>
-
                         </tr> 
                     </tbody>
                 </table>
@@ -1198,28 +1173,31 @@
                             <td></td>
                             <td>
                                 <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
-
+                                <!--                                <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">-->
+                                <select class="easyui-combobox" id="worktype1" name="worktype" style="width:150px; height: 30px">
+                                    <option value="0" >模拟量</option>
+                                    <option value="1" >开关量</option>  
+                                </select>
                             </td>
 
                         </tr>                  
                         <tr>
-
+          
                             <td>
-                                <span style="margin-left:20px;" >&#8195;&#8195;型号</span>&nbsp;
-                                <input id="model1" readonly="true" class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">
-                            </td>
-                            <td></td>
-                            <td>
-                                <span style="margin-left:10px;" >&#8195;&#8195;类型</span>&nbsp;
+                                <span style="margin-left:20px;" >&#8195;&#8195;类型</span>&nbsp;
                                 <select class="easyui-combobox" id="type" name="type" style="width:150px; height: 30px">
-                                    <option value="" ></option>
                                     <option value="1" >温度</option>
                                     <option value="2" >湿度</option>  
                                     <option value="3" >开关</option> 
                                 </select>
-
-                            </td>                           
+                                
+                            </td>  
+                            <td></td>
+                            
+                            <td>
+                                <span style="margin-left:10px;" >&#8195;&#8195;备注</span>&nbsp;
+                                <input id="model1"  class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">
+                            </td>
 
 
                         </tr> 
@@ -1248,7 +1226,7 @@
                 <tr>
                     <td>如1、2、3</td>
                     <td>网关编号不可重复</td>
-                    <td>站号下网关不可重复</td>
+                    <td>网关下站号不可重复</td>
                     <td>传感器名</td>
                     <td>数据位置</td>
                     <td>工作模式 0代表模拟量、1代表开关量，填入0 或1 即可</td>

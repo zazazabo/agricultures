@@ -513,7 +513,7 @@
                         <tr >
                             <th data-width="25"    data-select="false" data-align="center" data-formatter='formartcomaddr'  data-checkbox="true"  ></th>
 <!--                            <th data-width="100" data-field="comaddr" data-align="center"   data-formatter='formartcomaddr1'  >网关地址</th>-->
-                            <th data-width="100" data-field="name" data-align="center"    >网关名称</th>
+                            <th data-width="100" data-field="name" data-align="center" data-formatter='formartcomaddr1'    >网关名称</th>
                         </tr>
                     </thead>       
 

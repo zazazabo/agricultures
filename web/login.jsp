@@ -409,7 +409,7 @@
                     background:rgba(2,8,25,0.49);                  
                     /*                    margin: 50px auto 0 auto;*/
                     margin-left: 50%;
-                    margin-top: 60%;
+                    margin-top: 40%;
                     display:none;  
                 }
                 .logion{

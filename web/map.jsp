@@ -282,6 +282,17 @@
                 });
             }
 
+            //计算时间差
+            function TimeDifference(time1, time2)
+            {
+
+                time1 = new Date(time1.replace(/-/g, '/'));
+                time2 = new Date(time2.replace(/-/g, '/'));
+                var ms = Math.abs(time1.getTime() - time2.getTime());
+                return ms / 1000 / 60;
+
+            }
+
             var pid = parent.parent.getpojectId();
             //调用父页面的方法获取用户名
             var u_name = parent.getusername();
@@ -342,8 +353,31 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle',
-                            formatter: function (value, row, index) {
-                                return "<img  src='img/online1.png'/>";
+                            formatter: function (value, row, index, field) {
+                                var str = "";
+                                var time1 = value.substring(0, 16);
+                                var time2 = row.dtime.substring(0, 16);
+                                var stime = TimeDifference(time1, time2);
+                                var obj = {};
+                                obj.comaddr = row.l_comaddr; //selects[0];
+                                $.ajax({url: "login.gateway.comaddrzx.action", async: false, type: "get", datatype: "JSON", data: obj,
+                                    success: function (data) {
+                                        var arrlist = data.rs;
+                                        if (arrlist[0].online == 1) {
+                                            if (stime <= 15) {
+                                                str = "<img  src='img/online1.png'/>";
+                                            } else {
+                                                str = "<img  src='img/off.png'/>";
+                                            }
+                                        } else {
+                                            str = "<img  src='img/off.png'/>";
+                                        }
+                                    },
+                                    error: function () {
+                                        alert("提交添加失败！请刷新");
+                                    }
+                                });
+                                return  str;
                             }
                         }],
                     method: "post",
@@ -1218,13 +1252,13 @@
                                 strokeOpacity: 0.5});//透明度
                             map.addOverlay(polyline);
 
-                            if (confirm(lans[289][lang])) {  //你还要继续选点吗？
+                            if (confirm("你还要继续选点吗？")) {  //你还要继续选点吗？
 
                             } else {
                                 for (var i = 0; i < wgidlist.length; i++) {
                                     updatelnglat(wgarray[i].x, wgarray[i].y, wgidlist[i]);
                                 }
-                                alert(lans[295][lang]); //配置经纬度成功
+                                alert("配置经纬度成功"); //配置经纬度成功
                                 var nobj = {};
                                 nobj.name = u_name;
                                 var day = getNowFormatDate2();
@@ -1449,7 +1483,7 @@
                 }
             }
 
-            //灯具标注
+            //传感器标注
             function lamplists(arrlist) {
                 for (var i = 0; i < arrlist.length; i++) {
                     (function (x) {
@@ -1523,6 +1557,8 @@
                         if ((Longitude != "" && latitude != "") && (Longitude != null && latitude != null)) {
                             var point = new BMap.Point(Longitude, latitude);
                             var marker1;
+
+                         
 
 //                            if (isfault2 == 1) {
 //                                marker1 = new BMap.Marker(point, {

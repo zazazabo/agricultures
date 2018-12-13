@@ -280,7 +280,15 @@
                                 success: function (data) {
                                     var arrlist = data.rs;
                                     if (arrlist.length == 1) {
-                                        $("#gravidaTable").bootstrapTable('refresh');
+                                        var obj = {};
+                                        obj.l_comaddr = $("#l_comaddr").val();
+                                        obj.pid = "${param.pid}";
+                                        var opt = {
+                                            url: "loop.loopForm.getLoopList.action",
+                                            query: obj,
+                                            silent: false
+                                        };
+                                        $("#gravidaTable").bootstrapTable('refresh', opt);
                                     }
                                 },
                                 error: function () {
@@ -499,7 +507,12 @@
 
             //搜索
             function  search() {
-                var obj = $("#formsearch").serializeObject();
+                var obj = {};
+                obj.l_comaddr = $("#l_comaddr").val();
+                var busu = $("#busu").val();
+                if(busu !="-1"){
+                    obj.l_deplayment = busu;
+                }
                 var opt = {
                     url: "loop.loopForm.getLoopList.action",
                     silent: false,
@@ -1121,7 +1134,15 @@
                         }
                     });
                     layerAler("添加成功！");
-                    $("#gravidaTable").bootstrapTable('refresh');
+                    var obj = {};
+                    obj.l_comaddr = $("#l_comaddr").val();
+                    obj.pid = "${param.pid}";
+                    var opt = {
+                        url: "loop.loopForm.getLoopList.action",
+                        query: obj,
+                        silent: false
+                    };
+                    $("#gravidaTable").bootstrapTable('refresh', opt);
                 }
 
 
@@ -1145,7 +1166,15 @@
                         }
                     });
                     layerAler("移除成功！");
-                    $("#gravidaTable").bootstrapTable('refresh');
+                    var obj = {};
+                    obj.l_comaddr = $("#l_comaddr").val();
+                    obj.pid = "${param.pid}";
+                    var opt = {
+                        url: "loop.loopForm.getLoopList.action",
+                        query: obj,
+                        silent: false
+                    };
+                    $("#gravidaTable").bootstrapTable('refresh', opt);
                 }
 
 
@@ -1203,8 +1232,10 @@
                                 </td>
                                 <td>
                                     <select class="easyui-combobox" id="busu" name="l_deplayment" style="width:150px; height: 30px">
+                                        <option value="-1">全部</option>   
+                                        <option value="1">已部署</option>   
                                         <option value="0">未部署</option>
-                                        <option value="1">已部署</option>           
+
                                     </select>
                                 </td>
                                 <td>
@@ -1616,23 +1647,23 @@
 
                 <table  >
                     <tbody>
-<!--                        <tr>
-                            <td>
-
-                                <span style="margin-left:20px;" >网关地址</span>&nbsp;
-                                <span class="menuBox">
-
-                                    <input id="l_comaddr1" readonly="true" class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 
-                                           data-options='editable:false,valueField:"id", textField:"text"' />
-                                </span>  
-                            </td>
-                            <td></td>
-                            <td>
-                                <span style="margin-left:10px;" >网关名称</span>&nbsp;
-                                <input id="comaddrname1" readonly="false"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text">
-
-                            </td>
-                        </tr>-->
+                        <!--                        <tr>
+                                                    <td>
+                        
+                                                        <span style="margin-left:20px;" >网关地址</span>&nbsp;
+                                                        <span class="menuBox">
+                        
+                                                            <input id="l_comaddr1" readonly="true" class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 
+                                                                   data-options='editable:false,valueField:"id", textField:"text"' />
+                                                        </span>  
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <span style="margin-left:10px;" >网关名称</span>&nbsp;
+                                                        <input id="comaddrname1" readonly="false"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text">
+                        
+                                                    </td>
+                                                </tr>-->
 
                         <tr>
                             <td>

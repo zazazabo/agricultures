@@ -180,7 +180,7 @@
                 }
             };
             var websocket = null;
-            var conectstr = "ws://viphk.ngrok.org:10018/";
+            var conectstr = "ws://47.99.78.186:24228/";
             var timestamp = 0;
             function sendData(obj) {
 
@@ -425,11 +425,11 @@
                         if (data.rs[0].number == 0) {
                             $("#alarmNumber").html("");
 //                            $("#alarmNumber").css("color", "white");
-                            $("#imageId").attr("src","./img/green.png");
+                            $("#imageId").attr("src", "./img/green.png");
                         } else {
                             $("#alarmNumber").html(data.rs[0].number);
                             $("#alarmNumber").css("color", "black");
-                            $("#imageId").attr("src","./img/red.png");
+                            $("#imageId").attr("src", "./img/red.png");
 
                         }
                     },

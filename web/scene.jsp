@@ -319,7 +319,8 @@
 
 
             function showDialog() {
-
+                  $('#l_plan').combobox('clear')
+                $('#l_plan').combobox('reload');
                 $('#dialog-add').dialog('open');
                 return false;
             }
@@ -356,9 +357,9 @@
                         }
                         var arr = [];
                         for (var ii in scenearr) {
-                           arr.push(scenearr[ii]);
+                            arr.push(scenearr[ii]);
                         }
-                        if (arr.length>0) {
+                        if (arr.length > 0) {
                             var aa = arr[0];
                             var o1 = {p_code: ooo.l_plan, p_show: val, p_scenenum: aa};
                             console.log(o1);
@@ -384,7 +385,9 @@
                 });
 
 
-
+//                $('#l_plan').combobox({
+//                    url: 'loop.planForm.getPlanlist.action?attr=1&p_type =1 & pid =${param.pid}'
+//                });
                 return false;
 
 //                var o = {p_code: ooo.l_plan, p_show: val, p_scenenum: ooo.p_scenenum};
@@ -634,21 +637,21 @@
 
                                 <!-- <input  id="info1" name="info1" readonly="true" style="width:100px; height: 30px;"  > -->
                                 <!-- <input id="scenenum"  name="scenenum"  readonly="true" class="form-control" style="width:100px;display: inline;" type="text"> -->
-<!--                                <span style="margin-left: 20px;"  >
-                                    场景号
-                                </span>
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum1" name="p_scenenum" style="width:70px; height: 30px">
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                </select> -->
+                                <!--                                <span style="margin-left: 20px;"  >
+                                                                    场景号
+                                                                </span>
+                                                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="p_scenenum1" name="p_scenenum" style="width:70px; height: 30px">
+                                                                    <option value="0">0</option>
+                                                                    <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="3">3</option>
+                                                                    <option value="4">4</option>
+                                                                    <option value="5">5</option>
+                                                                    <option value="6">6</option>
+                                                                    <option value="7">7</option>
+                                                                    <option value="8">8</option>
+                                                                    <option value="9">9</option>
+                                                                </select> -->
 
                             </td>
 

@@ -67,7 +67,7 @@
             </xsql>
         </xhandle>
         <xhandle desc="" id="addGateway" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="model,comaddr,name,longitude,latitude,pid" tpe="DDL" tpl="insert into t_baseinfo(model,comaddr,name,longitude,latitude,pid) values(':model',':comaddr',':name',':longitude',':latitude',':pid')" var="rs">
+            <xsql id="a1" para="model,comaddr,name,Longitude,latitude,pid" tpe="DDL" tpl="insert into t_baseinfo(model,comaddr,name,Longitude,latitude,pid) values(':model',':comaddr',':name',':Longitude',':latitude',':pid')" var="rs">
             </xsql>
         </xhandle>
         <xhandle desc="网关" id="getComaddr" rtnype="JSON">

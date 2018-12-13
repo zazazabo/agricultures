@@ -636,7 +636,7 @@
             <canvas id="demo-canvas" width="1398" height="914"></canvas>
         </div>
 
-        <img src="./img/hm2.jpg" style="position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;">
+        <img src="./img/ny.jpg" style="position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;">
 
         <div class="changeLanguage">
             <div language="zh_CN" class="Zh" id="chinese">中文</div>

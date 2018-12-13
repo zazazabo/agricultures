@@ -19,7 +19,7 @@
         <style type="text/css">
             body {
                 /*               background:url(./img/ny.jpg)  no-repeat; background-size:contain; -moz-background-size:100% 100%;*/
-                background:url(./img/ny.jpg)  no-repeat center center;
+                background:url(./img/jdbj.jpg)  no-repeat center center;
 
                 background-size:cover;
 

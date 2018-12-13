@@ -509,11 +509,11 @@
             }
 
             $(function () {
-                
-                $("#add").attr("disabled",true);
-                $("#shanchu").attr("disabled",true);
-                $("#update").attr("disabled",true);
-                $("#addexcel").attr("disabled",true);
+
+                $("#add").attr("disabled", true);
+                $("#shanchu").attr("disabled", true);
+                $("#update").attr("disabled", true);
+                $("#addexcel").attr("disabled", true);
                 var obj = {};
                 obj.code = ${param.m_parent};
                 obj.roletype = ${param.role};
@@ -524,7 +524,7 @@
                             for (var i = 0; i < rs.length; i++) {
                                 if (rs[i].code == "500301" && rs[i].enable != 0) {
                                     $("#add").attr("disabled", false);
-                                    $("#addexcel").attr("disabled",false);
+                                    $("#addexcel").attr("disabled", false);
                                     continue;
                                 }
                                 if (rs[i].code == "500302" && rs[i].enable != 0) {
@@ -694,7 +694,7 @@
                 }
 
                 $('#comaddr').combobox({
-                    url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
+                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
                     formatter: function (row) {
                         var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
                         var v = row.text + v1;
@@ -707,7 +707,7 @@
                     onLoadSuccess: function (data) {
                         if (Array.isArray(data) && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
-                                data[i].text = data[i].id;
+                                data[i].text = data[i].name;
                             }
 
                             $(this).combobox('select', data[0].id);
@@ -717,8 +717,15 @@
                     }
                 });
 
+//                 $('#l_comaddr').combobox({
+//                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
+//                    onLoadSuccess: function (data) {                      
+//                            $(this).combobox('select', data[0].id);
+//                    }
+//                });
+
                 $("#l_comaddr").combobox({
-                    url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
+                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
                     formatter: function (row) {
                         var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
                         var v = row.text + v1;
@@ -730,7 +737,7 @@
                     onLoadSuccess: function (data) {
                         if (Array.isArray(data) && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
-                                data[i].text = data[i].id;
+                                data[i].text = data[i].name;
                             }
                             $(this).combobox('select', data[0].id);
                         }
@@ -1179,7 +1186,7 @@
                             <tr>
                                 <td>
                                     <span style="margin-left:10px;">
-                                        <span id="25" name="xxxx">网关地址</span>
+                                        <span >网关名称</span>
                                         &nbsp;</span>
                                 </td>
                                 <td>
@@ -1609,7 +1616,7 @@
 
                 <table  >
                     <tbody>
-                        <tr>
+<!--                        <tr>
                             <td>
 
                                 <span style="margin-left:20px;" >网关地址</span>&nbsp;
@@ -1625,7 +1632,7 @@
                                 <input id="comaddrname1" readonly="false"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text">
 
                             </td>
-                        </tr>
+                        </tr>-->
 
                         <tr>
                             <td>

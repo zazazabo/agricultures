@@ -17,7 +17,17 @@
 
 
         <style type="text/css">
-            body {background:url(./img/jdbj.jpg) top center no-repeat; background-size:cover; -moz-background-size:100% 100%;}
+            body {
+                /*               background:url(./img/ny.jpg)  no-repeat; background-size:contain; -moz-background-size:100% 100%;*/
+                background:url(./img/ny.jpg)  no-repeat center center;
+
+                background-size:cover;
+
+                background-attachment:fixed;
+
+                background-color:#CCCCCC;
+
+            } 
             .top{
                 /*                display: flex;*/
                 justify-content: space-around;
@@ -46,7 +56,8 @@
 
             .kg{ border: 1px solid black; width: 13%; float: left; height: 256px;    margin-left: 3%; margin-top: 2%;}
 
-            .hl{ border: 1px solid black; width: 13%; float: left; height: 256px;background:rgba(144, 238 ,144,0.6); filter:alpha(opacity=60); margin-left: 3%; margin-top: 2%;  }
+            .hl{ border: 1px solid black; width: 13%; float: left; height: 256px; margin-left: 3%; margin-top: 2%;  }
+            .hlzx{ background:rgba(144, 238 ,144,0.6); filter:alpha(opacity=60);}
             .lx{background:rgba(96, 96 ,96,0.6); filter:alpha(opacity=60);}
             .cgqzx{background:rgba(255,165,0,0.6); filter:alpha(opacity=60);}
             img{ width:100%;height:100%;}
@@ -121,8 +132,8 @@
                     }
                 });
             }
-            
-             //计算时间差
+
+            //计算时间差
             function TimeDifference(time1, time2)
             {
 
@@ -133,8 +144,8 @@
 
             }
             $(function () {
-               var pid = parent.parent.getpojectId();
-               var slen = 0;
+                var pid = parent.parent.getpojectId();
+                var slen = 0;
                 $.ajax({url: "homePage.homePage.getSensorList.action", type: "POST", datatype: "JSON", data: {pid: pid},
                     success: function (data) {
                         var arrlist = data.rs;
@@ -146,8 +157,13 @@
                                 var bodydiv2 = document.createElement("div");
                                 var img2 = document.createElement("img");
                                 $(img2).attr("id", "limg" + loop.id);
-                                str = "断开"; //状态
                                 $(bodydiv2).addClass("hl");
+                                if (loop.l_state == 1) {
+                                    $(bodydiv2).addClass("hlzx");
+                                } else {
+                                    $(bodydiv2).addClass("lx");
+                                }
+                                str = "断开"; //状态
                                 if (loop.l_switch == 1) {
                                     str = "闭合";
                                     img2.src = "./img/l.png";
@@ -188,9 +204,9 @@
                                 var time1 = sensor.onlinetime.substring(0, 16);
                                 var time2 = sensor.dtime.substring(0, 16);
                                 var stime = TimeDifference(time1, time2);
-                                if(stime>15){
+                                if (stime > 15) {
                                     $(bodydiv).addClass("lx");  //离线
-                                }else{
+                                } else {
                                     $(bodydiv).addClass("cgqzx");  //在线 
                                 }
                                 if (sensor.type == 1) {   //温度
@@ -261,14 +277,14 @@
                         layerAler("提交失败");
                     }
                 });
-              
+
                 setInterval('getinfo()', 10000);
-                
-                if(slen<=12){
+
+                if (slen <= 12) {
                     //$("#activity_pane").style.height = 700px;
-                    document.getElementById("activity_pane").style.height=850 +"px";
+                    document.getElementById("activity_pane").style.height = 850 + "px";
                 }
-                
+
             });
 
         </script>

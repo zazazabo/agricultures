@@ -509,11 +509,11 @@
             }
 
             $(function () {
-                
-                $("#add").attr("disabled",true);
-                $("#shanchu").attr("disabled",true);
-                $("#update").attr("disabled",true);
-                $("#addexcel").attr("disabled",true);
+
+                $("#add").attr("disabled", true);
+                $("#shanchu").attr("disabled", true);
+                $("#update").attr("disabled", true);
+                $("#addexcel").attr("disabled", true);
                 var obj = {};
                 obj.code = ${param.m_parent};
                 obj.roletype = ${param.role};
@@ -524,7 +524,7 @@
                             for (var i = 0; i < rs.length; i++) {
                                 if (rs[i].code == "500301" && rs[i].enable != 0) {
                                     $("#add").attr("disabled", false);
-                                    $("#addexcel").attr("disabled",false);
+                                    $("#addexcel").attr("disabled", false);
                                     continue;
                                 }
                                 if (rs[i].code == "500302" && rs[i].enable != 0) {
@@ -665,11 +665,11 @@
                     exportDataType: "basic", //basic', 'a
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [5, 10, 15, 20, 25],
+                    pageList: [10, 20, 40, 80, 160],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },

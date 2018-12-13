@@ -476,7 +476,7 @@
                                             var ids = [];//定义一个数组
                                             var xh = selects[i].序号;
                                             ids.push(xh);//将要删除的id存入数组
-                                            addlogon(u_name, "添加", o_pid, "网关管理", "添加网关["+selects[i].网关名称+"]");
+                                            addlogon(u_name, "添加", o_pid, "网关管理", "添加网关[" + selects[i].网关名称 + "]");
                                             $("#warningtable").bootstrapTable('remove', {field: '序号', values: ids});
                                         }
                                     },
@@ -494,12 +494,27 @@
                     });
 
                 }
-                $("#gravidaTable").bootstrapTable('refresh'); 
+                $("#gravidaTable").bootstrapTable('refresh');
             }
 
 
             function checkAdd() {
                 var obj = $("#formadd").serializeObject();
+                console.log(obj);
+                if (obj.comaddr == "") {
+                    layerAler("请填写网关地址");
+                    return;
+                }
+                if (obj.comaddr.length > 20) {
+                    layerAler("网关地址不能大于20长度");
+                    return;
+                }
+                var comaddr = obj.comaddr;
+                while (comaddr.length < 20) {
+                    comaddr = "0" + comaddr;
+                }
+                obj.comaddr = comaddr;
+                obj.l_plan = "";
                 var namesss = false;
                 $.ajax({async: false, cache: false, url: "gayway.GaywayForm.queryGateway.action", type: "GET", data: obj,
                     success: function (data) {
@@ -547,9 +562,19 @@
                                     var ooo = {};
                                     ooo.l_site = 1;
                                     ooo.l_name = "Y" + j.toString();
-                                    ooo.l_comaddr = obj.comaddr;
+                                    ooo.l_comaddr = comaddr;
                                     ooo.l_pos = z;
                                     ooo.l_port = j;
+                                  
+                                    ooo.l_worktype = 2;
+                                    ooo.l_plan = 1;
+                                    ooo.l_val1 = 0;
+                                    ooo.l_val2 = 0;
+                                    ooo.l_val3 = 0;
+                                    ooo.l_val4 = 0;
+                                    ooo.l_val5 = 0;
+                                    ooo.l_info=j
+                                    console.log(ooo);
                                     $.ajax({url: "loop.loopForm.addLoop.action", async: false, type: "get", datatype: "JSON", data: ooo,
                                         success: function (data) {
                                             var arrlist = data.rs;
@@ -634,7 +659,7 @@
                         <tr>
                             <td>
                                 <span style="margin-left:20px;" >项目列表</span>&nbsp;
-                                <input id="pid" class="easyui-combobox" name="pid" style="width:150px; height: 30px" data-options="editable:false,valueField:'id', textField:'text' " />
+                                <input id="pid" readonly="true" class="easyui-combobox" name="pid" style="width:150px; height: 30px" data-options="editable:true,valueField:'id', textField:'text' " />
                             </td>
                             <td>
                             </td>
@@ -645,7 +670,8 @@
                                 <span class="menuBox">
 
                                     <!--<input id="model" class="easyui-combobox" readonly="true" name="model" style="width:150px; height: 30px" data-options="editable:false" />-->
-                                    <select class="easyui-combobox" readonly="true" id="model" name="model" style="width:150px; height: 30px">
+                                    <select class="easyui-combobox" data-options="editable:true"  id="model" name="model" style="width:150px; height: 30px">
+                                        <option value=""></option>
                                         <option value="L-30MT-ES2">L-30MT-ES2</option>
                                     </select>
                                 </span>

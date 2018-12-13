@@ -654,7 +654,7 @@
                                 }
                             }
                         }],
-                    singleSelect: true,
+                    singleSelect: false,
                     clickToSelect: true,
                     sortName: 'id',
                     locale: 'zh-CN', //中文支持,

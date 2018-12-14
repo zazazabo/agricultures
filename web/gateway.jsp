@@ -557,7 +557,7 @@
 
 
                                 //添加回路
-                                for (var i = 0; i < 16; i++) {
+                                for (var i = 0; i < 14; i++) {
                                     var z = i + 4100;
                                     var j = i >= 8 ? 10 + (i - 8) : i;
                                     var ooo = {};
@@ -565,16 +565,16 @@
                                     ooo.l_name = "Y" + j.toString();
                                     ooo.l_comaddr = comaddr;
                                     ooo.l_pos = z;
-                                    ooo.l_port = j;
+                                    ooo.l_port = i;
 
-                                    ooo.l_worktype = 2;
-                                    ooo.l_plan = 1;
+                                    //ooo.l_worktype = 2;
+//                                    ooo.l_plan = 1;
                                     ooo.l_val1 = 0;
                                     ooo.l_val2 = 0;
                                     ooo.l_val3 = 0;
                                     ooo.l_val4 = 0;
                                     ooo.l_val5 = 0;
-                                    ooo.l_info = j
+//                                    ooo.l_info = i
                                     console.log(ooo);
                                     $.ajax({url: "loop.loopForm.addLoop.action", async: false, type: "get", datatype: "JSON", data: ooo,
                                         success: function (data) {

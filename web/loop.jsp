@@ -116,6 +116,11 @@
 
                 var namesss = false;
                 addlogon(u_name, "添加", o_pid, "回路管理", "添加回路");
+
+                if (isNumber(o.l_site) == false || isNumber(o.l_pos) == false) {
+                    layerAler("数据位置站号是数字");
+                    return false;
+                }
                 $.ajax({async: false, cache: false, url: "loop.loopForm.ExistLoop.action", type: "GET", data: o,
                     success: function (data) {
                         console.log(data);
@@ -124,10 +129,50 @@
                             return false;
                         }
                         if (data.total == 0) {
-                            $.ajax({async: false, cache: false, url: "loop.loopForm.addLoop.action", type: "GET", data: o,
+                            if (o.l_worktype == 3) {
+
+                                for (var i = 0; i < 5; i++) {
+                                    var time = "time" + (i + 1).toString();
+                                    var timeval = "timeval" + (i + 1).toString();
+                                    var o1 = {time: o[time], value: parseInt(o[timeval])};
+
+                                    var valobj = JSON.stringify(o1);
+                                    var val = "l_val" + (i + 1).toString();
+                                    o[val] = valobj;
+                                }
+                                console.log(o);
+                            } else if (o.l_worktype == 5) {
+                                for (var i = 0; i < 5; i++) {
+                                    var scene = "scen" + (i + 1).toString();
+                                    var val = "val" + (i + 1).toString();
+                                    var o1 = {scene: o[scene], value: parseInt(o[val])};
+                                    var valobj = JSON.stringify(o1);
+                                    var val = "l_val" + (i + 1).toString();
+                                    o[val] = valobj;
+                                }
+                                console.log(o);
+                            } else if (o.l_worktype == 9) {
+
+                                var oo = {infonum: parseInt(o.infonum), offset: parseInt(o.offset)};
+                                var oostr = JSON.stringify(oo);
+                                o.l_val1 = oostr;
+                                for (var i = 0; i < 4; i++) {
+                                    var info = "info" + (i + 1).toString();
+                                    var val = "infoval" + (i + 1).toString();
+                                    var o1 = {info: o[info], value: parseInt(o[val])};
+                                    var valobj = JSON.stringify(o1);
+                                    var val = "l_val" + (i + 1 + 1).toString();
+                                    o[val] = valobj;
+                                }
+                                console.log(o);
+
+                            }
+
+                            $.ajax({async: false, cache: false, url: "loop.loopForm.addLoop1.action", type: "GET", data: o,
                                 success: function (data) {
+//                                    search();
                                     $("#gravidaTable").bootstrapTable('refresh');
-                                    namesss = true;
+
                                 },
                                 error: function () {
                                     layerAler("系统错误，刷新后重试");
@@ -485,6 +530,49 @@
                 var select = selects[0];
                 console.log(select);
 
+                if (select.l_worktype == 3) {
+                    for (var i = 0; i < 5; i++) {
+                        var o1 = (i + 1).toString();
+                        var str = "l_val" + o1;
+                        var timestr = select[str];
+                        console.log(timestr)
+                        var objtime = eval('(' + timestr + ')');
+
+                        $("#time" + o1 + o1).spinner('setValue', objtime.time);
+                        $("#timeval" + o1 + o1).val(objtime.value);
+                    }
+                } else if (select.l_worktype == 5) {
+                    for (var i = 0; i < 5; i++) {
+                        var o1 = (i + 1).toString();
+                        var str = "l_val" + o1;
+                        var timestr = select[str];
+                        console.log(timestr)
+                        var objtime = eval('(' + timestr + ')');
+                        $("#scen" + o1 + o1).val(objtime.scene.toString());
+                        $("#scenval" + o1 + o1).val(objtime.value);
+                    }
+                } else if (select.l_worktype == 9) {
+
+                    for (var i = 0; i < 5; i++) {
+                         var o1 = (i + 1).toString();
+                        var str = "l_val" + o1;
+                        var timestr = select[str];
+                        var objtime = eval('(' + timestr + ')');
+                        console.log(timestr)
+                        
+                        
+//                        if(i==0){
+//                            
+//                            $("#infonum1").val(objtime.infonum.toString());
+//                            $("#offset").val(objtime.offset); 
+//                            continue;
+//                        }
+
+//                        $("#info_" + o1 + o1).val(objtime.info.toString());
+//                        $("#infoval" + o1 + o1).val(objtime.value);
+                    }
+                }
+
                 $("#l_comaddr1").combobox('setValue', select.l_comaddr);
                 $("#l_deployment").val(select.l_deplayment);
                 $("#comaddrname1").val(select.commname);
@@ -492,7 +580,6 @@
 
                 $("#hide_id").val(select.lid);
                 $("#l_site1").val(select.l_site);
-                $("#l_info1").val(select.l_info);
                 $("#l_pos1").val(select.l_pos);
                 console.log(select.l_worktype);
                 if (select.l_deplayment == "1") {
@@ -510,7 +597,7 @@
                 var obj = {};
                 obj.l_comaddr = $("#l_comaddr").val();
                 var busu = $("#busu").val();
-                if(busu !="-1"){
+                if (busu != "-1") {
                     obj.l_deplayment = busu;
                 }
                 var opt = {
@@ -526,7 +613,7 @@
 //                $("#add").attr("disabled", true);
 //                $("#shanchu").attr("disabled", true);
 //                $("#update").attr("disabled", true);
-//                $("#addexcel").attr("disabled", true);
+                //                $("#addexcel").attr("disabled", true);
                 var obj = {};
                 obj.code = ${param.m_parent};
                 obj.roletype = ${param.role};
@@ -558,7 +645,7 @@
 
 
                 $('#gravidaTable').bootstrapTable({
-//                    url: 'loop.loopForm.getLoopList.action',
+                    //                    url: 'loop.loopForm.getLoopList.action',
                     //服务器url
                     columns: [
                         {
@@ -625,18 +712,6 @@
                                 return value;
                             }
                         }, {
-                            field: 'l_plan',
-                            title: '工作方案', //控制方式
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle',
-                            formatter: function (value, row, index, field) {
-                                if (isJSON(value)) {
-                                    var obj = eval('(' + value + ')');
-                                    return obj.name;
-                                }
-                            }
-                        }, {
                             field: 'show',
                             title: '是否首页显示', //是否首页显示
                             width: 25,
@@ -684,9 +759,8 @@
                     // 设置默认分页为 50
                     pageList: [10, 20, 40, 80, 160],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
-//                        console.info("加载成功");
-                    },
-                    queryParams: function (params)  {   //配置参数     
+                        //                        console.info("加载成功");
+                    }, queryParams: function (params)  {   //配置参数     
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
                             search: params.search,
                             skip: params.offset,
@@ -695,8 +769,7 @@
                             pid: "${param.pid}"   
                         };      
                         return temp;  
-                    },
-                });
+                    }, });
 
 
                 var aaa = $("span[name=xxx]");
@@ -730,12 +803,6 @@
                     }
                 });
 
-//                 $('#l_comaddr').combobox({
-//                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
-//                    onLoadSuccess: function (data) {                      
-//                            $(this).combobox('select', data[0].id);
-//                    }
-//                });
 
                 $("#l_comaddr").combobox({
                     url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
@@ -797,8 +864,7 @@
                         var headStr = '序号,网关名称,网关地址,回路名称,回路编号,回路组号';
                         for (var i = 0; i < persons.length; i++) {
                             if (Object.keys(persons[i]).join(',') !== headStr) {
-                                alert(langs1[366][lang]);   //导入文件格式不正确
-                                persons = [];
+                                alert(langs1[366][lang]);   //导入文件格式不正确                                 persons = [];
                             }
                         }
                         console.log("p2:" + persons.length);
@@ -858,202 +924,6 @@
                     }
                 });
 
-                $('#l_plan').combobox({
-                    // url: "loop.planForm.getPlanlist.action?attr=0&pid=${param.pid}",
-                    formatter: function (row) {
-                        var strtype = "(时间)";
-                        if (row.p_type == 0) {
-                            strtype = "(时间)";
-                        } else if (row.p_type == 1) {
-                            strtype = "(场景)";
-                        } else if (row.p_type == 2) {
-                            strtype = "(信息点)"
-                        }
-
-                        var v = row.p_name + strtype;
-                        row.id = row.id;
-                        row.text = v;
-                        var opts = $(this).combobox('options');
-                        return row[opts.textField];
-                    },
-                    onLoadSuccess: function (data) {
-                        if (Array.isArray(data) && data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                data[i].text = data[i].p_name;
-                            }
-                            $(this).combobox('select', data[0].id);
-
-                        }
-                    },
-                    onSelect: function (record) {
-                        $("#planname").val(record.text);
-                        if (record.p_type == "0") {
-                            for (var i = 0; i < 5; i++) {
-                                var index = (i + 1).toString();
-                                var time = "p_time" + index;
-                                var val = "#l_val" + index;
-                                $(val).val(record[time]);
-
-                                if (isJSON(record[time])) {
-                                    var obj = eval('(' + record[time] + ')');
-                                    $("#time" + index).spinner('setValue', obj.time);
-                                    $("#timeval" + index).val(obj.value);
-                                }
-
-                                $("#time" + index).spinner('readonly', true);
-                                $("#timeval" + index).attr('readonly', true);
-                            }
-                        } else if (record.p_type == "1") {
-
-                            for (var i = 0; i < 5; i++) {
-                                var index = (i + 1).toString();
-                                var scene = "p_scene" + index;
-                                var val = "#l_val" + index;
-                                $(val).val(record[scene]);
-
-                                if (isJSON(record[scene])) {
-                                    var obj = eval('(' + record[scene] + ')');
-                                    $("#scen" + index).val(obj.scene);
-                                    $("#scenval" + index).val(obj.value);
-
-                                }
-                                $("#scen" + index).attr('readonly', true);
-                                $("#scenval" + index).attr('readonly', true);
-                            }
-                        } else if (record.p_type == "2") {
-
-
-
-                            var obj2 = eval('(' + record.p_info + ')');
-
-                            var o3 = {info: obj2.num, value: obj2.offset};
-
-                            var str1 = JSON.stringify(o3);
-                            $("#l_val1").val(str1);
-
-
-                            for (var i = 0; i < 4; i++) {
-                                var index = (i + 1).toString();
-                                var info = "p_info" + index;
-                                var val = "#l_val" + (i + 1 + 1).toString();
-                                $(val).val(record[info]);
-                                if (isJSON(record[info])) {
-                                    var obj = eval('(' + record[info] + ')');
-                                    $("#info_" + index).val(obj.info);
-                                    $("#infoval" + index).val(obj.value);
-                                    $("#info_" + index).attr('readonly', true);
-                                    $("#infoval" + index).attr('readonly', true);
-                                }
-                            }
-
-                            var infonum = record.p_info;
-                            var obj1 = eval('(' + infonum + ')');
-                            $("#infonum").val(obj1.num);
-                            $("#offset").val(obj1.offset);
-
-                            $("#infonum").attr('readonly', true);
-                            $("#offset").attr('readonly', true);
-                        }
-                    }
-                });
-
-
-                $('#l_plan1').combobox({
-                    // url: "loop.planForm.getPlanlist.action?attr=0&pid=${param.pid}",
-                    formatter: function (row) {
-                        var strtype = "(时间)";
-                        if (row.p_type == 0) {
-                            strtype = "(时间)";
-                        } else if (row.p_type == 1) {
-                            strtype = "(场景)";
-                        } else if (row.p_type == 2) {
-                            strtype = "(信息点)"
-                        }
-                        var v = row.p_name + strtype;
-                        row.id = row.id;
-                        row.text = v;
-                        var opts = $(this).combobox('options');
-                        return row[opts.textField];
-                    },
-                    onLoadSuccess: function (data) {
-                        if (Array.isArray(data) && data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                data[i].text = data[i].p_name;
-                            }
-
-                            $(this).combobox('select', data[0].id);
-
-                        }
-                    },
-                    onSelect: function (record) {
-                        $("#planname1").val(record.text);
-
-                        if (record.p_type == "0") {
-                            for (var i = 0; i < 5; i++) {
-                                var time = "p_time" + (i + 1).toString();
-                                var index = (i + 1).toString();
-                                var val = "#l_val" + index + index;
-                                console.log(val);
-                                $(val).val(record[time]);
-
-                                if (isJSON(record[time])) {
-                                    var obj = eval('(' + record[time] + ')');
-                                    $("#time" + index + index).spinner('setValue', obj.time);
-                                    $("#timeval" + index + index).val(obj.value);
-                                }
-
-                                $("#time" + index + index).spinner('readonly', true);
-                                $("#timeval" + index + index).attr('readonly', true);
-
-
-
-                            }
-                        } else if (record.p_type == "1") {
-                            for (var i = 0; i < 5; i++) {
-                                var scene = "p_scene" + (i + 1).toString();
-                                var index = (i + 1).toString();
-                                var val = "#l_val" + index + index;
-                                $(val).val(record[scene]);
-                                if (isJSON(record[scene])) {
-                                    var obj = eval('(' + record[scene] + ')');
-                                    $("#scen" + index + index).val(obj.scene);
-                                    $("#scenval" + index + index).val(obj.value);
-
-                                }
-                                $("#scen" + index + index).attr('readonly', true);
-                                $("#scenval" + index + index).attr('readonly', true);
-                            }
-                        } else if (record.p_type == "2") {
-                            var obj2 = eval('(' + record.p_info + ')');
-
-                            var o3 = {info: obj2.num, value: obj2.offset};
-                            var str1 = JSON.stringify(o3);
-                            $("#l_val11").val(str1);
-
-                            for (var i = 0; i < 4; i++) {
-                                var index = (i + 1).toString();
-                                var info = "p_info" + index;
-                                var val = "#l_val" + (i + 1 + 1).toString() + (i + 1 + 1).toString();
-                                $(val).val(record[info]);
-                                if (isJSON(record[info])) {
-                                    var obj = eval('(' + record[info] + ')');
-                                    $("#info_" + index + index).val(obj.info);
-                                    $("#infoval" + index + index).val(obj.value);
-                                    $("#info_" + index + index).attr('readonly', true);
-                                    $("#infoval" + index + index).attr('readonly', true);
-                                }
-                            }
-                            var infonum = record.p_info;
-                            var obj1 = eval('(' + infonum + ')');
-                            $("#infonum1").val(obj1.num);
-                            $("#offset1").val(obj1.offset);
-
-                            $("#infonum1").attr('readonly', true);
-                            $("#offset1").attr('readonly', true);
-                        }
-
-                    }
-                });
                 $('#l_worktype').combobox({
                     onLoadSuccess: function (data) {
                         if (Array.isArray(data) && data.length > 0) {
@@ -1124,9 +994,7 @@
                 }
 
                 for (var i = 0; i < selects.length; i++) {
-                    var id = selects[i].id;
-                    $.ajax({async: false, url: "homePage.loop.addshow.action", type: "get", datatype: "JSON", data: {id: id},
-                        success: function (data) {
+                    var id = selects[i].id;                     $.ajax({async: false, url: "homePage.loop.addshow.action", type: "get", datatype: "JSON", data: {id: id}, success: function (data) {
 
                         },
                         error: function () {
@@ -1156,9 +1024,7 @@
                 }
 
                 for (var i = 0; i < selects.length; i++) {
-                    var id = selects[i].id;
-                    $.ajax({async: false, url: "homePage.loop.removeshow.action", type: "get", datatype: "JSON", data: {id: id},
-                        success: function (data) {
+                    var id = selects[i].id;                     $.ajax({async: false, url: "homePage.loop.removeshow.action", type: "get", datatype: "JSON", data: {id: id}, success: function (data) {
 
                         },
                         error: function () {
@@ -1304,12 +1170,12 @@
 
             <form action="" method="POST" id="formadd" onsubmit="return checkLoopAdd()">    
                 <input type="hidden" name="pid" value="${param.pid}"/>
-                <input type="hidden" id="planname" name="planname" value="" />
-                <input type="hidden" id="l_val1" name="l_val1" value="" />
-                <input type="hidden" id="l_val2" name="l_val2" value="" />
-                <input type="hidden" id="l_val3" name="l_val3" value="" />
-                <input type="hidden" id="l_val4" name="l_val4" value="" />
-                <input type="hidden" id="l_val5" name="l_val5" value="" />
+                <!--                <input type="hidden" id="planname" name="planname" value="" />
+                                <input type="hidden" id="l_val1" name="l_val1" value="" />
+                                <input type="hidden" id="l_val2" name="l_val2" value="" />
+                                <input type="hidden" id="l_val3" name="l_val3" value="" />
+                                <input type="hidden" id="l_val4" name="l_val4" value="" />
+                                <input type="hidden" id="l_val5" name="l_val5" value="" />-->
                 <table >
                     <tbody>
                         <tr>
@@ -1346,17 +1212,21 @@
 
                         <tr>
                             <td>
-
-                                <span style="margin-left:20px;" >控制点号</span>&nbsp;
+                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
                                 <span class="menuBox">
-                                    <input id="l_info" class="form-control"  name="l_info" style="width:150px;display: inline;" placeholder="控制点号" type="text">
+                                    <input id="l_pos" class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
                                 </span>
+                                <!--                                <span style="margin-left:20px;" >控制点号</span>&nbsp;
+                                                                <span class="menuBox">
+                                                                    <input id="l_info" class="form-control"  name="l_info" style="width:150px;display: inline;" placeholder="控制点号" type="text">
+                                                                </span>-->
                             </td>
                             <td></td>
                             <td>
                                 <span style="margin-left:10px;" >工作方式</span>&nbsp;
                                 <span class="menuBox">
                                     <select class="easyui-combobox" id="l_worktype" name="l_worktype"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
+                                        <!--<option value="0">手动</option>-->
                                         <option value="3">时间</option>
                                         <option value="5">场景</option>
                                         <option value="9">信息点</option>
@@ -1367,19 +1237,19 @@
 
                         <tr>
                             <td>
-                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
-                                <span class="menuBox">
-                                    <input id="l_pos" class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
-                                </span>
+                                <!--                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
+                                                                <span class="menuBox">
+                                                                    <input id="l_pos" class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
+                                                                </span>-->
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:8px;" >工作方案</span>&nbsp;
-                                <span class="menuBox">
-                                    <select class="easyui-combobox" id="l_plan" name="l_plan"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
-
-                                    </select>
-                                </span>
+                                <!--                                <span style="margin-left:8px;" >工作方案</span>&nbsp;
+                                                                <span class="menuBox">
+                                                                    <select class="easyui-combobox" id="l_plan" name="l_plan"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
+                                
+                                                                    </select>
+                                                                </span>-->
                             </td>
                         </tr>    
 
@@ -1392,7 +1262,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;时间一</span>&nbsp;
-                                <input id="time1" name="time1" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <input id="time1" name="time1" style=" height: 28px; width: 75px;  " value="00:00"  class="easyui-timespinner">
                                 <span style="margin-left:5px;">控制值一</span>&nbsp;
                                 <input id="timeval1" class="form-control"  name="timeval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
@@ -1401,7 +1271,7 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;时间二</span>&nbsp;
-                                <input id="time2" name="time2" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <input id="time2" name="time2" style=" height: 28px; width: 75px;  " value="00:00"  class="easyui-timespinner">
                                 <span style="margin-left:5px;">控制值二</span>&nbsp;
                                 <input id="timeval2" class="form-control"  name="timeval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />&emsp;
                             </td>
@@ -1409,7 +1279,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;时间三</span>&nbsp;
-                                <input id="time3" name="time3" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <input id="time3" name="time3" style=" height: 28px; width: 75px;  " value="00:00"  class="easyui-timespinner">
                                 <span style="margin-left:5px;">控制值三</span>&nbsp;
                                 <input id="timeval3" class="form-control"  name="timeval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
                             </td>
@@ -1418,7 +1288,7 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;时间四</span>&nbsp;
-                                <input id="time4" name="time4" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <input id="time4" name="time4" style=" height: 28px; width: 75px;  " value="00:00"  class="easyui-timespinner">
                                 <span style="margin-left:5px;">控制值四</span>&nbsp;
                                 <input id="timeval4" class="form-control"  name="timeval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
                             </td>
@@ -1426,7 +1296,7 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;时间五</span>&nbsp;
-                                <input id="time5" name="time5" style=" height: 28px; width: 75px;  "  class="easyui-timespinner">
+                                <input id="time5" name="time5" style=" height: 28px; width: 75px;  " value="00:00"  class="easyui-timespinner">
                                 <span style="margin-left:5px;">控制值五</span>&nbsp;
                                 <input id="timeval5" class="form-control"  name="timeval5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
                             </td>
@@ -1570,32 +1440,15 @@
                 <input type="hidden" id="hide_id" name="hide_id" />
                 <input type="hidden" name="pid" value="${param.pid}"/>
                 <input type="hidden" id="l_deployment" name="l_deployment" />
-                <input type="hidden" id="planname1" name="planname" value="" />
-                <input type="hidden" id="l_val11" name="l_val1" value="" />
-                <input type="hidden" id="l_val22" name="l_val2" value="" />
-                <input type="hidden" id="l_val33" name="l_val3" value="" />
-                <input type="hidden" id="l_val44" name="l_val4" value="" />
-                <input type="hidden" id="l_val55" name="l_val5" value="" />             
+                <!--                <input type="hidden" id="planname1" name="planname" value="" />
+                                <input type="hidden" id="l_val11" name="l_val1" value="" />
+                                <input type="hidden" id="l_val22" name="l_val2" value="" />
+                                <input type="hidden" id="l_val33" name="l_val3" value="" />
+                                <input type="hidden" id="l_val44" name="l_val4" value="" />
+                                <input type="hidden" id="l_val55" name="l_val5" value="" />             -->
 
                 <table  >
                     <tbody>
-                        <!--                        <tr>
-                                                    <td>
-                        
-                                                        <span style="margin-left:20px;" >网关地址</span>&nbsp;
-                                                        <span class="menuBox">
-                        
-                                                            <input id="l_comaddr1" readonly="true" class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 
-                                                                   data-options='editable:false,valueField:"id", textField:"text"' />
-                                                        </span>  
-                                                    </td>
-                                                    <td></td>
-                                                    <td>
-                                                        <span style="margin-left:10px;" >网关名称</span>&nbsp;
-                                                        <input id="comaddrname1" readonly="false"   class="form-control"  name="comaddrname" style="width:150px;display: inline;" placeholder="请输入网关名称" type="text">
-                        
-                                                    </td>
-                                                </tr>-->
 
                         <tr>
                             <td>
@@ -1613,11 +1466,14 @@
 
                         <tr>
                             <td>
-
-                                <span style="margin-left:20px;" >控制点号</span>&nbsp;
+                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
                                 <span class="menuBox">
-                                    <input id="l_info1"  class="form-control"  name="l_info" style="width:150px;display: inline;" placeholder="控制点号" type="text">
+                                    <input id="l_pos1"  class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
                                 </span>
+                                <!--                                <span style="margin-left:20px;" >控制点号</span>&nbsp;
+                                                                <span class="menuBox">
+                                                                    <input id="l_info1"  class="form-control"  name="l_info" style="width:150px;display: inline;" placeholder="控制点号" type="text">
+                                                                </span>-->
                             </td>
                             <td></td>
                             <td>
@@ -1634,18 +1490,18 @@
 
                         <tr>
                             <td>
-                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
-                                <span class="menuBox">
-                                    <input id="l_pos1"  class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
-                                </span>
+                                <!--                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
+                                                                <span class="menuBox">
+                                                                    <input id="l_pos1"  class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
+                                                                </span>-->
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:8px;" >工作方案</span>&nbsp;
-                                <span class="menuBox">
-                                    <select class="easyui-combobox" id="l_plan1" name="l_plan"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
-                                    </select>
-                                </span>
+                                <!--                                <span style="margin-left:8px;" >工作方案</span>&nbsp;
+                                                                <span class="menuBox">
+                                                                    <select class="easyui-combobox" id="l_plan1" name="l_plan"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
+                                                                    </select>
+                                                                </span>-->
                             </td>
                         </tr>    
 

@@ -1102,13 +1102,13 @@
                                 </td>
 
                                 <td>
-                                    <button style="margin-left:10px;" id="btndeploySensor" onclick="deploySensor()" type="button" class="btn btn-success btn-sm">部署传感器</button>
+                                    <button style="margin-left:10px;" id="btndeploySensor" onclick="deploySensor()" type="button" class="btn btn-success btn-sm">部署</button>
                                 </td>
                                 <td>
-                                    <button style="margin-left:10px;" id="btnremoveSensor" type="button" onclick="removeSensor()" class="btn btn-success btn-sm">移除传感器</button>
+                                    <button style="margin-left:10px;" id="btnremoveSensor" type="button" onclick="removeSensor()" class="btn btn-success btn-sm">移除</button>
                                 </td>
                                 <td>
-                                    <button style="margin-left:10px;"  type="button" onclick="readSensor()" class="btn btn-success btn-sm">读取传感器信息</button>
+                                    <button style="margin-left:10px;"  type="button" onclick="readSensor()" class="btn btn-success btn-sm">读取</button>
                                 </td> 
 
                             </tr>

@@ -19,10 +19,10 @@
 
         <xhandle desc="是否存在回路" id="ExistLoop" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT tb.name as commname,*  FROM  t_loop tl,t_baseinfo tb WHERE tl.l_comaddr = tb.comaddr  AND @CONDITION  " var="bootstrap">
-                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_info AND @l_pos AND @pid">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @l_site AND @l_pos AND @pid">
                     <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>
-                    <xfltpara id="l_info" nrp="1=1" para="l_info" sql="tl.l_info = :l_info">
+                    <xfltpara id="l_site" nrp="1=1" para="l_site" sql="tl.l_site = :l_site">
                     </xfltpara>
                    <xfltpara id="l_pos" nrp="1=1" para="l_pos" sql="tl.l_pos = :l_pos">
                     </xfltpara>
@@ -34,7 +34,11 @@
 
 
         <xhandle desc="添加回路" id="addLoop" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="l_comaddr,l_name,l_site,l_pos,l_info,l_plan,l_worktype,l_val1,l_val2,l_val3,l_val4,l_val5" tpe="DDL" tpl="insert into t_loop(l_comaddr,l_name,l_site,l_pos,l_info,l_plan,l_worktype,l_val1,l_val2,l_val3,l_val4,l_val5,l_deplayment) values(':l_comaddr',':l_name',:l_site,:l_pos,:l_info,':l_plan',:l_worktype,':l_val1',':l_val2',':l_val3',':l_val4',':l_val5',0) " var="rs"></xsql>
+            <xsql id="a1" para="l_comaddr,l_name,l_site,l_pos,l_val1,l_val2,l_val3,l_val4,l_val5" tpe="DDL" tpl="insert into t_loop(l_comaddr,l_name,l_site,l_pos,l_val1,l_val2,l_val3,l_val4,l_val5,l_deplayment) values(':l_comaddr',':l_name',:l_site,:l_pos,':l_val1',':l_val2',':l_val3',':l_val4',':l_val5',0) " var="rs"></xsql>
+        </xhandle>
+
+     <xhandle desc="添加回路" id="addLoop1" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="l_comaddr,l_worktype,l_name,l_site,l_pos,l_val1,l_val2,l_val3,l_val4,l_val5" tpe="DDL" tpl="insert into t_loop(l_comaddr,l_worktype,l_name,l_site,l_pos,l_val1,l_val2,l_val3,l_val4,l_val5,l_deplayment) values(':l_comaddr',:l_worktype,':l_name',:l_site,:l_pos,':l_val1',':l_val2',':l_val3',':l_val4',':l_val5',0) " var="rs"></xsql>
         </xhandle>
 
 

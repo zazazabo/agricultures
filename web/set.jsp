@@ -96,8 +96,71 @@
 //                dealsend2("AC", data, 1, "readTrueTimeCB", l_comaddr, 0, 0, 0);
             }
 
+
+
+            function setCheckTimeCB(obj) {
+                if (obj.status == "success") {
+                    var data = Str2BytesH(obj.data);
+                    var v = "";
+                    for (var i = 0; i < data.length; i++) {
+
+                        v = v + sprintf("%02x", data[i]) + " ";
+                    }
+                    var infonum = obj.val;
+                    var infonum = infonum | 0x1000;
+                    var high = infonum >> 8 & 0xff;
+                    var low = infonum & 0xff;
+                    if (data[2] == high && data[3] == low) {
+                        layerAler("设置成功");
+                    }
+
+                    console.log(v);
+                }
+
+            }
+
+
+            function setCheckTime() {
+
+
+                var obj = $("#form1").serializeObject();
+                if (obj.l_comaddr == "") {
+                    layerAler('网关不能为空'); //
+                    return;
+                }
+
+                var ooo = $("#form2").serializeObject();
+
+
+                console.log(ooo);
+
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+                var infonum = 3900 | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+                vv.push(0);
+                vv.push(1); //寄存器数目 2字节   
+                vv.push(2);
+
+                var time = ooo.checktime;
+                var t = parseInt(time);
+
+                vv.push(t >> 8 & 0xff);
+                vv.push(t & 0xff);
+                var data = buicode2(vv);
+                dealsend2("10", data, "setCheckTimeCB", obj.l_comaddr, 0, 0, 3900);
+            }
+
+
+
+
+
+
+
             function  initDataCB(obj) {
-                
+
                 if (obj.status == "success") {
                     var data = Str2BytesH(obj.data);
                     var v = "";
@@ -113,11 +176,11 @@
                         layerAler("初始化成功");
                         var o2 = {pid: "${param.pid}", comaddr: obj.comaddr, l_deplayment: 0};
                         $.ajax({async: false, url: "gayway.GaywayForm.ClearData.action", type: "get", datatype: "JSON", data: o2,
-                                    success: function (data) {
-                                        var arrlist = data.rs;
-                                        if (arrlist.length == 1) {
-                                        }
-                                    },
+                            success: function (data) {
+                                var arrlist = data.rs;
+                                if (arrlist.length == 1) {
+                                }
+                            },
                             error: function () {
                                 alert("提交失败！");
                             }
@@ -783,6 +846,7 @@
                                                         <option value="1" >IP设置</option>
                                                         <option value="2">读取网关时间</option> 
                                                         <option value="3">数据初始化</option> 
+                                                        <option value="4">设置巡测时间</option> 
                                                         <!--                                                        <option value="2">设置换日冻结时间参数</option>    
                                                                                                                 <option value="3">设置通信巡检次数</option> 
                                                                                                                 <option value="4">读取网关时间</option> 
@@ -817,7 +881,7 @@
                                             <td>
 
                                                 <select class="easyui-combobox" id="sitetype" name="sitetype" style="width:150px; height: 30px">
-<!--                                                    <option value="0">域名</option>-->
+                                                    <!--                                                    <option value="0">域名</option>-->
                                                     <option value="1">IP</option>            
                                                 </select>   
 
@@ -914,6 +978,26 @@
                                 </table>
                             </div>
                         </div>
+
+                        <div class="row" id="row4"  style=" display: none">
+                            <div class="col-xs-12">
+                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
+                                    <tbody>
+                                        <tr>
+
+                                            <td>
+                                                <span  style="  margin-right: 2px;" >巡测时间:</span>
+                                                <input id="checktime"  class="form-control" name="checktime" style="width:150px;"  placeholder="时间" type="text">
+
+                                                <button  type="button" onclick="setCheckTime()"  class="btn btn-success btn-sm"><span >设置</sspan>
+                                                </button>&nbsp; 
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>                
 
                     </form>
                 </div>

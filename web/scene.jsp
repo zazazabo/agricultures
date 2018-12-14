@@ -336,12 +336,6 @@
                     }
                 });
 
-
-
-
-
-
-
                 $('#l_plan').combobox({
                     url: "loop.planForm.getPlanlist.action?attr=1&p_type=1&pid=${param.pid}",
                     formatter: function (row) {
@@ -905,18 +899,7 @@
                 <table>
                     <tbody>
                         <tr>
-                            <td>
-                                <span style="margin-left:20px;">
-                                    方案类型
-                                    &nbsp;</span>
-                                <span class="menuBox">
-                                    <select class="easyui-combobox" data-options="editable:false" id="p_type" name="p_type" style="width:150px; height: 30px">
-                                        <option value="0">时间</option>
-                                        <option value="1">场景</option>     
-                                        <option value="2">信息点</option> 
-                                    </select>
-                                </span>
-                            </td>
+
                             <td>
                                 <span >&nbsp;&nbsp;&nbsp;
                                     场景名称

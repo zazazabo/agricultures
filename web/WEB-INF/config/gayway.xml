@@ -25,6 +25,14 @@
                     </xfltpara>
                 </xflt>
             </xsql> 
+
+            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_plan set p_deployment=:l_deplayment where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="1=2" tpl="@comaddr">
+                    <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="p_comaddr=':comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+            
         </xhandle>        
         
         

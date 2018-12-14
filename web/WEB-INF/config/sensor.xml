@@ -83,7 +83,17 @@
         
         <xhandle desc="" id="getInfoNumList" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT DISTINCT infonum as id,name as text FROM t_sensor where deplayment = 1 " var="list">
-  
+              
+            </xsql>
+        </xhandle>  
+
+
+        <xhandle desc="" id="getInfoNumList2" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl=" SELECT DISTINCT infonum as id,name as text FROM t_sensor where deplayment = 1 AND  @CONDITION" var="list">
+                <xflt id="CONDITION" tpl="@l_comaddr ">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr=':l_comaddr'"></xfltpara>
+                </xflt>
+
             </xsql>
         </xhandle>  
 
@@ -92,7 +102,7 @@
     <xform desc="场景方案" id="planForm">
             
         <xhandle desc="添加场景场景方案" id="addSensorScenePlan" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="pid,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name" tpe="DDL" tpl="insert into t_plan(pid,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name) values(':pid',:p_attr,:p_type,':p_scene1',':p_scene2',':p_scene3',':p_scene4',':p_scene5',':p_name') " var="rs"></xsql>
+            <xsql id="a1" para="pid,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name,p_show,p_scenenum" tpe="DDL" tpl="insert into t_plan(pid,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name,p_show,p_scenenum) values(':pid',:p_attr,:p_type,':p_scene1',':p_scene2',':p_scene3',':p_scene4',':p_scene5',':p_name',1,:p_scenenum) " var="rs"></xsql>
         </xhandle>
 
 

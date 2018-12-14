@@ -506,12 +506,12 @@
                     layerAler("请填写网关地址");
                     return;
                 }
-                if (obj.comaddr.length > 20) {
-                    layerAler("网关地址不能大于20长度");
+                if (obj.comaddr.length > 18) {
+                    layerAler("网关地址不能大于18长度");
                     return;
                 }
                 var comaddr = obj.comaddr;
-                while (comaddr.length < 20) {
+                while (comaddr.length < 18) {
                     comaddr = "0" + comaddr;
                 }
                 obj.comaddr = comaddr;

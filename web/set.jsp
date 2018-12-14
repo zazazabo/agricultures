@@ -30,11 +30,6 @@
             }
 
 
-  var str1="运行方式" + (s1&0x1?==1:"手动":"自动") + "运行模式:"  + (s1>>1&0x1==0x1?"经纬度":"时间表") + "回路继电器状态:" +（s1>>2&0x1==1?"闭合":"断开");
-
-  var str2="回路交流接触器状态:" + (s1&0x1?==1:"闭合":"断开") + "回路校时状态:"  + (s1>>1&0x1==0x1?"末校时":"校时");
-
-
             function readTrueTimeCB(obj) {
                 if (obj.status == "success") {
                     var data = Str2BytesH(obj.data);
@@ -43,31 +38,19 @@
 
                         v = v + sprintf("%02x", data[i]) + " ";
                     }
-
                     console.log(obj);
-
-
-
-
                     var yh = data[15];
                     var yl = data[16];
-
-
-
                     var mh = data[11];
                     var ml = data[12];
 
                     var dh = data[9];
                     var dl = data[10];
-
-
-
                     var hh = data[7];
                     var hl = data[8];
 
                     var minh = data[5];
                     var minl = data[6];
-
                     var sh = data[3];
                     var sl = data[4];
                     var y = sprintf("%d", yl);
@@ -78,9 +61,7 @@
                     var s = sprintf("%d", sl);
                     var timestr = sprintf("%s-%s-%s %s:%s:%s", y, m, d, h, min, s);
                     $("#gaytime").val(timestr);
-//                    console.log(timestr);
                 }
-
             }
             function readTrueTime() {
 
@@ -115,7 +96,63 @@
 //                dealsend2("AC", data, 1, "readTrueTimeCB", l_comaddr, 0, 0, 0);
             }
 
+            function  initDataCB(obj) {
+                if (obj.status == "success") {
+                    var data = Str2BytesH(obj.data);
+                    var v = "";
+                    for (var i = 0; i < data.length; i++) {
 
+                        v = v + sprintf("%02x", data[i]) + " ";
+                    }
+                    var infonum = obj.val;
+                    var infonum = infonum | 0x1000;
+                    var high = infonum >> 8 & 0xff;
+                    var low = infonum & 0xff;
+                    if (data[2] == high && data[3] == low) {
+                        layerAler("初始化成功");
+                        var o2 = {pid: "${param.pid}", comaddr: obj.comaddr, l_deplayment: 0};
+                        $.ajax({async: false, url: "gayway.GaywayForm.ClearData.action", type: "get", datatype: "JSON", data: o2,
+                                    success: function (data) {
+                                        var arrlist = data.rs;
+                                        if (arrlist.length == 1) {
+                                        }
+                                    },
+                            error: function () {
+                                alert("提交失败！");
+                            }
+                        });
+                    }
+
+                    console.log(v);
+                }
+
+            }
+
+
+            function  initData() {
+                var obj = $("#form1").serializeObject();
+                if (obj.l_comaddr == "") {
+                    layerAler('网关不能为空'); //
+                    return;
+                }
+
+
+                console.log(obj);
+
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+                var infonum = 3928 | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+                vv.push(0);
+                vv.push(1); //寄存器数目 2字节   
+                vv.push(2);
+                vv.push(0);
+                vv.push(1);
+                var data = buicode2(vv);
+                dealsend2("10", data, "initDataCB", obj.l_comaddr, 0, 0, 3928);
+            }
             function dateFormatter(value) {
                 var date = new Date(value);
                 var year = date.getFullYear().toString();
@@ -368,8 +405,6 @@
                 }
             }
 
-
-
             $(function () {
                 var aaa = $("span[name=xxx]");
                 for (var i = 0; i < aaa.length; i++) {
@@ -484,8 +519,6 @@
                 var data = buicode(comaddr, 0x04, 0xAA, num, 0, 1, vv); //01 03 F24    
                 dealsend2("AA", data, 1, "readSiteCB", comaddr, 0, 0, 0);
             }
-
-
             function readTimeCB(obj) {
                 if (obj.status == "success") {
 
@@ -527,9 +560,7 @@
                 var data = buicode(comaddr, 0x04, 0xAA, num, 0, 4, vv); //01 03 F24    
                 dealsend2("AA", data, 4, "readTimeCB", comaddr, 0, 0, 0);
             }
-
             function setSiteCB(obj) {
-
                 console.log(obj);
                 if (obj.status == "success") {
                     layer.confirm(langs1[173][lang], {//确定修改网关指向的域名？
@@ -658,7 +689,6 @@
 
             }
 
-
             $(function () {
                 $("#l_comaddr").combobox({
                     url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
@@ -673,7 +703,7 @@
                     onLoadSuccess: function (data) {
                         if (Array.isArray(data) && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
-                                data[i].text = data[i].id;
+                                data[i].text = data[i].name;
                             }
                             $(this).combobox('select', data[0].id);
                         }
@@ -751,6 +781,7 @@
                                                     <select class="easyui-combobox" id="type" name="type" data-options="editable:false,valueField:'id', textField:'text' " style="width:200px; height: 30px">
                                                         <option value="1" >主站域名或IP设置</option>
                                                         <option value="2">读取网关时间</option> 
+                                                        <option value="3">数据初始化</option> 
                                                         <!--                                                        <option value="2">设置换日冻结时间参数</option>    
                                                                                                                 <option value="3">设置通信巡检次数</option> 
                                                                                                                 <option value="4">读取网关时间</option> 
@@ -865,7 +896,23 @@
                         </div>
 
 
+                        <div class="row" id="row3"  style=" display: none">
+                            <div class="col-xs-12">
+                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
+                                    <tbody>
+                                        <tr>
+                                            <td>
 
+                                                <button  type="button" onclick="initData()"  class="btn btn-success btn-sm"><span >初始化数据区</sspan>
+                                                </button>&nbsp; 
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
                     </form>
                 </div>

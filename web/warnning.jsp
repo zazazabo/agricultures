@@ -31,9 +31,9 @@
                     var e = $(d).attr("id");
                     $(d).html(langs1[e][lang]);
                 }
-                $("#add").attr("disabled", true);
-                $("#update").attr("disabled", true);
-                $("#del").attr("disabled", true);
+//                $("#add").attr("disabled", true);
+//                $("#update").attr("disabled", true);
+//                $("#del").attr("disabled", true);
                 var obj = {};
                 obj.code = ${param.m_parent};
                 obj.roletype = ${param.role};

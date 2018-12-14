@@ -3,11 +3,17 @@
 
     <xform desc="场景方案" id="planForm">
        
-
-
-        <xhandle desc="传感器场景方案2" id="getAllScennum" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan AS tp WHERE tp.p_attr=1 AND tp.p_type=1 AND p_show=1 AND  @CONDITION  " var="rs">
-                <xflt id="CONDITION" nrp="" tpl="@pid">
+        <xhandle desc="传感器场景方案" id="getSensorPlan" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan tp where  @CONDITION  " var="bootstrap">
+                <xflt id="CONDITION" nrp="" tpl="@p_attr AND @p_type AND @p_show AND @p_comaddr  AND @pid">
+                    <xfltpara id="p_attr" nrp="1=1" para="p_attr" sql="p_attr = :p_attr">
+                    </xfltpara>
+                    <xfltpara id="p_type" nrp="1=1" para="p_type" sql="p_type = :p_type">
+                    </xfltpara>
+                    <xfltpara id="p_show" nrp="1=1" para="p_show" sql="p_show = :p_show">
+                    </xfltpara>
+                    <xfltpara id="p_comaddr" nrp="1=1" para="p_comaddr" sql="p_comaddr = ':p_comaddr'">
+                    </xfltpara>
                     <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
                     </xfltpara>
                 </xflt>
@@ -15,6 +21,20 @@
         </xhandle>
 
 
+        <xhandle desc="传感器场景方案2" id="getAllScennum" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan AS tp WHERE tp.p_attr=1 AND tp.p_type=1 AND p_show=1 AND  @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@p_comaddr AND @pid">
+                     <xfltpara id="p_comaddr" nrp="1=2" para="p_comaddr" sql="p_comaddr = ':p_comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+
+        <xhandle desc="添加场景场景方案" id="addSensorScenePlan2" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="pid,p_comaddr,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name,p_show,p_scenenum" tpe="DDL" tpl="insert into t_plan(pid,p_comaddr,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name,p_show,p_scenenum) values(':pid',':p_comaddr',:p_attr,:p_type,':p_scene1',':p_scene2',':p_scene3',':p_scene4',':p_scene5',':p_name',1,:p_scenenum) " var="rs"></xsql>
+        </xhandle>
 
 
 

@@ -9,6 +9,25 @@
                 </xflt>
             </xsql>
         </xhandle>
+        
+           <xhandle desc="" id="ClearData" rtnype="JSON">
+            
+            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_sensor set l_deplayment=:l_deplayment where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="1=2" tpl="@comaddr">
+                    <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="l_comaddr=':comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+            
+            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_loop set l_deplayment=:l_deplayment where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="1=2" tpl="@comaddr">
+                    <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="l_comaddr=':comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>        
+        
+        
         <xhandle desc="" id="List" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_baseinfo where @CONDITION " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@id AND @comaddr AND @pid">
@@ -71,7 +90,7 @@
             </xsql>
         </xhandle>
         <xhandle desc="网关" id="getComaddr" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.comaddr as id,tl.comaddr as text,name,online FROM t_baseinfo tl where @CONDITION 
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT   tl.comaddr as id,tl.name as text,name,online FROM t_baseinfo tl where @CONDITION 
              " var="list">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr  AND @pid ">
                     <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="comaddr = ':l_comaddr' ">

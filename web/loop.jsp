@@ -707,7 +707,7 @@
                 }
 
                 $('#comaddr').combobox({
-                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
+                    url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
                     formatter: function (row) {
                         var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
                         var v = row.text + v1;
@@ -738,7 +738,7 @@
 //                });
 
                 $("#l_comaddr").combobox({
-                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
+                    url: "gayway.GaywayForm.getComaddr.action?pid=${param.pid}",
                     formatter: function (row) {
                         var v1 = row.online == 1 ? "&nbsp;<img src='img/online1.png'>" : "&nbsp;<img src='img/off.png'>";
                         var v = row.text + v1;
@@ -1258,74 +1258,6 @@
                             </tr>
                         </tbody>
                     </table> 
-                    <!--                    <table style="border-collapse:separate;  border-spacing:0px 10px;border: 1px solid #16645629; margin-left: 10px; margin-top: 10px; align-content:  center">
-                                            <tr>
-                                                <td style=" float: right">
-                    
-                                                    信1:
-                                                    <span class="menuBox">
-                                                        <input id="info1"  value="1"   class="form-control"  name="info1" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                                                    值1:
-                                                    <span class="menuBox">
-                                                        <input id="val1"   value="2"  class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                    
-                                                    信2:
-                                                    <span class="menuBox">
-                                                        <input id="info1"   value="3"  class="form-control"  name="info2" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                                                    值2:
-                                                    <span class="menuBox">
-                                                        <input id="val1"  value="4"   class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                                                    信3:
-                                                    <span class="menuBox">
-                                                        <input id="info1"   value="5"   class="form-control"  name="info3" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                                                    值3:
-                                                    <span class="menuBox">
-                                                        <input id="val1"  value="6"    class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                                                    信4:
-                                                    <span class="menuBox">
-                                                        <input id="info1"   value="7"   class="form-control"  name="info4" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                                                    值4:
-                                                    <span class="menuBox">
-                                                        <input id="val1"  value="8"   class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                    
-                                                    信5:
-                                                    <span class="menuBox">
-                                                        <input id="info1"  value="9"   class="form-control"  name="info5" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                                                    值5:
-                                                    <span class="menuBox">
-                                                        <input id="val1"  value="10"   class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>  
-                    
-                    
-                                                    控制值:
-                                                    <span class="menuBox">
-                                                        <input id="controlVal"  value="10"   class="form-control"  name="controlVal" style="width:50px;display: inline;" placeholder="value" type="text">
-                                                    </span>    
-                    
-                                                </td>
-                    
-                    
-                    
-                                            </tr>
-                                        </table>-->
                 </div>
             </form>
         </div>

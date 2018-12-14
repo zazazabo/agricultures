@@ -763,9 +763,9 @@
                             sort: v1, //排序字段 和 （desc、ase）
                             sortOrder: params.order,
                             type_id: "1",
-                            pid: "${param.pid}"
-                        };
-                         l_comaddr:'';    
+                            pid: "${param.pid}",
+                            l_comaddr:$("#l_comaddr").val()
+                        };   
                         return temp;  
                     }
                 });

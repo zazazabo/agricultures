@@ -2,7 +2,7 @@
 <xforms>
     <xform desc="首页" id="homePage">
         <xhandle desc="首页显示传感" id="getSensorList" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select GETDATE() as dtime, * from t_sensor where show=1 AND deplayment=1 AND @CONDITION  " var="rs">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select GETDATE() as dtime, * from t_sensor where show=1 AND deplayment=1 AND @CONDITION order by s_index   " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@pid">
                     <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
                 </xflt>
@@ -33,17 +33,24 @@
                 </xflt>
             </xsql>
         </xhandle>  
-         <xhandle desc="查看传感是否同一网关下站号和数据位置相同" id="getIsSiten" rtnype="JSON">
+        <xhandle desc="查看传感是否同一网关下站号和数据位置相同" id="getIsSiten" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor WHERE   @CONDITION  " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @sitenum AND @dreg">
                     <xfltpara id="l_comaddr" nrp="1=1" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>
-                     <xfltpara id="sitenum" nrp="1=1" para="sitenum" sql="sitenum = ':sitenum'">
+                    <xfltpara id="sitenum" nrp="1=1" para="sitenum" sql="sitenum = ':sitenum'">
                     </xfltpara>
-                     <xfltpara id="dreg" nrp="1=1" para="dreg" sql="dreg = ':dreg'">
+                    <xfltpara id="dreg" nrp="1=1" para="dreg" sql="dreg = ':dreg'">
                     </xfltpara>
                 </xflt>
             </xsql> 
+        </xhandle>  
+        <xhandle desc="修改传感器排列顺序" id="updesc" rtnype="JSON">
+            <xsql id="a1" para="s_index" tpe="DDL" tpl="update t_sensor set s_index=':s_index' where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
+                </xflt>
+            </xsql>
         </xhandle>  
     </xform>
     <xform desc="回路管理" id="loop">

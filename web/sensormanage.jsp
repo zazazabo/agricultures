@@ -13,7 +13,7 @@
         <script type="text/javascript" src="SheetJS-js-xlsx/dist/xlsx.core.min.js"></script>
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript" src="js/getdate.js"></script>
-        <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<!--        <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>-->
         <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
         <script>
             var lang = '${param.lang}';//'zh_CN';
@@ -292,10 +292,10 @@
             function  search() {
                 var obj = {};
                 var busu = $("#busu").val();
-                if(busu !="-1"){
+                if (busu != "-1") {
                     obj.deplayment = busu;
                 }
-                obj.l_comaddr = $("#l_comaddr2").val();              
+                obj.l_comaddr = $("#l_comaddr2").val();
                 var opt = {
                     url: "sensor.sensorform.getSensorList.action",
                     silent: false,
@@ -409,6 +409,7 @@
 
                 }
             }
+
             function deploySensor() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var o = $("#form1").serializeObject();
@@ -457,6 +458,7 @@
                 }
                 );
             }
+
             function removeSensor() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var o = $("#form1").serializeObject();
@@ -732,7 +734,7 @@
                             }
                         }
                     ],
-
+                    smartDisplay:false,
                     clickToSelect: true,
                     singleSelect: false,
                     sortName: 'infonum',
@@ -746,7 +748,7 @@
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [50, 100],
+                    pageList: [10, 20, 40,'ALL'],
                     sortable: true, //是否启用排序 
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
@@ -764,7 +766,7 @@
                             sortOrder: params.order,
                             type_id: "1",
                             pid: "${param.pid}",
-                            l_comaddr:$("#l_comaddr").val()
+                            l_comaddr: $("#l_comaddr").val()
                         };   
                         return temp;  
                     }
@@ -827,8 +829,8 @@
                     locale: 'zh-CN', //中文支持,
                     pagination: true,
                     pageNumber: 1,
-                    pageSize: 40,
-                    pageList: [20, 40, 80, 160]
+                    pageSize: 20,
+                    pageList: [20, 40, 60,'ALL']
 
                 });
 
@@ -985,8 +987,6 @@
             });
 
             function  sy() {
-                var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
-
                 $("#gravidaTable").find(":checkbox:checked").each(function () {
                     var $tr = $(this).parents("tr");
                     var id = $(this).parents("tr").find("td:first").html();
@@ -994,27 +994,6 @@
                     if ($tr.index() == 0) {
                         layerAler("数据已是第一行");
                         return;
-                    } else {
-                        $tr.fadeOut().fadeIn();
-                        $tr.prev().before($tr);
-                        var lindex = 0;
-                        if (number > 1) {
-                            lindex = (number - 1) * 20 + $tr.index();
-                        } else {
-                            lindex = $tr.index();
-                        }
-//                        $.ajax({async: false, url: "sensor.sensorform.modifySensor.action", type: "get", datatype: "JSON", data: o,
-//                            success: function (data) {
-//                                var a = data.rs;
-//                                if (a.length == 1) {
-//                                    search();
-//                                }
-//                            },
-//                            error: function () {
-//                                alert("提交失败！");
-//                            }
-//                        });
-
                     }
                 });
 
@@ -1036,11 +1015,26 @@
             }
 
             function bc() {
+                var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
                 var allTableData = $("#gravidaTable").bootstrapTable('getData');
                 console.log(allTableData.length);
-//                for (var i = 0; i < allTableData.length; i++) {
-//
-//                }
+                console.log(allTableData[0]);
+                for (var i = 0; i < allTableData.length; i++) {
+                    var sen = allTableData[i];
+                    var obj = {};
+                    obj.id = sen.id;
+                    obj.s_index = i;
+                    $.ajax({async: false, url: "homePage.sensormanage.updesc.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
+                }
+                layerAler("成功！");
 
             }
 //            $.extend($.fn.dataTableExt.oStdClasses,{

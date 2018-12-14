@@ -558,7 +558,7 @@
 
                                 //添加回路
                                 for (var i = 0; i < 14; i++) {
-                                    var z = i + 4100;
+                                    var z = i + 4200;
                                     var j = i >= 8 ? 10 + (i - 8) : i;
                                     var ooo = {};
                                     ooo.l_site = 1;

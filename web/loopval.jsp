@@ -176,7 +176,8 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                               if(value ==1){
+//                                console.log(row);
+                               if(row.online ==1){
                                   var  str = "<img  src='img/online1.png'/>";
                                   return  str;
                                }else{

@@ -43,7 +43,7 @@
 
 
         <xhandle desc="修改回路" id="modifyloop" rtnype="JSON">
-            <xsql id="a1" para="l_name,l_worktype,l_pos,l_site,l_info,l_plan,l_val1,l_val2,l_val3,l_val4,l_val5" tpe="DDL" tpl="update t_loop set l_name=':l_name',l_worktype=:l_worktype,l_pos=:l_pos,l_site=:l_site,l_info=:l_info,l_plan=':l_plan',l_val1=':l_val1',l_val2=':l_val2',l_val3=':l_val3',l_val4=':l_val4',l_val5=':l_val5' where @CONDITION " var="rs">
+            <xsql id="a1" para="l_name,l_worktype,l_pos,l_site,l_val1,l_val2,l_val3,l_val4,l_val5" tpe="DDL" tpl="update t_loop set l_name=':l_name',l_worktype=:l_worktype,l_pos=:l_pos,l_site=:l_site,l_val1=':l_val1',l_val2=':l_val2',l_val3=':l_val3',l_val4=':l_val4',l_val5=':l_val5' where @CONDITION " var="rs">
                 <xflt id="CONDITION" tpl="@id ">
                     <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'"></xfltpara>
                 </xflt>

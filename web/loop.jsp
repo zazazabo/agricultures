@@ -424,25 +424,42 @@
                         vv.push(valuenum >> 8 & 0xff)   //寄存器变量值
                         vv.push(valuenum & 0xff);
 
+                    } else if (ele.l_worktype == "5") {
+                        var scene = ele[num];
+                        var o = eval('(' + scene + ')');
+
+                        var scenenum = o.scene;
+
+                        vv.push(scenenum >> 8 & 0xff)   //寄存器变量值
+                        vv.push(scenenum & 0xff);
+                        var valuenum = o.value;
+                        vv.push(valuenum >> 8 & 0xff)   //寄存器变量值
+                        vv.push(valuenum & 0xff);
                     } else if (ele.l_worktype == "9") {
                         var info = ele[num];
                         var o = eval('(' + info + ')');
-                        var infonum1 = parseInt(o.info);
+                        if (i == 0) {
+                            var num = o.infonum;
+                            var offset = o.offset;
+                            vv.push(num >> 8 & 0xff)   //寄存器变量值
+                            vv.push(num & 0xff);
 
-                        vv.push(infonum1 >> 8 & 0xff)   //寄存器变量值
-                        vv.push(infonum1 & 0xff);
-                        var valuenum = parseInt(o.value);
-                        vv.push(valuenum >> 8 & 0xff)   //寄存器变量值
-                        vv.push(valuenum & 0xff);
+
+                            vv.push(offset >> 8 & 0xff)   //寄存器变量值
+                            vv.push(offset & 0xff);
+
+                        } else {
+
+                            var infonum1 = parseInt(o.info);
+                            vv.push(infonum1 >> 8 & 0xff)   //寄存器变量值
+                            vv.push(infonum1 & 0xff);
+                            var valuenum = parseInt(o.value);
+                            vv.push(valuenum >> 8 & 0xff)   //寄存器变量值
+                            vv.push(valuenum & 0xff);
+                        }
+
 
                     }
-//                    var infonum = parseInt(infoalldata[info1]);
-//                    var valnum = parseInt(infoalldata[val1]);
-//
-//                    vv.push(infonum >> 8 & 0xff)   //寄存器变量值
-//                    vv.push(infonum & 0xff);
-//                    vv.push(valnum >> 8 & 0xff)   //寄存器变量值
-//                    vv.push(valnum & 0xff);
                 }
 
 
@@ -501,9 +518,47 @@
             function modifyLoopName() {
                 var o = $("#form2").serializeObject();
                 o.id = o.hide_id;
-                var objplan = {code: o.l_plan, name: o.planname};
-                o.l_plan = JSON.stringify(objplan);
+
                 addlogon(u_name, "修改", o_pid, "回路管理", "修改回路");
+
+                if (o.l_worktype == 3) {
+
+                    for (var i = 0; i < 5; i++) {
+                        var time = "time" + (i + 1).toString();
+                        var timeval = "timeval" + (i + 1).toString();
+                        var o1 = {time: o[time], value: parseInt(o[timeval])};
+
+                        var valobj = JSON.stringify(o1);
+                        var val = "l_val" + (i + 1).toString();
+                        o[val] = valobj;
+                    }
+
+
+                } else if (o.l_worktype == 5) {
+                    for (var i = 0; i < 5; i++) {
+                        var scene = "scen" + (i + 1).toString();
+                        var val = "val" + (i + 1).toString();
+                        var o1 = {scene: o[scene], value: parseInt(o[val])};
+                        var valobj = JSON.stringify(o1);
+                        var val = "l_val" + (i + 1).toString();
+                        o[val] = valobj;
+                    }
+                } else if (o.l_worktype == 9) {
+                    var oo = {infonum: parseInt(o.infonum), offset: parseInt(o.offset)};
+                    var oostr = JSON.stringify(oo);
+                    o.l_val1 = oostr;
+                    for (var i = 0; i < 4; i++) {
+                        var info = "info" + (i + 1).toString();
+                        var val = "infoval" + (i + 1).toString();
+                        var o1 = {info: o[info], value: parseInt(o[val])};
+                        var valobj = JSON.stringify(o1);
+                        var val = "l_val" + (i + 1 + 1).toString();
+                        o[val] = valobj;
+                    }
+                }
+
+                console.log(o);
+
                 $.ajax({async: false, url: "loop.loopForm.modifyloop.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
                         console.log(data);
@@ -536,10 +591,21 @@
                         var str = "l_val" + o1;
                         var timestr = select[str];
                         console.log(timestr)
-                        var objtime = eval('(' + timestr + ')');
+                        if (isJSON(timestr)) {
+                            var objtime = eval('(' + timestr + ')');
+                            $("#time" + o1 + o1).spinner('setValue', objtime.time);
+                            $("#timeval" + o1 + o1).val(objtime.value);
+                        }
 
-                        $("#time" + o1 + o1).spinner('setValue', objtime.time);
-                        $("#timeval" + o1 + o1).val(objtime.value);
+                        if (select.l_deplayment == 1) {
+                            $("#time" + o1 + o1).spinner('readonly', true);
+                            $("#timeval" + o1 + o1).attr('readonly', true)
+                        } else {
+                            $("#time" + o1 + o1).spinner('readonly', false);
+                            $("#timeval" + o1 + o1).attr('readonly', false)
+                        }
+
+
                     }
                 } else if (select.l_worktype == 5) {
                     for (var i = 0; i < 5; i++) {
@@ -550,26 +616,42 @@
                         var objtime = eval('(' + timestr + ')');
                         $("#scen" + o1 + o1).val(objtime.scene.toString());
                         $("#scenval" + o1 + o1).val(objtime.value);
+
+                        if (select.l_deplayment == 1) {
+                            $("#scen" + o1 + o1).attr('readonly', true);
+                            $("#scenval" + o1 + o1).attr('readonly', true)
+                        } else {
+                            $("#scen" + o1 + o1).attr('readonly', false);
+                            $("#scenval" + o1 + o1).attr('readonly', false)
+                        }
+
+
                     }
                 } else if (select.l_worktype == 9) {
 
-                    for (var i = 0; i < 5; i++) {
-                         var o1 = (i + 1).toString();
+                    var obj1 = eval('(' + select.l_val1 + ')');
+                    $("#infonum1").val(obj1.infonum.toString());
+                    $("#offset1").val(obj1.offset.toString());
+
+                    for (var i = 0; i < 4; i++) {
+                        var o1 = (i + 1 + 1).toString();
+                        var o2 = (i + 1).toString();
                         var str = "l_val" + o1;
                         var timestr = select[str];
                         var objtime = eval('(' + timestr + ')');
                         console.log(timestr)
-                        
-                        
-//                        if(i==0){
-//                            
-//                            $("#infonum1").val(objtime.infonum.toString());
-//                            $("#offset").val(objtime.offset); 
-//                            continue;
-//                        }
+                        $("#info_" + o2 + o2).val(objtime.info.toString());
+                        $("#infoval" + o2 + o2).val(objtime.value);
 
-//                        $("#info_" + o1 + o1).val(objtime.info.toString());
-//                        $("#infoval" + o1 + o1).val(objtime.value);
+                        if (select.l_deplayment == 1) {
+                            $("#info_" + o2 + o2).attr('readonly', true);
+                            $("#infoval" + o2 + o2).attr('readonly', true)
+                        } else {
+                            $("#info_" + o2 + o2).attr('readonly', false);
+                            $("#infoval" + o2 + o2).attr('readonly', false)
+                        }
+
+
                     }
                 }
 
@@ -582,10 +664,15 @@
                 $("#l_site1").val(select.l_site);
                 $("#l_pos1").val(select.l_pos);
                 console.log(select.l_worktype);
+                $('#l_pos1').attr('readonly', true);
+                $('#l_site1').attr('readonly', true);
                 if (select.l_deplayment == "1") {
                     $('#l_worktype1').combobox('readonly', true);
+
+
                 } else if (select.l_deplayment == "0") {
                     $('#l_worktype1').combobox('readonly', false);
+
                 }
                 $('#l_worktype1').combobox('setValue', select.l_worktype);
                 $('#dialog-edit').dialog('open');
@@ -994,7 +1081,8 @@
                 }
 
                 for (var i = 0; i < selects.length; i++) {
-                    var id = selects[i].id;                     $.ajax({async: false, url: "homePage.loop.addshow.action", type: "get", datatype: "JSON", data: {id: id}, success: function (data) {
+                    var id = selects[i].id;
+                    $.ajax({async: false, url: "homePage.loop.addshow.action", type: "get", datatype: "JSON", data: {id: id}, success: function (data) {
 
                         },
                         error: function () {
@@ -1024,7 +1112,8 @@
                 }
 
                 for (var i = 0; i < selects.length; i++) {
-                    var id = selects[i].id;                     $.ajax({async: false, url: "homePage.loop.removeshow.action", type: "get", datatype: "JSON", data: {id: id}, success: function (data) {
+                    var id = selects[i].id;
+                    $.ajax({async: false, url: "homePage.loop.removeshow.action", type: "get", datatype: "JSON", data: {id: id}, success: function (data) {
 
                         },
                         error: function () {

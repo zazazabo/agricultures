@@ -523,10 +523,10 @@
 
             $(function () {
 
-                $("#add").attr("disabled", true);
-                $("#shanchu").attr("disabled", true);
-                $("#update").attr("disabled", true);
-                $("#addexcel").attr("disabled", true);
+//                $("#add").attr("disabled", true);
+//                $("#shanchu").attr("disabled", true);
+//                $("#update").attr("disabled", true);
+//                $("#addexcel").attr("disabled", true);
                 var obj = {};
                 obj.code = ${param.m_parent};
                 obj.roletype = ${param.role};

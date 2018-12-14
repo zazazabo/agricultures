@@ -12,7 +12,7 @@
         
            <xhandle desc="" id="ClearData" rtnype="JSON">
             
-            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_sensor set l_deplayment=:l_deplayment where @CONDITION " var="rs">
+            <xsql id="a1" para="l_deplayment" tpe="DDL" tpl="update t_sensor set deplayment=:l_deplayment where @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="1=2" tpl="@comaddr">
                     <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="l_comaddr=':comaddr'">
                     </xfltpara>

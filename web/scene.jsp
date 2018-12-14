@@ -632,6 +632,7 @@
 
                 var ooo = $("#formadd").serializeObject();
                 ooo.p_attr = 1;
+                ooo.p_type=1;
                 for (var i = 0; i < 5; i++) {
                     var ii = (i + 1).toString();
                     var info = "info" + ii;
@@ -747,7 +748,7 @@
 
                     if (ooo.p_deployment == 1) {
                         layerAler("已部署不能删除");
-                        return ;
+                        return;
                         continue;
                     }
                     $.ajax({async: false, url: "loop.planForm.deletePlan.action", type: "get", datatype: "JSON", data: o,
@@ -844,7 +845,7 @@
                             </span>  
                         </td>
 
-   
+
 
                         <td>
                             <button   type="button" style="margin-left: 20px;" onclick="deployscenPlan(1)" class="btn btn-success btn-sm">部署</button>&emsp;
@@ -904,6 +905,18 @@
                 <table>
                     <tbody>
                         <tr>
+                            <td>
+                                <span style="margin-left:20px;">
+                                    方案类型
+                                    &nbsp;</span>
+                                <span class="menuBox">
+                                    <select class="easyui-combobox" data-options="editable:false" id="p_type" name="p_type" style="width:150px; height: 30px">
+                                        <option value="0">时间</option>
+                                        <option value="1">场景</option>     
+                                        <option value="2">信息点</option> 
+                                    </select>
+                                </span>
+                            </td>
                             <td>
                                 <span >&nbsp;&nbsp;&nbsp;
                                     场景名称

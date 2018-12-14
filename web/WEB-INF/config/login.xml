@@ -167,7 +167,7 @@
             </xsql>
         </xhandle> 
         <xhandle desc="查询传感器分布" id="queryLamp" rtnype="JSON">
-            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where deplayment= 1 and @CONDITION " var="rs">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select GETDATE() as dtime, * from t_sensor where deplayment= 1 and @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@comaddr AND @pid">
                     <xfltpara id="comaddr" nrp="1=1" para="comaddr" sql="l_comaddr = ':comaddr'">
                     </xfltpara>
@@ -259,7 +259,7 @@
             </xsql>
         </xhandle> 
         <xhandle desc="查看用户名是否存在" id="isusername" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select name from t_user where @CONDITION " var="rs">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select name from t_user where @CONDITION and prohibit = 0  " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@name">
                     <xfltpara id="name" nrp="1=1" para="name" sql="name = ':name'"> 
                     </xfltpara>           
@@ -267,7 +267,7 @@
             </xsql>
         </xhandle> 
         <xhandle desc="获取人员列表" id="query" rtnype="JSON">
-            <xsql desc="查询该用户的子用户" id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_user    WHERE   @CONDITION  prohibit = 0   " var="bootstrap">
+            <xsql desc="查询该用户的子用户" id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_user    WHERE   @CONDITION AND  prohibit = 0   " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@u_parent_id">
                     <xfltpara id="u_parent_id" nrp="1=1" para="u_parent_id" sql="u_parent_id = ':u_parent_id'"> 
                     </xfltpara>           

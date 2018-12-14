@@ -780,7 +780,7 @@
 
                                                 <span class="menuBox">
                                                     <select class="easyui-combobox" id="type" name="type" data-options="editable:false,valueField:'id', textField:'text' " style="width:200px; height: 30px">
-                                                        <option value="1" >主站域名或IP设置</option>
+                                                        <option value="1" >IP设置</option>
                                                         <option value="2">读取网关时间</option> 
                                                         <option value="3">数据初始化</option> 
                                                         <!--                                                        <option value="2">设置换日冻结时间参数</option>    
@@ -812,13 +812,13 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <span  style=" float: right; margin-right: 2px;" name="xxx" id="188">域名IP选择</span>
+                                                <span  style=" float: right; margin-right: 2px;" name="xxx" id="188">IP</span>
                                             </td>
                                             <td>
 
                                                 <select class="easyui-combobox" id="sitetype" name="sitetype" style="width:150px; height: 30px">
-                                                    <option value="0">域名</option>
-                                                    <option value="1">ip</option>            
+<!--                                                    <option value="0">域名</option>-->
+                                                    <option value="1">IP</option>            
                                                 </select>   
 
                                             </td>

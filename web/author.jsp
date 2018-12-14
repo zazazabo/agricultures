@@ -40,7 +40,7 @@
             function addrole() {
                 var name = $("#rolename").val();
                 if (name == "") {
-                    layerAler(langs1[249][lang]);  //角色名不能为空
+                    layerAler("角色名不能为空");  //角色名不能为空
                     return;
                 }
                 $('#panemask').showLoading({
@@ -55,7 +55,7 @@
                         if (data != null) {
                             var rsname = data.rsname;
                             if (rsname.length > 0) {
-                                layerAler(langs1[250][lang]);  //此角色已存在
+                                layerAler("此角色已存在");  //此角色已存在
                                 return;
                             }
                             var list = data.rs;
@@ -149,7 +149,7 @@
                                 var role = $("#role").val();
                                 var isparent = $("#isParent").val();
                                 if (role == "") {
-                                    layerAler(langs1[252][lang]);  //请选择要取消权限的角色
+                                    layerAler("请选择要取消权限的角色");  //请选择要取消权限的角色
                                     return;
                                 }
                                 var iscodeobj = {};
@@ -234,7 +234,7 @@
                 var roletype = $("#role").combobox('getValue');
                 var name = $("#role").combobox('getText');
                 if ($("#role").val() == "") {
-                    layerAler(langs1[239][lang]);   //请选择要分配权限的角色
+                    layerAler("请选择要分配权限的角色");   //请选择要分配权限的角色
                     return;
                 }
                 $('#panemask').showLoading({
@@ -247,8 +247,8 @@
 //                    layerAler(langs1[240][lang]);  //请勾选菜单列表
 //                    return;
 //                }
-                layer.confirm(langs1[241][lang], {//确认要分配权限吗？
-                    btn: [langs1[146][lang], langs1[147][lang]]//确定、取消按钮
+                layer.confirm("确认要分配权限吗?", {//确认要分配权限吗？
+                    btn: ['确定', '取消']//确定、取消按钮
                 }, function (index) {
 
                     addlogon(u_name, "分配权限权限", o_pid, "角色权限管理", "修改角色【"+ $("#role").combobox('getText')+"】权限");
@@ -290,7 +290,7 @@
             //删除角色
             function delrole() {
                 if ($("#role").val() == "") {
-                    layerAler(langs1[505][lang]);   //请选择要删除的角色
+                    layerAler("请选择要删除的角色");   //请选择要删除的角色
                     return;
                 }
                 var obj = {};

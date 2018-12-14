@@ -1215,7 +1215,7 @@
                     //修改单个网关
                     if (wgonedraw) {
                         if (wgchecck.Longitude != null && wgchecck.latitude != null) {
-                            if (confirm(lans[288][lang])) {  //该设备已有经纬度了，您确定更改吗?
+                            if (confirm("该设备已有经纬度了，您确定更改吗?")) {  //该设备已有经纬度了，您确定更改吗?
                                 updatelnglat(e.point.lng, e.point.lat, wgchecck.comaddr);
                                 var allOver = map.getOverlays(); //获取全部标注
                                 for (var j = 0; j < allOver.length; j++) {
@@ -1490,6 +1490,31 @@
                         var obj = arrlist[i];
                         var Longitude = obj.longitude;
                         var latitude = obj.latitude;
+                        var time1 = obj.onlinetime.substring(0, 16);
+                        var time2 = obj.dtime.substring(0, 16);
+                        var stime = TimeDifference(time1, time2);
+                        var lx = "离线";
+                        var isLx = 0;  //判断是否在线
+                        var gobj = {};
+                        gobj.comaddr = obj.l_comaddr; //selects[0];
+                        $.ajax({url: "login.gateway.comaddrzx.action", async: false, type: "get", datatype: "JSON", data: gobj,
+                            success: function (data) {
+                                var arrlist = data.rs;
+                                if (arrlist[0].online == 1) {
+                                    if (stime > 15) {
+                                        lx = "离线";
+                                    } else {
+                                        lx = "在线";
+                                        isLx = 1;
+                                    }
+                                } else {
+                                    lx = "离线";
+                                }
+                            },
+                            error: function () {
+                                alert("提交添加失败！请刷新");
+                            }
+                        });
                         //var s = obj.l_name;
 //                        var Iszx = lans[285][lang];    //是否离线,离线
 //                        var Isfault = lans[13][lang]; //是否有故障,默认正常
@@ -1550,15 +1575,23 @@
                                             <td>" + "数值" + ":</td>\n\
                                             <td>" + numvalue + "</td>\n\
                                             <td>&nbsp;&nbsp;</td>\n\
-                                            <td>" + "xx" + ":</td>\n\
-                                            <td>" + "xx" + "</td>\n\
+                                            <td>" + "状态" + ":</td>\n\
+                                            <td>" + lx + "</td>\n\
                                         </tr>\n\
                                     </table></div>";
                         if ((Longitude != "" && latitude != "") && (Longitude != null && latitude != null)) {
                             var point = new BMap.Point(Longitude, latitude);
                             var marker1;
+                            if (isLx == 1) {
+                                marker1 = new BMap.Marker(point, {
+                                    icon: lgreen
+                                });
+                            } else {
+                                marker1 = new BMap.Marker(point, {
+                                    icon: lhui
+                                });
+                            }
 
-                         
 
 //                            if (isfault2 == 1) {
 //                                marker1 = new BMap.Marker(point, {
@@ -1581,9 +1614,7 @@
 //                                    icon: lhui
 //                                });
 //                            }
-                            marker1 = new BMap.Marker(point, {
-                                icon: lgreen
-                            });
+
                             var opts = {title: '<span style="font-size:14px;color:#0A8021">' + "传感器信息" + '</span>'};//设置信息框、信息说明
                             var infoWindow = new BMap.InfoWindow(textvalue, opts); // 创建信息窗口对象，引号里可以书写任意的html语句。
                             marker1.addEventListener("mouseover", function () {

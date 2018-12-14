@@ -842,22 +842,7 @@
                             </span>  
                         </td>
 
-                        <td>
-
-                        </td>
-
-
-                        <td>
-                            <button   type="button" style="margin-left: 20px;" onclick="showDialog()" class="btn btn-success btn-sm">添加</button>&emsp;
-                        </td>
-
-                        <td>
-                            <button   type="button" style="margin-left: 20px;" onclick="editshow()" class="btn btn-success btn-sm">编辑</button>&emsp;
-                        </td>   
-                        <td>
-                            <button   type="button" style="margin-left: 20px;" onclick="removeshow()" class="btn btn-success btn-sm">删除</button>&emsp;
-                        </td>
-
+   
 
                         <td>
                             <button   type="button" style="margin-left: 20px;" onclick="deployscenPlan(1)" class="btn btn-success btn-sm">部署</button>&emsp;
@@ -882,14 +867,14 @@
 
 
         <div class="btn-group zuheanniu" id="zuheanniu" style="float:left;position:relative;z-index:100;margin:12px 0 0 10px;">
-            <button class="btn btn-success ctrol" onclick="showDialog();" data-toggle="modal" data-target="#pjj5" id="add" >  
+            <button class="btn btn-success ctrol" onclick="showDialog() data-toggle="modal" data-target="#pjj5" id="add" >  
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;添加
             </button>
 
-            <button class="btn btn-primary ctrol"  onclick="modifyModal();" id="update" >
+            <button class="btn btn-primary ctrol"  onclick="editshow();" id="update" >
                 <span class="glyphicon glyphicon-pencil"></span>&nbsp;编辑
             </button>
-            <button class="btn btn-danger ctrol" onclick="deleteloop()"  id="shanchu">
+            <button class="btn btn-danger ctrol" onclick="removeshow()"  id="shanchu">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;删除
             </button>
             <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >

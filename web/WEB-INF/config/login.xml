@@ -513,7 +513,7 @@
         </xhandle>              
     </xform>
     
-    <xform desc="项目管理" id="project">
+      <xform desc="项目管理" id="project">
         <xhandle desc="项目列表" id="queryProject" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_project    WHERE   @CONDITION" var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@name AND @unit AND @code ">
@@ -527,7 +527,7 @@
             </xsql>   
         </xhandle>  
         <xhandle desc="添加项目" id="addProject" rtnype="JSON">
-            <xsql id="a1" para="name,area" tpe="DDL" tpl="insert into t_project(name,area) values(':name',':area') " var="rs">
+            <xsql id="a1" para="name,area,uid" tpe="DDL" tpl="insert into t_project(name,area,uid) values(':name',':area',':uid') " var="rs">
             </xsql>
         </xhandle>    
         <xhandle desc="查找最后一个项目编码" id="selectlatcode" rtnype="JSON">
@@ -547,6 +547,14 @@
         
         <xhandle desc="添加项目到当前用户的管理权限下" id="addpid" rtn="rs" rtnype="JSON">
             <xsql id="a1" para="npid" tpe="DDL" tpl="update t_user set pid = pid+':npid' where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="添加项目到当前用户的管理权限下" id="addpid1" rtn="rs" rtnype="JSON">
+            <xsql id="a1" para="npid" tpe="DDL" tpl="update t_user set pid =':npid' where  @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@id ">
                     <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
                     </xfltpara>
@@ -573,7 +581,7 @@
         </xhandle> 
         
         <xhandle desc="修改项目表" id="updProject" rtn="rs" rtnype="JSON">
-            <xsql id="a1" para="area,name" tpe="DDL" tpl="update t_project set area = ':area',name=':name' where  @CONDITION " var="rs">
+            <xsql id="a1" para="area,name,lang" tpe="DDL" tpl="update t_project set area = ':area',name=':name',lang = ':lang' where  @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@id ">
                     <xfltpara id="id" nrp="1=1" para="id" sql="id=:id">
                     </xfltpara>
@@ -608,10 +616,20 @@
             </xsql>
         </xhandle> 
         
+        <xhandle desc="判断当前用户是否是创建该项目的用户或父用户" id="IsUserOr" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_user where @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id">
+                    <xfltpara id="id" nrp="1=2" para="uid" sql="id &lt;= ':uid' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        
+        
         <xhandle desc="修改用户权限" id="upduserpid" rtn="rs" rtnype="JSON">
             <xsql id="a1" para="pid" tpe="DDL" tpl="update t_user set pid = ':pid' where  @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@id ">
-                    <xfltpara id="id" nrp="1=1" para="id" sql="id=':id'">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'">
                     </xfltpara>
                 </xflt>
             </xsql>

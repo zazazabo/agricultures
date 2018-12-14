@@ -177,7 +177,8 @@
                     }
 
                 });
-                addlogon(u_name, "添加", o_pid, "项目管理", "添加【" + obj.name + "】项目");
+                obj.uid = uid;
+                addlogon(u_name, "添加", o_pid, "项目管理", "添加【"+obj.name+"】项目");
                 var isflesh = false;
                 $.ajax({url: "login.project.queryProject.action", async: false, type: "POST", datatype: "JSON", data: obj,
                     success: function (data) {
@@ -190,46 +191,80 @@
                                             success: function (data) {
                                                 var newcode;
                                                 var code = data.codes;
-
                                                 if (code.length == 1) {
                                                     newcode = code[0].code;
-                                                    var pidobj = {};
-                                                    pidobj.id = uid;
-                                                    pidobj.npid = "," + newcode;
-                                                    $.ajax({async: false, url: "login.project.addpid.action", type: "get", datatype: "JSON", data: pidobj,
-                                                        success: function (data) {
+                                                    var s = getuserporject(uid);
+                                                    if (s == null || s == "") {
+                                                        var pidobj1 = {};
+                                                        pidobj1.id = uid;
+                                                        pidobj1.npid = newcode;
+                                                        $.ajax({async: false, url: "login.project.addpid1.action", type: "get", datatype: "JSON", data: pidobj1,
+                                                            success: function (data) {
 
-                                                        },
-                                                        error: function () {
-                                                            alert("提交失败！");
-                                                        }
-                                                    });
+                                                            },
+                                                            error: function () {
+                                                                alert("提交失败！");
+                                                            }
+                                                        });
+                                                    } else {
+                                                        var pidobj = {};
+                                                        pidobj.id = uid;
+                                                        pidobj.npid = "," + newcode;
+                                                        $.ajax({async: false, url: "login.project.addpid.action", type: "get", datatype: "JSON", data: pidobj,
+                                                            success: function (data) {
+
+                                                            },
+                                                            error: function () {
+                                                                alert("提交失败！");
+                                                            }
+                                                        });
+                                                    }
+
                                                     var pobj = {};
                                                     pobj.id = uid;
                                                     var parentid = 0;
                                                     do {
-
                                                         $.ajax({async: false, url: "login.project.selectparent.action", type: "get", datatype: "JSON", data: pobj,
                                                             success: function (data) {
-                                                                var parentid = data.ups;
-                                                                parentid = parentid[0].u_parent_id;
+                                                                var parentids = data.ups;
+                                                                parentid = parentids[0].u_parent_id;
                                                                 pobj.id = parentid;
                                                                 if (parentid != 0) {
-                                                                    var ppobj = {};
-                                                                    ppobj.id = parentid;
-                                                                    ppobj.npid = "," + newcode;
-                                                                    $.ajax({async: false, url: "login.project.addpid.action", type: "get", datatype: "JSON", data: ppobj,
-                                                                        success: function (data) {
+                                                                    var pid = getuserporject(parentid);
+                                                                    if (pid == null || pid == "") {
+                                                                        var ppobj = {};
+                                                                        ppobj.id = parentid;
+                                                                        ppobj.npid = newcode;
+                                                                        $.ajax({async: false, url: "login.project.addpid1.action", type: "get", datatype: "JSON", data: ppobj,
+                                                                            success: function (data) {
 
-                                                                        },
-                                                                        error: function () {
-                                                                            alert("提交失败！");
-                                                                        }
-                                                                    });
+                                                                            },
+                                                                            error: function () {
+                                                                                alert("提交失败！");
+                                                                            }
+                                                                        });
+                                                                    } else {
+                                                                        var ppobj2 = {};
+                                                                        ppobj2.id = parentid;
+                                                                        ppobj2.npid = "," + newcode;
+                                                                        $.ajax({async: false, url: "login.project.addpid.action", type: "get", datatype: "JSON", data: ppobj2,
+                                                                            success: function (data) {
+
+                                                                            },
+                                                                            error: function () {
+                                                                                alert("提交失败！");
+                                                                            }
+                                                                        });
+                                                                    }
+
                                                                 }
                                                             }
                                                         });
                                                     } while (parentid != 0);
+
+                                                    var pid = getuserporject(uid);
+                                                    parent.parent.porject(pid);  //首页刷新项目列表
+
                                                 }
 
                                             },
@@ -247,11 +282,10 @@
 
 
 
-                        } else if (data.total > 0) {
+                        } else if (data.rs.length > 0) {
                             layerAler(langs1[260][lang]);  //此项目已存在
                         }
                         return  false;
-//             
                     },
                     error: function () {
                         alert("提交添加失败！");
@@ -302,8 +336,9 @@
                 });
             }
             //删除
-            function deleteUser() {
+             function deleteUser() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
+                console.log(selects[0]);
                 var num = selects.length;
                 if (num == 0) {
                     layerAler(langs1[263][lang]);  //请选择您要删除的记录
@@ -325,7 +360,7 @@
                                 layerAler(langs1[264][lang]);  //该项目下存在网关，不可删除
                             } else {
                                 if (uid == selects[0].uid) {
-                                    addlogon(u_name, "删除", o_pid, "项目管理", "删除项目【" + selects[0].name + "】");
+                                    addlogon(u_name, "删除", o_pid, "项目管理", "删除项目【"+selects[0].name+"】");
                                     $.ajax({async: false, url: "login.project.delete.action", type: "POST", datatype: "JSON", data: {id: selects[0].id},
                                         success: function (data) {
                                             var arrlist = data.rs;
@@ -397,7 +432,7 @@
                                                     pobj.id = parentid;
                                                     if (parentid != 0) {
                                                         if (uid == parentid) {
-                                                            addlogon(u_name, "删除", o_pid, "项目管理", "删除项目【" + selects[0].name + "】");
+                                                            addlogon(u_name, "删除", o_pid, "项目管理", "删除项目【"+selects[0].name+"】");
                                                             $.ajax({async: false, url: "login.project.delete.action", type: "POST", datatype: "JSON", data: {id: selects[0].id},
                                                                 success: function (data) {
                                                                     var arrlist = data.rs;
@@ -468,9 +503,11 @@
                                         });
                                     } while (parentid != 0);
                                     if (ok == 0) {
-                                        layerAler("子用户不可删除父用户创建的项目");
+                                        layerAler("子用户不可删除父用户创建的项目"); //"子用户不可删除父用户创建的项目"
                                     }
                                 }
+
+
                             }
                         },
                         error: function () {

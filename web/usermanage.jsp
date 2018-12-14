@@ -199,11 +199,11 @@
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [5, 10, 15, 20, 25],
+                    pageList: [10, 15],
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
                         //                        console.info("加载成功");
                     },
@@ -454,7 +454,7 @@
                         <button type="button" class="close" data-dismiss="modal">
                             <span style="font-size:20px ">×</span></button>
                         <span class="glyphicon glyphicon-floppy-disk" style="font-size: 20px"></span>
-                        <h4 class="modal-title" style="display: inline;"><span id="232" name="xxx">添加用户</span></h4></div>
+                        <h4 class="modal-title" style="display: inline;"><span>添加用户</span></h4></div>
 
                     <form action="" method="POST" id="Form_User">      
                         <div class="modal-body">

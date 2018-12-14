@@ -46,6 +46,37 @@
                 exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
                 document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
             }
+
+            //获取项目
+            function  porject(pid) {
+                var pids = [];
+                if (pid != null && pid != "") {
+                    pids = pid.split(",");   //项目编号
+                    // $("#pojects").val(pids[0]);
+                    var pname = [];   //项目名称
+                    console.log("l:" + pids.length);
+                    for (var i = 0; i < pids.length; i++) {
+                        var obj = {};
+                        obj.code = pids[i];
+                        $.ajax({url: "login.main.getpojcetname.action", async: false, type: "get", datatype: "JSON", data: obj,
+                            success: function (data) {
+                                pname.push(data.rs[0].name);
+                            },
+                            error: function () {
+                                alert("出现异常！");
+                            }
+                        });
+                    }
+
+                    for (var i = 0; i < pids.length; i++) {
+                        var options;
+                        options += "<option value=\"" + pids[i] + "\">" + pname[i] + "</option>";
+                        $("#pojects").html(options);
+                    }
+                }else{
+                    $("#pojects").html("");
+                }
+            }
             var o = {};
             var lang = getCookie("lang");
             var eventobj = {
@@ -861,7 +892,11 @@
             }
             $(function () {
                 var pid = '${rs[0].pid}';
-                var pids = pid.split(",");   //项目编号
+                var pids = [];
+                if (pid != null && pid != "") {
+                    pids = pid.split(",");   //项目编号
+                }
+
                 // $("#pojects").val(pids[0]);
                 var pname = [];   //项目名称
                 for (var i = 0; i < pids.length; i++) {

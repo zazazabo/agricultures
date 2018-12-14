@@ -678,7 +678,7 @@
                                 <input id="upid" type="hidden" value="${rs[0].pid}"/>
                                 <input id="u_name" type="hidden" value="${rs[0].name}"/>
                             </span>
-                            <ul class="two animated fadeInDown twoL" style="background:rgb(92, 183, 92) none repeat scroll 0% 0%; color: rgb(255, 255, 255); width: 230px; margin-top:-15px;">
+                            <ul class="two animated fadeInDown twoL" style="background:rgb(92, 183, 92) none repeat scroll 0% 0%; color: rgb(255, 255, 255); width: 280px; margin-top:-15px;">
                                 <li style=" height: 40px;"><img src="./img/user.jpg" style=" height: 25px; width: 25px;vertical-align: middle; border-radius: 16px;"><span style=" margin-left: 20px;">${rs[0].name}</span></li>
                                 <li style=" height: 40px;">
                                     <span>邮箱：</span><span style=" margin-left: 20px;" id="e1">${rs[0].email}</span>

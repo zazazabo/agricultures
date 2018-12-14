@@ -824,10 +824,10 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <span  style=" float: right; margin-right: 2px;" name="xxx" id="189">主站ip或域名</span>
+                                                <span  style=" float: right; margin-right: 2px;" name="xxx" id="189">主站IP</span>
                                             </td>
                                             <td>
-                                                <input id="ip"  class="form-control" name="ip"  style="width:150px; " placeholder="输入主站域名" type="text">
+                                                <input id="ip"  class="form-control" name="ip"  style="width:150px; " placeholder="输入主站IP" type="text">
                                             </td>
                                         </tr>
 

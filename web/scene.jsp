@@ -746,6 +746,8 @@
                     var o = {p_code: ooo.p_code, p_show: 0, p_scenenum: ooo.p_scenenum, id: ooo.id};
 
                     if (ooo.p_deployment == 1) {
+                        layerAler("已部署不能删除");
+                        return ;
                         continue;
                     }
                     $.ajax({async: false, url: "loop.planForm.deletePlan.action", type: "get", datatype: "JSON", data: o,
@@ -867,7 +869,7 @@
 
 
         <div class="btn-group zuheanniu" id="zuheanniu" style="float:left;position:relative;z-index:100;margin:12px 0 0 10px;">
-            <button class="btn btn-success ctrol" onclick="showDialog() data-toggle="modal" data-target="#pjj5" id="add" >  
+            <button class="btn btn-success ctrol" onclick="showDialog()" data-toggle="modal" data-target="#pjj5" id="add" >  
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;添加
             </button>
 

@@ -98,6 +98,39 @@
             }
 
             function showDialog() {
+                var o1 = $("#formsearch").serializeObject();
+                o1.pid = "${param.pid}";
+                console.log(o1);
+                $.ajax({async: false, url: "sensor.sensorform.getInfoNumList2.action", type: "get", datatype: "JSON", data: o1,
+                    success: function (data) {
+//                        console.log(data);
+                        $("#infonum").combobox('loadData', data);
+
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+
+                $.ajax({async: false, url: "plan.planForm.getSensorPlanBynum1.action", type: "get", datatype: "JSON", data: o1,
+                    success: function (data) {
+                        console.log(data);
+                        for (var i = 0; i < 5; i++) {
+                            $("#scen" + (i + 1)).combobox('loadData', data);
+                        }
+//                        $("#infonum").combobox('loadData', data);
+
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+
+
+
+
 
                 $('#dialog-add').dialog('open');
                 return false;
@@ -159,7 +192,8 @@
                                 for (var i = 0; i < 4; i++) {
                                     var info = "info" + (i + 1).toString();
                                     var val = "infoval" + (i + 1).toString();
-                                    var o1 = {info: o[info], value: parseInt(o[val])};
+                                    var valdata=o[val]==null?0:parseInt(o[val]);
+                                    var o1 = {info: o[info], value: valdata};
                                     var valobj = JSON.stringify(o1);
                                     var val = "l_val" + (i + 1 + 1).toString();
                                     o[val] = valobj;
@@ -544,6 +578,7 @@
                         o[val] = valobj;
                     }
                 } else if (o.l_worktype == 9) {
+                       
                     var oo = {infonum: parseInt(o.infonum), offset: parseInt(o.offset)};
                     var oostr = JSON.stringify(oo);
                     o.l_val1 = oostr;
@@ -555,9 +590,10 @@
                         var val = "l_val" + (i + 1 + 1).toString();
                         o[val] = valobj;
                     }
+                         console.log(o);
                 }
 
-                console.log(o);
+        
 
                 $.ajax({async: false, url: "loop.loopForm.modifyloop.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
@@ -584,6 +620,41 @@
                 }
                 var select = selects[0];
                 console.log(select);
+
+                var o1 = $("#formsearch").serializeObject();
+                o1.pid = "${param.pid}";
+
+                $.ajax({async: false, url: "sensor.sensorform.getInfoNumList2.action", type: "get", datatype: "JSON", data: o1,
+                    success: function (data) {
+//                        console.log(data);
+                        $("#infonum1").combobox('loadData', data);
+
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+                $.ajax({async: false, url: "plan.planForm.getSensorPlanBynum1.action", type: "get", datatype: "JSON", data: o1,
+                    success: function (data) {
+                        console.log(data);
+                        for (var i = 0; i < 5; i++) {
+                            var a = (i + 1).toString();
+                            $("#scen" + a + a).combobox('loadData', data);
+                        }
+//                        $("#infonum").combobox('loadData', data);
+
+                    },
+                    error: function () {
+                        alert("提交失败！");
+                    }
+                });
+
+
+
+
+
+
 
                 if (select.l_worktype == 3) {
                     for (var i = 0; i < 5; i++) {
@@ -614,24 +685,23 @@
                         var timestr = select[str];
                         console.log(timestr)
                         var objtime = eval('(' + timestr + ')');
-                        $("#scen" + o1 + o1).val(objtime.scene.toString());
+                        $("#scen" + o1 + o1).combobox('setValue', objtime.scene.toString());
                         $("#scenval" + o1 + o1).val(objtime.value);
 
                         if (select.l_deplayment == 1) {
-                            $("#scen" + o1 + o1).attr('readonly', true);
+                            $("#scen" + o1 + o1).combobox('readonly', true);
                             $("#scenval" + o1 + o1).attr('readonly', true)
                         } else {
-                            $("#scen" + o1 + o1).attr('readonly', false);
+                            $("#scen" + o1 + o1).combobox('readonly', false);
                             $("#scenval" + o1 + o1).attr('readonly', false)
                         }
 
 
                     }
                 } else if (select.l_worktype == 9) {
-
                     var obj1 = eval('(' + select.l_val1 + ')');
-                    $("#infonum1").val(obj1.infonum.toString());
-                    $("#offset1").val(obj1.offset.toString());
+                    $("#infonum1").combobox('setValue', obj1.infonum.toString());
+                    $("#offset1").val(obj1.offset==null?"0":obj1.offset.toString());
 
                     for (var i = 0; i < 4; i++) {
                         var o1 = (i + 1 + 1).toString();
@@ -641,14 +711,14 @@
                         var objtime = eval('(' + timestr + ')');
                         console.log(timestr)
                         $("#info_" + o2 + o2).val(objtime.info.toString());
-                        $("#infoval" + o2 + o2).val(objtime.value);
+                        $("#infoval" + o2 + o2).combobox('setValue',objtime.value);
 
                         if (select.l_deplayment == 1) {
                             $("#info_" + o2 + o2).attr('readonly', true);
-                            $("#infoval" + o2 + o2).attr('readonly', true)
+                            $("#infoval" + o2 + o2).combobox('readonly', true)
                         } else {
                             $("#info_" + o2 + o2).attr('readonly', false);
-                            $("#infoval" + o2 + o2).attr('readonly', false)
+                            $("#infoval" + o2 + o2).combobox('readonly', false)
                         }
 
 
@@ -1259,12 +1329,7 @@
 
             <form action="" method="POST" id="formadd" onsubmit="return checkLoopAdd()">    
                 <input type="hidden" name="pid" value="${param.pid}"/>
-                <!--                <input type="hidden" id="planname" name="planname" value="" />
-                                <input type="hidden" id="l_val1" name="l_val1" value="" />
-                                <input type="hidden" id="l_val2" name="l_val2" value="" />
-                                <input type="hidden" id="l_val3" name="l_val3" value="" />
-                                <input type="hidden" id="l_val4" name="l_val4" value="" />
-                                <input type="hidden" id="l_val5" name="l_val5" value="" />-->
+
                 <table >
                     <tbody>
                         <tr>
@@ -1323,26 +1388,6 @@
                                 </span>
                             </td>
                         </tr>                 
-
-                        <tr>
-                            <td>
-                                <!--                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
-                                                                <span class="menuBox">
-                                                                    <input id="l_pos" class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
-                                                                </span>-->
-                            </td>
-                            <td></td>
-                            <td>
-                                <!--                                <span style="margin-left:8px;" >工作方案</span>&nbsp;
-                                                                <span class="menuBox">
-                                                                    <select class="easyui-combobox" id="l_plan" name="l_plan"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
-                                
-                                                                    </select>
-                                                                </span>-->
-                            </td>
-                        </tr>    
-
-
                     </tbody>
                 </table> 
 
@@ -1405,7 +1450,9 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景一</span>&nbsp;
-                                <input id="scen1" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen1" name="scen1" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen1" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />-->
                                 <span style="margin-left:10px;">控制值一</span>&nbsp;
                                 <input id="scenval1" class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
@@ -1414,7 +1461,9 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景二</span>&nbsp;
-                                <input id="scen2" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen2" name="scen2" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen2" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />-->
                                 <span style="margin-left:10px;"  >控制值二</span>&nbsp;
                                 <input id="scenval2" class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />&emsp;
                             </td>
@@ -1423,7 +1472,9 @@
                         <tr id="">
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景三</span>&nbsp;
-                                <input id="scen3" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen3" name="scen3" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen3" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />-->
                                 <span style="margin-left:10px;">控制值三</span>&nbsp;
                                 <input id="scenval3" class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
                             </td>
@@ -1432,7 +1483,9 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景四</span>&nbsp;
-                                <input id="scen4" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen4" name="scen4" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen4" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />-->
                                 <span style="margin-left:10px;"  >控制值四</span>&nbsp;
                                 <input id="scenval4" class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
                             </td>
@@ -1441,7 +1494,9 @@
                         <tr id="">
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景五</span>&nbsp;
-                                <input id="scen5" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen5" name="scen5" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen5" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />-->
                                 <span style="margin-left:10px;">控制值五</span>&nbsp;
                                 <input id="scenval5" class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
                             </td>
@@ -1458,10 +1513,10 @@
                     <tbody>
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >信息点号</span>&nbsp;
-                                <input  class="form-control" id="infonum" name="infonum" style="width:50px;display: inline;" placeholder="值" type="text" />
-                                <!--                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum" name="infonum" style="width:70px; height: 30px">
-                                                                </select>-->
+                                <span style="margin-left:20px;" >信息点名</span>&nbsp;
+                                <!--<input  class="form-control" id="infonum" name="infonum" style="width:50px;display: inline;" placeholder="值" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum" name="infonum" style="width:150px; height: 30px">
+                                </select>
                                 <span style="margin-left:10px;">偏差值</span>&nbsp;
                                 <input id="offset" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="偏差值" type="text" />
                             </td>
@@ -1478,7 +1533,11 @@
                                 <input  class="form-control" id="info_1" name="info1" style="width:50px;display: inline;" placeholder="值" type="text" />
 
                                 <span style="margin-left:10px;">控制值</span>&nbsp;
-                                <input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />&emsp;
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infoval1" name="infoval1" style="width:60px; height: 30px">
+                                    <option value="0" >关</option>
+                                    <option value="1" >开</option>
+                                </select>
+                                <!--<input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />&emsp;-->
                             </td>
                             <td>
 
@@ -1489,7 +1548,11 @@
                                 <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info2" name="info2" style="width:70px; height: 30px">
                                                                 </select>-->
                                 <span style="margin-left:10px;">控制值</span>&nbsp;
-                                <input id="infoval2" class="form-control"  name="infoval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infoval2" name="infoval2" style="width:60px; height: 30px">
+                                    <option value="0" >关</option>
+                                    <option value="1" >开</option>
+                                </select>
+                                <!--<input id="infoval2" class="form-control"  name="infoval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />-->
                             </td>
                         </tr>
                         <tr >
@@ -1499,7 +1562,11 @@
                                 <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info3" name="info3" style="width:70px; height: 30px">
                                                                 </select>-->
                                 <span style="margin-left:10px;">控制值</span>&nbsp;
-                                <input id="infoval3" class="form-control"  name="infoval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infoval3" name="infoval3" style="width:60px; height: 30px">
+                                    <option value="0" >关</option>
+                                    <option value="1" >开</option>
+                                </select>
+                                <!--<input id="infoval3" class="form-control"  name="infoval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />-->
                             </td>
                             <td>
 
@@ -1510,7 +1577,11 @@
                                 <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info4" name="info4" style="width:70px; height: 30px">
                                                                 </select>-->
                                 <span style="margin-left:10px;">控制值</span>&nbsp;
-                                <input id="infoval4" class="form-control"  name="infoval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />&emsp;
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infoval4" name="infoval4" style="width:60px; height: 30px">
+                                    <option value="0" >关</option>
+                                    <option value="1" >开</option>
+                                </select>
+                                <!--<input id="infoval4" class="form-control"  name="infoval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />&emsp;-->
                             </td>
                         </tr>                      
 
@@ -1529,13 +1600,6 @@
                 <input type="hidden" id="hide_id" name="hide_id" />
                 <input type="hidden" name="pid" value="${param.pid}"/>
                 <input type="hidden" id="l_deployment" name="l_deployment" />
-                <!--                <input type="hidden" id="planname1" name="planname" value="" />
-                                <input type="hidden" id="l_val11" name="l_val1" value="" />
-                                <input type="hidden" id="l_val22" name="l_val2" value="" />
-                                <input type="hidden" id="l_val33" name="l_val3" value="" />
-                                <input type="hidden" id="l_val44" name="l_val4" value="" />
-                                <input type="hidden" id="l_val55" name="l_val5" value="" />             -->
-
                 <table  >
                     <tbody>
 
@@ -1559,10 +1623,6 @@
                                 <span class="menuBox">
                                     <input id="l_pos1"  class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
                                 </span>
-                                <!--                                <span style="margin-left:20px;" >控制点号</span>&nbsp;
-                                                                <span class="menuBox">
-                                                                    <input id="l_info1"  class="form-control"  name="l_info" style="width:150px;display: inline;" placeholder="控制点号" type="text">
-                                                                </span>-->
                             </td>
                             <td></td>
                             <td>
@@ -1577,22 +1637,6 @@
                             </td>
                         </tr>                 
 
-                        <tr>
-                            <td>
-                                <!--                                <span style="margin-left:8px;" >寄存器位置</span>&nbsp;
-                                                                <span class="menuBox">
-                                                                    <input id="l_pos1"  class="form-control"  name="l_pos" style="width:150px;display: inline;" placeholder="寄存器位置" type="text">
-                                                                </span>-->
-                            </td>
-                            <td></td>
-                            <td>
-                                <!--                                <span style="margin-left:8px;" >工作方案</span>&nbsp;
-                                                                <span class="menuBox">
-                                                                    <select class="easyui-combobox" id="l_plan1" name="l_plan"  data-options='editable:false,valueField:"id", textField:"text"' style="width:150px; height: 30px">          
-                                                                    </select>
-                                                                </span>-->
-                            </td>
-                        </tr>    
 
                     </tbody>
                 </table>
@@ -1656,7 +1700,9 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景一</span>&nbsp;
-                                <input id="scen11" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen11" name="scen1" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen11" class="form-control"  name="scen1" style="width:50px;display: inline;" placeholder="场景1" type="text" />-->
                                 <span style="margin-left:10px;">控制值一</span>&nbsp;
                                 <input id="scenval11" class="form-control"  name="val1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                             </td>
@@ -1665,7 +1711,9 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景二</span>&nbsp;
-                                <input id="scen22" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen22" name="scen2" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen22" class="form-control"  name="scen2" style="width:50px;display: inline;" placeholder="场景2" type="text" />-->
                                 <span style="margin-left:10px;"  >控制值二</span>&nbsp;
                                 <input id="scenval22" class="form-control"  name="val2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />&emsp;
                             </td>
@@ -1674,7 +1722,9 @@
                         <tr id="">
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景三</span>&nbsp;
-                                <input id="scen33" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen33" name="scen3" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen33" class="form-control"  name="scen3" style="width:50px;display: inline;" placeholder="场景3" type="text" />-->
                                 <span style="margin-left:10px;">控制值三</span>&nbsp;
                                 <input id="scenval33" class="form-control"  name="val3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
                             </td>
@@ -1683,7 +1733,9 @@
                             </td>
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景四</span>&nbsp;
-                                <input id="scen44" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen44" name="scen4" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen44" class="form-control"  name="scen4" style="width:50px;display: inline;" placeholder="场景4" type="text" />-->
                                 <span style="margin-left:10px;"  >控制值四</span>&nbsp;
                                 <input id="scenval44" class="form-control"  name="val4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />
                             </td>
@@ -1692,7 +1744,9 @@
                         <tr id="">
                             <td>
                                 <span style="margin-left:20px;" >&emsp;场景五</span>&nbsp;
-                                <input id="scen55" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="scen55" name="scen5" style="width:100px; height: 30px">
+                                </select>
+                                <!--<input id="scen55" class="form-control"  name="scen5" style="width:50px;display: inline;" placeholder="场景5" type="text" />-->
                                 <span style="margin-left:10px;">控制值五</span>&nbsp;
                                 <input id="scenval55" class="form-control"  name="val5" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
                             </td>
@@ -1710,9 +1764,9 @@
                         <tr >
                             <td>
                                 <span style="margin-left:20px;" >信息点号</span>&nbsp;
-                                <input  class="form-control" id="infonum1" name="infonum" style="width:50px;display: inline;" placeholder="值" type="text" />
-                                <!--                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum1" name="infonum" style="width:70px; height: 30px">
-                                                                </select>-->
+                                <!--<input  class="form-control" id="infonum1" name="infonum" style="width:50px;display: inline;" placeholder="值" type="text" />-->
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum1" name="infonum" style="width:70px; height: 30px">
+                                </select>
                                 <span style="margin-left:10px;">偏差值</span>&nbsp;
                                 <input id="offset1" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="控制值5" type="text" />
                             </td>
@@ -1731,7 +1785,11 @@
                                                                      <input id="infoval1" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />
                                                                 </select>-->
                                 <span style="margin-left:10px;">控制值</span>&nbsp;
-                                <input id="infoval11" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />&emsp;
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infoval11" name="infoval1" style="width:60px; height: 30px">
+                                    <option value="0" >关</option>
+                                    <option value="1" >开</option>
+                                </select>
+                                <!--<input id="infoval11" class="form-control"  name="infoval1" style="width:50px;display: inline;" placeholder="控制值1" type="text" />&emsp;-->
                             </td>
                             <td>
 
@@ -1742,7 +1800,11 @@
                                 <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info2" name="info2" style="width:70px; height: 30px">
                                                                 </select>-->
                                 <span style="margin-left:10px;">控制值</span>&nbsp;
-                                <input id="infoval22" class="form-control"  name="infoval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infoval22" name="infoval2" style="width:60px; height: 30px">
+                                    <option value="0" >关</option>
+                                    <option value="1" >开</option>
+                                </select>
+                                <!--<input id="infoval22" class="form-control"  name="infoval2" style="width:50px;display: inline;" placeholder="控制值2" type="text" />-->
                             </td>
                         </tr>
                         <tr >
@@ -1752,7 +1814,11 @@
                                 <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info3" name="info3" style="width:70px; height: 30px">
                                                                 </select>-->
                                 <span style="margin-left:10px;">控制值</span>&nbsp;
-                                <input id="infoval33" class="form-control"  name="infoval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infoval33" name="infoval3" style="width:60px; height: 30px">
+                                    <option value="0" >关</option>
+                                    <option value="1" >开</option>
+                                </select>
+                                <!--<input id="infoval33" class="form-control"  name="infoval3" style="width:50px;display: inline;" placeholder="控制值3" type="text" />-->
                             </td>
                             <td>
 
@@ -1763,7 +1829,11 @@
                                 <!--                                <select class="easyui-combobox" data-options="editable:true,valueField:'id', textField:'text'" id="info4" name="info4" style="width:70px; height: 30px">
                                                                 </select>-->
                                 <span style="margin-left:10px;">控制值</span>&nbsp;
-                                <input id="infoval44" class="form-control"  name="infoval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />&emsp;
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infoval44" name="infoval4" style="width:60px; height: 30px">
+                                    <option value="0" >关</option>
+                                    <option value="1" >开</option>
+                                </select>
+                                <!--<input id="infoval44" class="form-control"  name="infoval4" style="width:50px;display: inline;" placeholder="控制值4" type="text" />&emsp;-->
                             </td>
                         </tr>                      
                     </tbody>

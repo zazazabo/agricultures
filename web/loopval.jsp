@@ -158,10 +158,10 @@
                                     return  str;
                                 } else if (type >> 2 & 0x1 == 1) {
                                     var str = "";  //return 字符串
-                                    var pname =""; //场景名称
+                                    var pname = ""; //场景名称
                                     var pvalue = "";  //场景值
                                     for (var i = 1; i < 6; i++) {
-                                        
+
                                         var index = "l_val" + (i).toString();
                                         var strobj = row[index];
                                         if (isJSON(strobj)) {
@@ -172,25 +172,61 @@
                                             $.ajax({url: "homePage.loopval.getl_name.action", async: false, type: "get", datatype: "JSON", data: pobj,
                                                 success: function (data) {
                                                     var rs = data.rs;
-                                                    pname = rs[0].p_name;     
+                                                    pname = rs[0].p_name;
                                                 },
                                                 error: function () {
                                                     alert("提交添加失败！请刷新");
                                                 }
                                             });
-                                            if(obj.value ==1){
+                                            if (obj.value == 1) {
                                                 pvalue = "闭合";
-                                            }else{
+                                            } else {
                                                 pvalue = "断开";
                                             }
 
                                         }
-                                        str = str+pname+":"+pvalue+"         ";
+                                        str = str + pname + ":" + pvalue + "         ";
                                     }
-                                    
+
                                     return str;
                                 } else if (type >> 3 & 0x1 == 1) {
-                                    return '信息点';
+                                    var name = "";
+                                    var svalue = "";
+                                    for (var i = 1; i < 6; i++) {
+
+                                        var index = "l_val" + (i).toString();
+                                        var strobj = row[index];
+                                        if (isJSON(strobj)) {
+                                            var obj = eval('(' + strobj + ')');
+                                            if (index == "l_val1") {
+                                                var pobj = {};
+                                                pobj.l_comaddr = p_comaddr;
+                                                pobj.infonum = obj.infonum;
+                                                $.ajax({url: "homePage.loopval.getInfoname.action", async: false, type: "get", datatype: "JSON", data: pobj,
+                                                    success: function (data) {
+                                                        var rs = data.rs;
+                                                        name = rs[0].name;
+                                                        str = "信息点名:"+name+ "         ";;
+                                                    },
+                                                    error: function () {
+                                                        alert("提交添加失败！请刷新");
+                                                    }
+                                                });
+                                            } else {
+                                                if (obj.value == 1) {
+                                                    svalue = "闭合";
+                                                } else {
+                                                    svalue = "断开";
+                                                }
+                                                str = str + "读数值:"+obj.info + "         "+"控制值:"+svalue+"         ";
+                                            }
+
+
+
+                                        }
+                                    }
+
+                                    return str;
                                 } else {
                                     return  str;
                                 }

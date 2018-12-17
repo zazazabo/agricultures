@@ -87,4 +87,17 @@
             </xsql>
         </xhandle>
     </xform>
+    
+     <xform desc="回路监控" id="loopval">
+        <xhandle desc="查询场景名称" id="getl_name" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select p_name from t_plan WHERE   @CONDITION  " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@p_comaddr AND @p_scenenum">
+                    <xfltpara id="p_comaddr" nrp="1=2" para="p_comaddr" sql="p_comaddr = ':p_comaddr'">
+                    </xfltpara>
+                    <xfltpara id="p_scenenum" nrp="1=2" para="p_scenenum" sql="p_scenenum = ':p_scenenum'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle>  
+    </xform>
 </xforms>

@@ -94,13 +94,13 @@
                                 var type = parseInt(value);
 //                                var str = type & 0x1 == 1 ? "自动" : "手动";
 
-                                var str="";
+                                var str = "";
                                 if (type >> 1 & 0x1 == 1) {
-                                    return "时间"
+                                    return "时间";
                                 } else if (type >> 2 & 0x1 == 1) {
-                                    return '场景' 
+                                    return '场景';
                                 } else if (type >> 3 & 0x1 == 1) {
-                                    return '信息点'
+                                    return '信息点';
                                 } else {
                                     return  str;
                                 }
@@ -112,15 +112,89 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                                
-//                            console.log(isJSON(value))    
-                                
-                                if(isJSON(value)){
-                                     var obj = eval('(' + value + ')');
-                                     console.log(obj);
-                                     return obj.name;
+                                var p_comaddr = row.l_comaddr;   //网关
+                                var type = parseInt(row.l_worktype);
+//                                var str = type & 0x1 == 1 ? "自动" : "手动";
+
+                                var str = "";
+                                if (type >> 1 & 0x1 == 1) {
+                                    var val1 = eval('(' + row.l_val1 + ')');  //时间1
+                                    var val2 = eval('(' + row.l_val2 + ')');  //时间2
+                                    var val3 = eval('(' + row.l_val3 + ')');  //时间3
+                                    var val4 = eval('(' + row.l_val4 + ')');  //时间4
+                                    var val5 = eval('(' + row.l_val5 + ')');  //时间5
+                                    var v1 = "";
+                                    var v2 = "";
+                                    var v3 = "";
+                                    var v4 = "";
+                                    var v5 = "";
+                                    if (val1.value == 1) {
+                                        v1 = "闭合";
+                                    } else {
+                                        v1 = "断开";
+                                    }
+                                    if (val2.value == 1) {
+                                        v2 = "闭合";
+                                    } else {
+                                        v2 = "断开";
+                                    }
+                                    if (val3.value == 1) {
+                                        v3 = "闭合";
+                                    } else {
+                                        v3 = "断开";
+                                    }
+                                    if (val4.value == 1) {
+                                        v4 = "闭合";
+                                    } else {
+                                        v4 = "断开";
+                                    }
+                                    if (val5.value == 1) {
+                                        v5 = "闭合";
+                                    } else {
+                                        v5 = "断开";
+                                    }
+                                    //  console.log(typeof(val1));
+                                    var str = val1.time + ":" + v1 + "   " + val2.time + ":" + v2 + "   " + val3.time + ":" + v3 + "   " + val4.time + ":" + v4 + "   " + val5.time + ":" + v5;
+                                    return  str;
+                                } else if (type >> 2 & 0x1 == 1) {
+                                    var str = "";  //return 字符串
+                                    var pname =""; //场景名称
+                                    var pvalue = "";  //场景值
+                                    for (var i = 1; i < 6; i++) {
+                                        
+                                        var index = "l_val" + (i).toString();
+                                        var strobj = row[index];
+                                        if (isJSON(strobj)) {
+                                            var obj = eval('(' + strobj + ')');
+                                            var pobj = {};
+                                            pobj.p_comaddr = p_comaddr;
+                                            pobj.p_scenenum = obj.scene;
+                                            $.ajax({url: "homePage.loopval.getl_name.action", async: false, type: "get", datatype: "JSON", data: pobj,
+                                                success: function (data) {
+                                                    var rs = data.rs;
+                                                    pname = rs[0].p_name;     
+                                                },
+                                                error: function () {
+                                                    alert("提交添加失败！请刷新");
+                                                }
+                                            });
+                                            if(obj.value ==1){
+                                                pvalue = "闭合";
+                                            }else{
+                                                pvalue = "断开";
+                                            }
+
+                                        }
+                                        str = str+pname+":"+pvalue+"         ";
+                                    }
+                                    
+                                    return str;
+                                } else if (type >> 3 & 0x1 == 1) {
+                                    return '信息点';
+                                } else {
+                                    return  str;
                                 }
-                   
+
 //                                var worktype = parseInt(row.l_worktype);
 //                                if (worktype >> 1 & 0x1 == 1) {
 //                                    var str = row.l_val1;
@@ -163,13 +237,13 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                               if(value ==1){
-                                   return "闭合";
-                               }else{
-                                   return "断开"; 
-                               }
+                                if (value == 1) {
+                                    return "闭合";
+                                } else {
+                                    return "断开";
+                                }
                             }
-                        },{
+                        }, {
                             field: 'l_state',
                             title: '在线状态', //
                             width: 25,
@@ -177,13 +251,13 @@
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
 //                                console.log(row);
-                               if(row.online ==1){
-                                  var  str = "<img  src='img/online1.png'/>";
-                                  return  str;
-                               }else{
-                                  var  str = "<img  src='img/off.png'/>";
-                                  return  str;
-                               }
+                                if (row.online == 1) {
+                                    var str = "<img  src='img/online1.png'/>";
+                                    return  str;
+                                } else {
+                                    var str = "<img  src='img/off.png'/>";
+                                    return  str;
+                                }
                             }
                         }],
                     clickToSelect: true,
@@ -321,7 +395,7 @@
                     return;
                 }
                 var ele = selects[0];
-                addlogon(u_name, "设置", o_pid, "回路监控", "设置回路【"+ele.l_name+"】状态");
+                addlogon(u_name, "设置", o_pid, "回路监控", "设置回路【" + ele.l_name + "】状态");
                 var o = {};
                 o.l_comaddr = ele.l_comaddr;
                 console.log(ele);
@@ -513,7 +587,7 @@
                     <thead >
                         <tr >
                             <th data-width="25"    data-select="false" data-align="center" data-formatter='formartcomaddr'  data-checkbox="true"  ></th>
-<!--                            <th data-width="100" data-field="comaddr" data-align="center"   data-formatter='formartcomaddr1'  >网关地址</th>-->
+                            <!--                            <th data-width="100" data-field="comaddr" data-align="center"   data-formatter='formartcomaddr1'  >网关地址</th>-->
                             <th data-width="100" data-field="name" data-align="center" data-formatter='formartcomaddr1'    >网关名称</th>
                         </tr>
                     </thead>       

@@ -21,7 +21,7 @@
             var o_pid = parent.parent.getpojectId();
             var lang = '${param.lang}';//'zh_CN';
             var langs1 = parent.parent.getLnas();
-
+            var infolist = {};
             function layerAler(str) {
                 layer.alert(str, {
                     icon: 6,
@@ -39,12 +39,210 @@
                     $(d).html(langs1[e][lang]);
                 }
 
+                $('#table0').bootstrapTable({
+//                    url: 'sensor.planForm.getSensorPlan.action',
+                    clickToSelect: true,
+                    columns: [
+//                        {
+//                            title: '单选',
+//                            field: 'select',
+//                            //复选框
+//                            checkbox: true,
+//                            width: 25,
+//                            align: 'center',
+//                            valign: 'middle',
+//                            formatter: function (value, row, index, field) {
+//                                row.index = index;
+//                                return value;
+//                            }
+//
+//                        }, {
+//                            field: 'p_comaddr',
+//                            title: '网关', //信息点
+//                            width: 25,
+//                            align: 'center',
+//                            valign: 'middle',
+//                            colspan: 1,
+//                            formatter: function (value, row, index, field) {
+//                                return value;
+//                            }
+//                        },
+                        {
+                            field: 'p_name',
+                            title: '场景名', //信息点
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            colspan: 1,
+                            formatter: function (value, row, index, field) {
+                                return value;
+                            }
+                        }, {
+                            field: 'p_scenenum',
+                            title: '场景号', //信息点
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            colspan: 1,
+                            formatter: function (value, row, index, field) {
+                                if (value != null) {
+                                    return value.toString();
+                                }
+                            }
+                        }, {
+                            field: 'p_scene',
+                            title: '条件1', //信息点
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            colspan: 1,
+                            formatter: function (value, row, index, field) {
+                                if (isJSON(row.p_scene1)) {
+                                    var obj = eval('(' + row.p_scene1 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
+                            }
+                        }, {
+                            field: 'p_scene',
+                            title: '条件2', //信息点
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            colspan: 1,
+                            formatter: function (value, row, index, field) {
+                                if (isJSON(row.p_scene2)) {
+                                    var obj = eval('(' + row.p_scene2 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
+                            }
+                        }, {
+                            field: 'p_scene',
+                            title: '条件3', //信息点
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            colspan: 1,
+                            formatter: function (value, row, index, field) {
+                                if (isJSON(row.p_scene3)) {
+                                    var obj = eval('(' + row.p_scene3 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
+                            }
+                        }, {
+                            field: 'p_scene',
+                            title: '条件4', //信息点
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            colspan: 1,
+                            formatter: function (value, row, index, field) {
+                                if (isJSON(row.p_scene4)) {
+                                    var obj = eval('(' + row.p_scene4 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
+                            }
+                        }, {
+                            field: 'p_scene',
+                            title: '条件5', //信息点
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            colspan: 1,
+                            formatter: function (value, row, index, field) {
+                                if (isJSON(row.p_scene5)) {
+                                    var obj = eval('(' + row.p_scene5 + ')');
+                                    var o1 = obj.info.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    return str;
+                                }
+                            }
+                        }, {
+                            field: 'p_deployment',
+                            title: '部署情况', //信息点
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            colspan: 1,
+                            formatter: function (value, row, index, field) {
+                                if (row.p_deployment == "0" || row.p_deployment == null) {
+                                    var str = "<span class='label label-warning'>" + '未部署' + "</span>";  //未部署
+                                    return  str;
+                                } else if (row.p_deployment == "1") {
+                                    var str = "<span class='label label-success'>" + '已部署' + "</span>";  //已部署
+                                    return  str;
+                                }
+                            }
+                        }
+                    ],
+                    singleSelect: false,
+                    sortName: 'id',
+                    locale: 'zh-CN', //中文支持,
+                    showColumns: true,
+                    sortOrder: 'desc',
+                    pagination: true,
+                    sidePagination: 'server',
+                    pageNumber: 1,
+                    pageSize: 10,
+                    showRefresh: true,
+                    showToggle: true,
+                    // 设置默认分页为 50
+                    pageList: [10, 20, 40, 80, 160],
+                    onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
+                    },
+                    //服务器url
+                    queryParams: function (params)  {   //配置参数     
+                        var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
+                            search: params.search,
+                            skip: params.offset,
+                            limit: params.limit,
+                            p_attr: 1,
+                            p_type: 1,
+                            p_show: 1,
+                            type_id: "1",
+                            pid: "${param.pid}"  
+                        };      
+                        return temp;  
+                    },
+                });
+
+
                 $('#gayway').on('check.bs.table', function (row, element) {
                     var l_comaddr = element.comaddr;
                     var obj = {};
                     obj.l_comaddr = l_comaddr;
                     obj.pid = "${param.pid}";
                     console.log(obj);
+                    var obj2 = {};
+                    obj2.l_comaddr = element.comaddr;
+                    obj2.pid = "${param.pid}";
+                    obj2.p_comaddr = element.comaddr;
+                    var opt = {
+                        url: "plan.planForm.getSensorPlan.action",
+                        query: obj2,
+                        silent: true
+                    };
+                    infolist = {};
+                    $.ajax({async: false, url: "sensor.sensorform.getInfoNumList2.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var o = data[i];
+                                infolist[o.id] = o.text;
+                            }
+//                                console.log(infolist);
+                            $("#table0").bootstrapTable('refresh', opt);
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
 
 
 
@@ -96,6 +294,34 @@
                     var data = buicode2(vv);
                     console.log(data);
                     dealsend2("03", data, "readinfoCB", l_comaddr, 0, 0, 3800);
+
+                    var obj = {};
+                    obj.l_comaddr = l_comaddr;
+                    obj.pid = "${param.pid}";
+                    console.log(obj);
+                    var obj2 = {};
+                    obj2.l_comaddr = l_comaddr;
+                    obj2.pid = "${param.pid}";
+                    obj2.p_comaddr = l_comaddr;
+                    var opt = {
+                        url: "plan.planForm.getSensorPlan.action",
+                        query: obj2,
+                        silent: true
+                    };
+                    infolist = {};
+                    $.ajax({async: false, url: "sensor.sensorform.getInfoNumList2.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var o = data[i];
+                                infolist[o.id] = o.text;
+                            }
+//                                console.log(infolist);
+                            $("#table0").bootstrapTable('refresh', opt);
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
 
 
                     return {disabled: false, checked: true//设置选中
@@ -334,7 +560,7 @@
                     <thead >
                         <tr >
                             <th data-width="25"    data-select="false" data-align="center" data-formatter='formartcomaddr'  data-checkbox="true"  ></th>
-<!--                            <th data-width="100" data-field="comaddr" data-align="center"   data-formatter='formartcomaddr1'  >网关地址</th>-->
+                            <!--                            <th data-width="100" data-field="comaddr" data-align="center"   data-formatter='formartcomaddr1'  >网关地址</th>-->
                             <th data-width="100" data-field="name" data-align="center"  data-formatter='formartcomaddr1'   >网关名称</th>
                         </tr>
                     </thead>       
@@ -405,14 +631,12 @@
                         </tbody>
                     </table>
                 </form>
+                <table id="table0" style="width:100%; " class="text-nowrap table table-hover table-striped">
 
+                </table> 
             </div>
 
 
-
         </div>
-
-
-
     </body>
 </html>

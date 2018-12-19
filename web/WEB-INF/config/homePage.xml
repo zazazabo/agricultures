@@ -110,4 +110,40 @@
             </xsql> 
         </xhandle>  
     </xform>
+    
+    <xform desc="后台网关编号管理" id="gatewaymanage">
+        <xhandle desc="查找后台全部网关编号" id="gcodeLlist" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_basecode" var="bootstrap">
+                
+            </xsql> 
+        </xhandle>  
+        <xhandle desc="查找后台网关编号是否存在" id="existence" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_basecode WHERE @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@comaddr">
+                    <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="comaddr = ':comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle> 
+        <xhandle desc="添加网关编号" id="addcode" rtnype="JSON">
+            <xsql id="a1" para="comaddr" tpe="DDL" tpl="insert into t_basecode(comaddr) values(':comaddr') " var="rs">
+            </xsql>
+        </xhandle> 
+        <xhandle desc="修改网关编号" id="upcode" rtnype="JSON">
+            <xsql id="a1" para="comaddr" tpe="DDL" tpl="update t_basecode set comaddr = ':comaddr' where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@id ">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id=':id'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+        <xhandle desc="删除网关编号" id="delcode" rtnype="JSON">
+            <xsql id="a1" tpe="DDL" tpl="delete from t_basecode where @CONDITION " var="rs">
+                <xflt id="CONDITION" tpl="@id">
+                    <xfltpara id="id" nrp="1=2" para="id" sql="id = :id">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle> 
+    </xform>
 </xforms>

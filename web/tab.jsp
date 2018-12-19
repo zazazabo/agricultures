@@ -105,7 +105,7 @@
                     var html = $(this).attr('name');
                     console.log(html);
                     $(".J_iframe").attr('src', html);
-                })
+                });
                 function size() {
                     var height = $(document.body).height() - 60;
                     $(".J_mainContent").height(height);

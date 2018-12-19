@@ -365,8 +365,10 @@
                     layer.close(index);
 
                 });
-
-
+            }
+            //后台管理
+            function  manage(){
+               $("#iframe").attr('src', "gatewaymanage.jsp");
             }
             //弹出修改个人信息框
             function  updshow() {
@@ -695,7 +697,12 @@
                                 <li style=" height: 40px;" onclick="updshow()" >
                                     <span>修改个人信息</span>
                                 </li>
-                                <li onclick="getout()">退出</li>
+                                <c:if test="${rs[0].Ismanage==1}">
+                                    <li style=" height: 40px;" onclick="manage()">
+                                        <span>后台管理数据</span>
+                                    </li>
+                                </c:if>
+                                <li  style=" height: 40px;" onclick="getout()">退出</li>
                             </ul>
                         </li>
 

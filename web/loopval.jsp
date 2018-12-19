@@ -199,6 +199,7 @@
                                         if (isJSON(strobj)) {
                                             var obj = eval('(' + strobj + ')');
                                             if (index == "l_val1") {
+                                                console.log("i:"+i);
                                                 var pobj = {};
                                                 pobj.l_comaddr = p_comaddr;
                                                 pobj.infonum = obj.infonum;

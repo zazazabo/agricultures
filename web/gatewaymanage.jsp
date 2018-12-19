@@ -30,6 +30,9 @@
         <script type="text/javascript" src="SheetJS-js-xlsx/dist/xlsx.core.min.js"></script>
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript" src="js/getdate.js"></script>
+        <link rel="stylesheet" type="text/css" href="bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+        <script src="bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+        <script src="bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
         <script>
             var u_name = parent.parent.getusername();
             var o_pid = parent.parent.getpojectId();
@@ -100,6 +103,8 @@
                     console.log(s);
                     $("#id_").val(s.id);
                     $("#comaddr_").val(s.comaddr);
+                    $("#feebleday1").val(s.feebleday);
+                    $("#remarks1").val(s.remarks);
                     $('#dialog-edit').dialog('open');
                     return false;
                 }
@@ -108,41 +113,12 @@
 
             function  editComplete() {
                 var obj = $("#form2").serializeObject();
-                if (obj.comaddr == "") {
-                    layerAler("请填写网关地址");
-                    return;
-                }
-                if (obj.comaddr.length > 18) {
-                    layerAler("网关地址不能大于18长度");
-                    return;
-                }
-                var comaddr = obj.comaddr;
-                while (comaddr.length < 18) {
-                    comaddr = "0" + comaddr;
-                }
-                obj.comaddr = comaddr;
-                $.ajax({async: false, cache: false, url: "homePage.gatewaymanage.existence.action", type: "GET", data: obj,
+                $.ajax({async: false, cache: false, url: "homePage.gatewaymanage.upcode.action", type: "GET", data: obj,
                     success: function (data) {
                         var rs = data.rs;
                         if (rs.length > 0) {
-                            layerAler("该网关地址已存在");
-                        } else {
-                            $.ajax({async: false, cache: false, url: "homePage.gatewaymanage.upcode.action", type: "GET", data: obj,
-                                success: function (data) {
-                                    var rs = data.rs;
-                                    if (rs.length > 0) {
-                                        $("#dialog-edit").dialog("close");
-                                        $("#gravidaTable").bootstrapTable('refresh');
-                                    }
-
-                                },
-                                error: function () {
-                                    layer.alert('系统错误，刷新后重试', {
-                                        icon: 6,
-                                        offset: 'center'
-                                    });
-                                }
-                            });
+                            $("#dialog-edit").dialog("close");
+                            $("#gravidaTable").bootstrapTable('refresh');
                         }
 
                     },
@@ -157,6 +133,17 @@
             }
 
             $(function () {
+
+                $(".form_datetime").datetimepicker({
+                    language: 'zh-CN',
+                    format: 'yyyy-mm-dd', //显示格式
+                    todayHighlight: 1, //今天高亮
+                    minView: "month", //设置只显示到月份
+                    startView: 2,
+                    forceParse: 0,
+                    showMeridian: 1,
+                    autoclose: 1//选择后自动关闭
+                });
 
 
                 var aaa = $("span[name=xxx]");
@@ -244,7 +231,7 @@
                     autoOpen: false,
                     modal: true,
                     width: 400,
-                    height: 200,
+                    height: 300,
                     position: ["top", "top"],
                     buttons: {
                         添加: function () {
@@ -258,7 +245,7 @@
                     autoOpen: false,
                     modal: true,
                     width: 400,
-                    height: 200,
+                    height: 300,
                     position: "top",
                     buttons: {
                         修改: function () {
@@ -300,6 +287,47 @@
                         {
                             field: 'comaddr',
                             title: '编号',
+                            width: 150,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            field: 'inserday',
+                            title: '添加日期',
+                            width: 150,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value) {
+                                if (value != "" && value != null) {
+
+                                    var index = value.indexOf(".");
+                                    var str = value.substring(0, index);
+                                    return str;
+                                } else {
+                                    return  value;
+                                }
+                            }
+                        }, {
+                            field: 'feebleday',
+                            title: '无效期',
+                            width: 150,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value) {
+                                if (value != "" && value != null) {
+                                    return  value.replace(".0", "");
+                                } else {
+                                    return value;
+                                }
+                            }
+                        }, {
+                            field: 'inserpeople',
+                            title: '添加人',
+                            width: 150,
+                            align: 'center',
+                            valign: 'middle'
+                        }, {
+                            field: 'remarks',
+                            title: '备注',
                             width: 150,
                             align: 'center',
                             valign: 'middle'
@@ -401,6 +429,7 @@
                     comaddr = "0" + comaddr;
                 }
                 obj.comaddr = comaddr;
+                obj.inserpeople = parent.getusername();
                 $.ajax({async: false, cache: false, url: "homePage.gatewaymanage.existence.action", type: "GET", data: obj,
                     success: function (data) {
                         var rs = data.rs;
@@ -473,7 +502,19 @@
                         <tr>
                             <td>
                                 <span style="margin-left:10px;" >网关编号</span>&nbsp;
-                                <input id="comaddr" class="form-control" name="comaddr" style="width:150px;display: inline;" placeholder="请输入网关地址" type="text">
+                                <input id="comaddr" class="form-control" name="comaddr" style="width:150px;display: inline;" placeholder="请输入网关编号" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="margin-left:23px;" >无效期</span>&nbsp; 
+                                <input type="text" class="form-control form_datetime" name="feebleday"  readOnly id="timeMin1" style=" width: 150px;">  
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="margin-left:35px;" >备注</span>&nbsp;
+                                <input id="remarks" class="form-control" name="remarks" style="width:150px;display: inline;" placeholder="请输入备注" type="text">
                             </td>
                         </tr>
                     </tbody>
@@ -487,11 +528,22 @@
                     <tbody>
                         <tr>
                             <td>
-
                                 <input id="id_" name="id" type="hidden">
-                                <span style="margin-left:20px;">网关编号</span>&nbsp;
-                                <input id="comaddr_" class="form-control" name="comaddr" style="width:150px;display: inline;" placeholder="请输入网关编号" type="text">
-                            </td> 
+                                <span style="margin-left:10px;" >网关编号</span>&nbsp;
+                                <input id="comaddr_" class="form-control" name="comaddr" disabled="disabled" style="width:150px;display: inline;"  type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="margin-left:23px;" >无效期</span>&nbsp; 
+                                <input type="text" class="form-control form_datetime" name="feebleday"  readOnly id="feebleday1" style=" width: 150px;">  
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="margin-left:35px;" >备注</span>&nbsp;
+                                <input id="remarks1" class="form-control" name="remarks" style="width:150px;display: inline;" placeholder="请输入备注" type="text">
+                            </td>
                         </tr>
                     </tbody>
                 </table>

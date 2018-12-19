@@ -154,7 +154,7 @@
                 <tr>
                     <td><span name="xxxx" id="298">传感器在线</span>:</td>
                     <td style=" color: green;">-----------------</td>
-                    <td><img src="img/yl.png" style=" margin-left:-7px;"></td>
+                    <td><img src="img/cglv.png" style=" margin-left:-7px;"></td>
                 </tr>
                 <tr>
                     <td><span name="xxxx" id="299">传感器离线</span>:</td>

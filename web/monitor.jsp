@@ -85,7 +85,7 @@
                             }
                         }, {
                             field: 'onlinetime',
-                            title: '状态',
+                            title: '运行状态',
                             width: 25,
                             align: 'center',
                             valign: 'middle',

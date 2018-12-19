@@ -158,7 +158,7 @@
                                 var img2 = document.createElement("img");
                                 $(img2).attr("id", "limg" + loop.id);
                                 $(bodydiv2).addClass("hl");
-                                if (loop.l_state == 1) {
+                                if (loop.line == 1) {
                                     $(bodydiv2).addClass("hlzx");
                                 } else {
                                     $(bodydiv2).addClass("lx");
@@ -201,10 +201,10 @@
                                 var str = "";
                                 var str2 = "";  //湿度温度描述
                                 var pd = 0;
-                                var time1 = sensor.onlinetime.substring(0, 16);
-                                var time2 = sensor.dtime.substring(0, 16);
-                                var stime = TimeDifference(time1, time2);
-                                if (stime > 15) {
+//                                var time1 = sensor.onlinetime.substring(0, 16);
+//                                var time2 = sensor.dtime.substring(0, 16);
+//                                var stime = TimeDifference(time1, time2);
+                                if (sensor.errflag=="1") {
                                     $(bodydiv).addClass("lx");  //离线
                                 } else {
                                     $(bodydiv).addClass("cgqzx");  //在线 

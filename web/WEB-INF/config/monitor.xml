@@ -2,7 +2,7 @@
 <xforms>
     <xform desc="监视" id="monitorForm">
         <xhandle desc="查询传感表" id="getSensorList" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT GETDATE() as dtime, tb.name AS commname,*FROM  t_sensor tl,t_baseinfo AS tb WHERE tl.l_comaddr = tb.comaddr AND deplayment=1 AND   @CONDITION  " var="bootstrap">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT GETDATE() as dtime, tb.name AS commname,tb.online as online1,*FROM  t_sensor tl,t_baseinfo AS tb WHERE tl.l_comaddr = tb.comaddr AND deplayment=1 AND   @CONDITION  " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @pid">
                     <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr = ':l_comaddr'"></xfltpara>       
                     <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>

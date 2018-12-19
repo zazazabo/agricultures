@@ -90,29 +90,43 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                                var str = "";
-                                var time1 = value.substring(0, 16);
-                                var time2 = row.dtime.substring(0, 16);
-                                var stime = TimeDifference(time1, time2);
-                                var obj = {};
-                                obj.comaddr = row.l_comaddr; //selects[0];
-                                $.ajax({url: "login.gateway.comaddrzx.action", async: false, type: "get", datatype: "JSON", data: obj,
-                                    success: function (data) {
-                                        var arrlist = data.rs;
-                                        if (arrlist[0].online == 1) {
-                                            if (stime <= 15) {
-                                                str = "<img  src='img/online1.png'/>";
-                                            } else {
-                                                str = "<img  src='img/off.png'/>";
-                                            }
-                                        } else {
-                                            str = "<img  src='img/off.png'/>";
-                                        }
-                                    },
-                                    error: function () {
-                                        alert("提交添加失败！请刷新");
+                              console.log(row);
+                                var str=value;
+                                if (row.online1 == "1") {
+                                    if (row.errflag == "1") {
+                                        str = "<img  src='img/off.png'/>";
+                                    } else {
+                                        str = "<img  src='img/online1.png'/>";
                                     }
-                                });
+                                } else {
+                                    str = "<img  src='img/off.png'/>";
+                                }
+
+
+
+//                                var str = "";
+//                                var time1 = value.substring(0, 16);
+//                                var time2 = row.dtime.substring(0, 16);
+//                                var stime = TimeDifference(time1, time2);
+//                                var obj = {};
+//                                obj.comaddr = row.l_comaddr; //selects[0];
+//                                $.ajax({url: "login.gateway.comaddrzx.action", async: false, type: "get", datatype: "JSON", data: obj,
+//                                    success: function (data) {
+//                                        var arrlist = data.rs;
+//                                        if (arrlist[0].online == 1) {
+//                                            if (stime <= 15) {
+//                                                str = "<img  src='img/online1.png'/>";
+//                                            } else {
+//                                                str = "<img  src='img/off.png'/>";
+//                                            }
+//                                        } else {
+//                                            str = "<img  src='img/off.png'/>";
+//                                        }
+//                                    },
+//                                    error: function () {
+//                                        alert("提交添加失败！请刷新");
+//                                    }
+//                                });
                                 return  str;
                             }
                         }],
@@ -174,7 +188,7 @@
                 });
             });
             //定时刷新数据
-            setInterval('getcominfo()', 6000);
+            //setInterval('getcominfo()', 6000);
             function  getcominfo() {
                 var selects = $('#gayway').bootstrapTable('getSelections');
                 var l_comaddr = selects[0].comaddr;
@@ -246,7 +260,7 @@
                     <thead >
                         <tr >
                             <th data-width="25"    data-select="false" data-align="center" data-formatter='formartcomaddr'  data-checkbox="true"  ></th>
-<!--                            <th data-width="100" data-field="comaddr" data-align="center" data-formatter='formartcomaddr1'   >网关地址</th>-->
+                            <!--                            <th data-width="100" data-field="comaddr" data-align="center" data-formatter='formartcomaddr1'   >网关地址</th>-->
                             <th data-width="100" data-field="name" data-align="center"  data-formatter='formartcomaddr1'   >网关名称</th>
                         </tr>
                     </thead>       

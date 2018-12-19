@@ -96,8 +96,6 @@
 //                dealsend2("AC", data, 1, "readTrueTimeCB", l_comaddr, 0, 0, 0);
             }
 
-
-
             function setCheckTimeCB(obj) {
                 if (obj.status == "success") {
                     var data = Str2BytesH(obj.data);
@@ -118,7 +116,6 @@
                 }
 
             }
-
 
             function setCheckTime() {
 
@@ -153,12 +150,6 @@
                 dealsend2("10", data, "setCheckTimeCB", obj.l_comaddr, 0, 0, 3900);
             }
 
-
-
-
-
-
-
             function  initDataCB(obj) {
 
                 if (obj.status == "success") {
@@ -192,7 +183,6 @@
 
             }
 
-
             function  initData() {
                 var obj = $("#form1").serializeObject();
                 if (obj.l_comaddr == "") {
@@ -217,6 +207,7 @@
                 var data = buicode2(vv);
                 dealsend2("10", data, "initDataCB", obj.l_comaddr, 0, 0, 3928);
             }
+            
             function dateFormatter(value) {
                 var date = new Date(value);
                 var year = date.getFullYear().toString();

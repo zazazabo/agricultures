@@ -618,7 +618,7 @@
                        data-single-select="true"
                        data-striped="true"
                        data-click-to-select="true"
-                       data-search="true"
+                       data-search="false"
                        data-checkbox-header="true"
                        data-url="gayway.GaywayForm.getComaddrList.action?pid=${param.pid}&page=ALL" style="width:200px;" >
                     <thead >

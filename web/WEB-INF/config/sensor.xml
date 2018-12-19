@@ -154,6 +154,9 @@
         </xhandle>
 
 
+
+
+
         <xhandle desc="传感器场景方案" id="getSensorPlanBynum" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan tp where p_deployment='1' and p_attr=1 and p_type=1 and  @CONDITION  " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@p_scenenum AND @pid">

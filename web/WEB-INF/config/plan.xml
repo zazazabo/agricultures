@@ -24,7 +24,7 @@
         <xhandle desc="传感器场景方案2" id="getAllScennum" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT * FROM t_plan AS tp WHERE tp.p_attr=1 AND tp.p_type=1 AND p_show=1 AND  @CONDITION  " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@p_comaddr AND @pid">
-                     <xfltpara id="p_comaddr" nrp="1=2" para="p_comaddr" sql="p_comaddr = ':p_comaddr'">
+                    <xfltpara id="p_comaddr" nrp="1=2" para="p_comaddr" sql="p_comaddr = ':p_comaddr'">
                     </xfltpara>
                     <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
                     </xfltpara>
@@ -47,6 +47,16 @@
                 </xflt>
             </xsql>
         </xhandle>
+
+        <xhandle desc="获取场景值" id="getscenenum" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT TOP 1 * FROM t_scene WHERE  CONVERT(Nvarchar, day, 23)= CONVERT(Nvarchar, GETDATE(), 23) AND  @CONDITION   ORDER BY DAY DESC " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="comaddr = ':l_comaddr'">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+
 
     </xform>
 </xforms>

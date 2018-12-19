@@ -22,6 +22,7 @@
             var lang = '${param.lang}';//'zh_CN';
             var langs1 = parent.parent.getLnas();
             var infolist = {};
+            var scenenum = null;
             function layerAler(str) {
                 layer.alert(str, {
                     icon: 6,
@@ -42,31 +43,16 @@
                 $('#table0').bootstrapTable({
 //                    url: 'sensor.planForm.getSensorPlan.action',
                     clickToSelect: true,
+                    rowStyle: function (row, index) {
+                        console.log(scenenum);
+                        
+                                                if(scenenum==row.p_scenenum){
+                             return {css:{"color":"green"}}
+                        }
+                        
+                        return row;
+                    },
                     columns: [
-//                        {
-//                            title: '单选',
-//                            field: 'select',
-//                            //复选框
-//                            checkbox: true,
-//                            width: 25,
-//                            align: 'center',
-//                            valign: 'middle',
-//                            formatter: function (value, row, index, field) {
-//                                row.index = index;
-//                                return value;
-//                            }
-//
-//                        }, {
-//                            field: 'p_comaddr',
-//                            title: '网关', //信息点
-//                            width: 25,
-//                            align: 'center',
-//                            valign: 'middle',
-//                            colspan: 1,
-//                            formatter: function (value, row, index, field) {
-//                                return value;
-//                            }
-//                        },
                         {
                             field: 'p_name',
                             title: '场景名', //信息点
@@ -77,19 +63,21 @@
                             formatter: function (value, row, index, field) {
                                 return value;
                             }
-                        }, {
-                            field: 'p_scenenum',
-                            title: '场景号', //信息点
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle',
-                            colspan: 1,
-                            formatter: function (value, row, index, field) {
-                                if (value != null) {
-                                    return value.toString();
-                                }
-                            }
-                        }, {
+                        },
+//                        , {
+//                            field: 'p_scenenum',
+//                            title: '场景号', //信息点
+//                            width: 25,
+//                            align: 'center',
+//                            valign: 'middle',
+//                            colspan: 1,
+//                            formatter: function (value, row, index, field) {
+//                                if (value != null) {
+//                                    return value.toString();
+//                                }
+//                            }
+//                        }
+                         {
                             field: 'p_scene',
                             title: '条件1', //信息点
                             width: 25,
@@ -164,22 +152,6 @@
                                     return str;
                                 }
                             }
-                        }, {
-                            field: 'p_deployment',
-                            title: '部署情况', //信息点
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle',
-                            colspan: 1,
-                            formatter: function (value, row, index, field) {
-                                if (row.p_deployment == "0" || row.p_deployment == null) {
-                                    var str = "<span class='label label-warning'>" + '未部署' + "</span>";  //未部署
-                                    return  str;
-                                } else if (row.p_deployment == "1") {
-                                    var str = "<span class='label label-success'>" + '已部署' + "</span>";  //已部署
-                                    return  str;
-                                }
-                            }
                         }
                     ],
                     singleSelect: false,
@@ -236,7 +208,6 @@
                                 var o = data[i];
                                 infolist[o.id] = o.text;
                             }
-//                                console.log(infolist);
                             $("#table0").bootstrapTable('refresh', opt);
                         },
                         error: function () {
@@ -266,6 +237,9 @@
                 });
 
             })
+
+
+
             function formartcomaddr(value, row, index) {
                 if (index == 0) {
                     var l_comaddr = row.comaddr;
@@ -281,19 +255,35 @@
                     };
 
 
-                    var vv = [];
-                    vv.push(1);
-                    vv.push(3);
-                    var infonum = 3800 | 0x1000;
-                    vv.push(infonum >> 8 & 0xff);
-                    vv.push(infonum & 0xff);
 
-                    vv.push(0);
-                    vv.push(2); //寄存器数目 2字节   
+                    $.ajax({async: false, url: "plan.planForm.getscenenum.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            console.log(data);
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+                                scenenum = arrlist[0].scenenum
+                                var name = arrlist[0].scenename;
+                                $("#value2").val(name);
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
 
-                    var data = buicode2(vv);
-                    console.log(data);
-                    dealsend2("03", data, "readinfoCB", l_comaddr, 0, 0, 3800);
+//                    var vv = [];
+//                    vv.push(1);
+//                    vv.push(3);
+//                    var infonum = 3800 | 0x1000;
+//                    vv.push(infonum >> 8 & 0xff);
+//                    vv.push(infonum & 0xff);
+//
+//                    vv.push(0);
+//                    vv.push(2); //寄存器数目 2字节   
+//
+//                    var data = buicode2(vv);
+//                    console.log(data);
+//                    dealsend2("03", data, "readinfoCB", l_comaddr, 0, 0, 3800);
 
                     var obj = {};
                     obj.l_comaddr = l_comaddr;
@@ -554,7 +544,7 @@
                        data-single-select="true"
                        data-striped="true"
                        data-click-to-select="true"
-                       data-search="true"
+                       data-search="false"
                        data-checkbox-header="true"
                        data-url="gayway.GaywayForm.getComaddrList.action?pid=${param.pid}&page=ALL" style="width:200px;" >
                     <thead >
@@ -601,9 +591,9 @@
                                     <button type="button" id="btnswitch" onclick="switchloop()" class="btn btn-success btn-sm">
                                         设置
                                     </button>
-                                    <button type="button" id="btnswitch" onclick="readinfo()" class="btn btn-success btn-sm">
+<!--                                    <button type="button" id="btnswitch" onclick="readinfo()" class="btn btn-success btn-sm">
                                         读取
-                                    </button>
+                                    </button>-->
                                     <!--
                                                                         <span style="margin-left:10px;" id="48" name="xxx">回路</span>
                                                                         <select class="easyui-combobox" id="type" name="type" style="width:100px; height: 30px">
@@ -620,11 +610,11 @@
                                     </button>
 
                                 </td>
-                                <td >
-                                    <input  id="value2" name="value2" style="width:100px; margin-left: 10px; height: 30px;" class="form-control" type="text" >
-                                    <!--<button  type="button" onclick="tourloop()" class="btn btn-success btn-sm"><span name="xxx" id="454">读取回路状态</span></button>-->
+<!--                                <td >
+                                    <input  id="value2" readonly="true" name="value2" style="width:100px; margin-left: 10px; height: 30px;" class="form-control" type="text" >
+                                    <button  type="button" onclick="tourloop()" class="btn btn-success btn-sm"><span name="xxx" id="454">读取回路状态</span></button>
                                     &nbsp;
-                                </td>
+                                </td>-->
                             </tr>
 
 

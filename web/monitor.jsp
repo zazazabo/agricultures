@@ -90,43 +90,20 @@
                             align: 'center',
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
-                              console.log(row);
-                                var str=value;
+                                var str = value;
                                 if (row.online1 == "1") {
                                     if (row.errflag == "1") {
-                                        str = "<img  src='img/off.png'/>";
+
+                                        var str = '<img   src="img/off.png" onclick="tourlamp(' + row.l_comaddr + ',' + row.l_code + ')" />';
+                                        return  str;
                                     } else {
-                                        str = "<img  src='img/online1.png'/>";
+                                        var str = '<img   src="img/online1.png" onclick="tourlamp(' + row.l_comaddr + ',' + row.l_code + ')" />';
+                                        return  str;
                                     }
                                 } else {
-                                    str = "<img  src='img/off.png'/>";
+                                    var str = '<img   src="img/off.png" onclick="tourlamp(' + row.l_comaddr + ',' + row.l_code + ')" />';
+                                    return str;
                                 }
-
-
-
-//                                var str = "";
-//                                var time1 = value.substring(0, 16);
-//                                var time2 = row.dtime.substring(0, 16);
-//                                var stime = TimeDifference(time1, time2);
-//                                var obj = {};
-//                                obj.comaddr = row.l_comaddr; //selects[0];
-//                                $.ajax({url: "login.gateway.comaddrzx.action", async: false, type: "get", datatype: "JSON", data: obj,
-//                                    success: function (data) {
-//                                        var arrlist = data.rs;
-//                                        if (arrlist[0].online == 1) {
-//                                            if (stime <= 15) {
-//                                                str = "<img  src='img/online1.png'/>";
-//                                            } else {
-//                                                str = "<img  src='img/off.png'/>";
-//                                            }
-//                                        } else {
-//                                            str = "<img  src='img/off.png'/>";
-//                                        }
-//                                    },
-//                                    error: function () {
-//                                        alert("提交添加失败！请刷新");
-//                                    }
-//                                });
                                 return  str;
                             }
                         }],
@@ -153,12 +130,6 @@
                         if (selects.length > 0) {
                             comaddr = selects[0];
                         }
-                        console.log(comaddr);
-//                     var selects= $("#gravidaTable").bootstrapTable('getSelects');
-//                        var comaddr="";
-//                        if(selects.length>0){
-//                            comaddr=selects[0].comaddr;
-//                        }
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
                             search: params.search,
                             skip: params.offset,
@@ -254,7 +225,7 @@
                        data-single-select="true"
                        data-striped="true"
                        data-click-to-select="true"
-                       data-search="true"
+                       data-search="false"
                        data-checkbox-header="true"
                        data-url="gayway.GaywayForm.getComaddrList.action?pid=${param.pid}&page=ALL" style="width:200px;" >
                     <thead >

@@ -45,11 +45,11 @@
                     clickToSelect: true,
                     rowStyle: function (row, index) {
                         console.log(scenenum);
-                        
-                                                if(scenenum==row.p_scenenum){
-                             return {css:{"color":"green"}}
+
+                        if (scenenum == row.p_scenenum) {
+                            return {css: {"color": "green"}}
                         }
-                        
+
                         return row;
                     },
                     columns: [
@@ -64,7 +64,7 @@
                                 return value;
                             }
                         },
-                         {
+                        {
                             field: 'p_scene',
                             title: '条件1', //信息点
                             width: 25,
@@ -75,7 +75,7 @@
                                 if (isJSON(row.p_scene1)) {
                                     var obj = eval('(' + row.p_scene1 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString()   + "&emsp;"  + "上限:" + obj.up.toString() ;
+                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
                                     return str;
                                 }
                             }
@@ -90,7 +90,7 @@
                                 if (isJSON(row.p_scene2)) {
                                     var obj = eval('(' + row.p_scene2 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;"  + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
+                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
                                     return str;
                                 }
                             }
@@ -105,7 +105,7 @@
                                 if (isJSON(row.p_scene3)) {
                                     var obj = eval('(' + row.p_scene3 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" +  "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
+                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
                                     return str;
                                 }
                             }
@@ -120,7 +120,7 @@
                                 if (isJSON(row.p_scene4)) {
                                     var obj = eval('(' + row.p_scene4 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString()  + "&emsp;" + "上限:" + obj.up.toString() ;
+                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
                                     return str;
                                 }
                             }
@@ -135,7 +135,7 @@
                                 if (isJSON(row.p_scene5)) {
                                     var obj = eval('(' + row.p_scene5 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;"  + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString() ;
+                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
                                     return str;
                                 }
                             }
@@ -175,6 +175,8 @@
 
                 $('#gayway').on('check.bs.table', function (row, element) {
                     var l_comaddr = element.comaddr;
+
+
                     var obj = {};
                     obj.l_comaddr = l_comaddr;
                     obj.pid = "${param.pid}";
@@ -188,7 +190,7 @@
                         query: obj2,
                         silent: true
                     };
-                    infolist = {};
+
                     $.ajax({async: false, url: "sensor.sensorform.getInfoNumList2.action", type: "get", datatype: "JSON", data: obj,
                         success: function (data) {
                             for (var i = 0; i < data.length; i++) {
@@ -202,14 +204,8 @@
                         }
                     });
 
+                    getSceneNum(l_comaddr);
 
-
-//                    var opt = {
-//                        url: "loop.loopForm.getLoopList.action",
-//                        silent: true,
-//                        query: obj
-//                    };
-//                    $("#gravidaTable").bootstrapTable('refresh', opt);
                 });
 
                 $('#scenenum').combobox({
@@ -223,9 +219,55 @@
                     }
                 });
 
+
             })
 
 
+            function getSceneNumCB(obj) {
+                var data = Str2BytesH(obj.data);
+                var v = "";
+                for (var i = 0; i < data.length; i++) {
+                    v = v + sprintf("%02x", data[i]) + " ";
+                }
+                console.log(v);
+
+
+                var sceneval = data[3] * 256 + data[4];
+                console.log(scenenum, sceneval);
+                if (scenenum != sceneval) {
+                    scenenum=sceneval;
+                    $("#table0").bootstrapTable('refresh');
+                }
+//                scenenum = sceneval;
+//                console.log("场景:" + sceneval);
+//                    var obj2 = {};
+//                    obj2.l_comaddr = obj.comaddr;
+//                    obj2.pid = "${param.pid}";
+//                    obj2.p_comaddr = obj.comaddr;;
+//                    var opt = {
+//                        url: "plan.planForm.getSensorPlan.action",
+//                        query: obj2,
+//                        silent: true
+//                    };
+
+
+            }
+
+            function getSceneNum(l_comaddr) {
+                var vv = [];
+                vv.push(1);
+                vv.push(3);
+                var infonum = 3800 | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+
+                vv.push(0);
+                vv.push(2); //寄存器数目 2字节   
+
+                var data = buicode2(vv);
+                console.log(data);
+                dealsend2("03", data, "getSceneNumCB", l_comaddr, 0, 0, 3800);
+            }
 
             function formartcomaddr(value, row, index) {
                 if (index == 0) {
@@ -258,19 +300,8 @@
                         }
                     });
 
-//                    var vv = [];
-//                    vv.push(1);
-//                    vv.push(3);
-//                    var infonum = 3800 | 0x1000;
-//                    vv.push(infonum >> 8 & 0xff);
-//                    vv.push(infonum & 0xff);
-//
-//                    vv.push(0);
-//                    vv.push(2); //寄存器数目 2字节   
-//
-//                    var data = buicode2(vv);
-//                    console.log(data);
-//                    dealsend2("03", data, "readinfoCB", l_comaddr, 0, 0, 3800);
+
+                    getSceneNum(l_comaddr);
 
                     var obj = {};
                     obj.l_comaddr = l_comaddr;
@@ -293,14 +324,14 @@
                                 infolist[o.id] = o.text;
                             }
 //                                console.log(infolist);
-                            $("#table0").bootstrapTable('refresh', opt);
+                            //$("#table0").bootstrapTable('refresh', opt);
                         },
                         error: function () {
                             alert("提交失败！");
                         }
                     });
 
-
+                    $("#table0").bootstrapTable('refresh', opt);
                     return {disabled: false, checked: true//设置选中
                     };
 
@@ -456,69 +487,6 @@
             }
 
 
-            function readinfoCB(obj) {
-                var data = Str2BytesH(obj.data);
-                var v = "";
-                for (var i = 0; i < data.length; i++) {
-                    v = v + sprintf("%02x", data[i]) + " ";
-                }
-                console.log(v);
-//                var infonum = obj.val | 0x1000;
-//                var high = infonum >> 8 & 0xff;
-//                var low = infonum & 0xff;
-//
-//                if (data[2] == high&&data[3]==low) {
-//                        alert("读取成功");
-//
-//
-//                }
-
-                var sceneval = data[3] * 256 + data[4];
-
-                var ooo = {p_scenenum: sceneval, pid: "${param.pid}"};
-                console.log(ooo);
-                $.ajax({async: false, url: "sensor.planForm.getSensorPlanBynum.action", type: "get", datatype: "JSON", data: ooo,
-                    success: function (data) {
-                        var arrlist = data.rs;
-                        if (arrlist.length == 1) {
-                            var dataobj = arrlist[0];
-                            console.log(arrlist[0]);
-                            $("#value2").val(dataobj.p_name);
-                        }
-                    },
-                    error: function () {
-                        alert("提交失败！");
-                    }
-                });
-
-
-
-
-
-            }
-
-            function readinfo() {
-                var s2 = $('#gayway').bootstrapTable('getSelections');
-                if (s2.length == 0) {
-                    layerAler('请勾选网关');  //请勾选网关
-                }
-                var l_comaddr = s2[0].comaddr;
-
-                var obj = $("#form1").serializeObject();
-                var vv = [];
-                vv.push(1);
-                vv.push(3);
-                var infonum = 3800 | 0x1000;
-                vv.push(infonum >> 8 & 0xff);
-                vv.push(infonum & 0xff);
-
-                vv.push(0);
-                vv.push(2); //寄存器数目 2字节   
-
-                var data = buicode2(vv);
-                console.log(data);
-                dealsend2("03", data, "readinfoCB", l_comaddr, 0, 0, 3800);
-            }
         </script>
     </head>
     <body id="panemask">
@@ -578,9 +546,9 @@
                                     <button type="button" id="btnswitch" onclick="switchloop()" class="btn btn-success btn-sm">
                                         设置
                                     </button>
-<!--                                    <button type="button" id="btnswitch" onclick="readinfo()" class="btn btn-success btn-sm">
-                                        读取
-                                    </button>-->
+                                    <!--                                    <button type="button" id="btnswitch" onclick="readinfo()" class="btn btn-success btn-sm">
+                                                                            读取
+                                                                        </button>-->
                                     <!--
                                                                         <span style="margin-left:10px;" id="48" name="xxx">回路</span>
                                                                         <select class="easyui-combobox" id="type" name="type" style="width:100px; height: 30px">
@@ -597,18 +565,18 @@
                                     </button>
 
                                 </td>
-<!--                                <td >
-                                    <input  id="value2" readonly="true" name="value2" style="width:100px; margin-left: 10px; height: 30px;" class="form-control" type="text" >
-                                    <button  type="button" onclick="tourloop()" class="btn btn-success btn-sm"><span name="xxx" id="454">读取回路状态</span></button>
-                                    &nbsp;
-                                </td>-->
+                                <!--                                <td >
+                                                                    <input  id="value2" readonly="true" name="value2" style="width:100px; margin-left: 10px; height: 30px;" class="form-control" type="text" >
+                                                                    <button  type="button" onclick="tourloop()" class="btn btn-success btn-sm"><span name="xxx" id="454">读取回路状态</span></button>
+                                                                    &nbsp;
+                                                                </td>-->
                             </tr>
 
 
                         </tbody>
                     </table>
                 </form>
-                
+
                 <table id="table0" style="width:100%; " class="text-nowrap table table-hover table-striped">
 
                 </table> 

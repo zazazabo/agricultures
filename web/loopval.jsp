@@ -70,22 +70,8 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle'
-                        }, {
-                            field: 'l_site',
-                            title: '站号', //
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: 'l_info',
-                            title: '控制点号', //
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle',
-                            formatter: function (value, row, index, field) {
-                                return value;
-                            }
-                        }, {
+                        },
+                        {
                             field: 'l_worktype',
                             title: '工作模式', //合闸参数
                             width: 25,
@@ -150,8 +136,6 @@
                                         if (isJSON(strobj)) {
                                             var obj = eval('(' + strobj + ')');
                                             if (i == 0) {
-                                                console.log(infolist[obj.infonum.toString()]);
-                                                //strtime = strtime + "信息点号:" + obj.infonum + "  " + "偏差值:" + obj.offset + "&emsp;";
                                                 strret = strret + infolist[obj.infonum.toString()] + "&emsp;偏差着:" + obj.offset + "&emsp;";
                                             } else
                                             {
@@ -228,6 +212,9 @@
 
                 $('#gayway').on('check.bs.table', function (row, element) {
                     var l_comaddr = element.comaddr;
+                    var vv = [];
+                    dealsend2("loop", "00", "loopcb", l_comaddr, 0, 0, 0);
+
                     var obj = {};
                     obj.l_comaddr = l_comaddr;
                     obj.pid = "${param.pid}";
@@ -279,6 +266,18 @@
                         silent: true,
                         query: obj
                     };
+
+
+
+                    var vv = [];
+                    dealsend2("loop", "00", "loopcb", l_comaddr, 0, 0, 0);
+
+
+
+
+
+
+
 
                     $.ajax({async: false, url: "sensor.sensorform.getInfoNumList2.action", type: "get", datatype: "JSON", data: obj,
                         success: function (data) {
@@ -573,7 +572,7 @@
                        data-single-select="true"
                        data-striped="true"
                        data-click-to-select="true"
-                       data-search="true"
+                       data-search="false"
                        data-checkbox-header="true"
                        data-url="gayway.GaywayForm.getComaddrList.action?pid=${param.pid}&page=ALL" style="width:200px;" >
                     <thead >

@@ -430,8 +430,8 @@
                 vv.push(infonum >> 8 & 0xff); //起始地址
                 vv.push(infonum & 0xff);
                 vv.push(0);           //寄存器数目 2字节  
-                vv.push(4);
-                vv.push(8);           //字节数目长度  1字节
+                vv.push(6);
+                vv.push(12);           //字节数目长度  1字节
 
 
                 vv.push(info >> 8 & 0xff);  //信息点
@@ -446,8 +446,14 @@
                 vv.push(reg & 0xff);
 
                 var worktype = parseInt(ele.worktype);
-                vv.push(worktype >> 8 & 0xff)   //寄存器变量值
+                vv.push(worktype >> 8 & 0xff)   //工作模式
                 vv.push(worktype & 0xff);
+                
+                vv.push(0)
+                vv.push(0)  //数值
+                
+                vv.push(0); //
+                vv.push(1);
 
                 var data = buicode2(vv);
                 dealsend2("10", data, "deploySensorCB", o.l_comaddr, 1, ele.id, info);

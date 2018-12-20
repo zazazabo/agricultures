@@ -47,13 +47,14 @@
                         var strw2 = w2 & 0x01 == 0x01 ? "打开" : "关闭";
                         ; //                        var worktype = data[9] * 256 + data[10];
                         var dataval = data[11] * 256 + data[12];
-                        var f1 = data[13];
-                        var strw3 = f1 & 0x01 == 0x01 ? "有" : "无";
+                        var f1 = data[13] * 256 + data[14];
+                        var strw3 = f1 & 0x01 == 0x01 ? "开" : "关";
+
                         var faultnum = data[15] * 256 + data[16];
 
-                        layerAler("信息点:" + info + "<br>" + "站号" + site + "<br>" + "数据位置"
+                        layerAler("信息点:" + info + "<br>" + "站号:" + site + "<br>" + "数据位置："
                                 + regpos + "<br>" + "工作模式:" + strw1 + "<br>" + "通信故障参数:"
-                                + strw2 + "<br>" + "探测值：" + dataval + "<br>" + "故障:" + strw3 + "<br>"
+                                + strw3 + "<br>" + "探测值：" + dataval + "<br>"
                                 + "通信出错次数:" + faultnum);
                     }
 
@@ -85,8 +86,8 @@
 
 
             function toursensor(comaddr, infonum) {
-              console.log(comaddr);
-              console.log(infonum);
+                console.log(comaddr);
+                console.log(infonum);
             }
             $(function () {
                 $('#gravidaTable').bootstrapTable({
@@ -157,19 +158,15 @@
                                 var str = value;
                                 if (row.online1 == "1") {
                                     if (row.errflag == "1") {
-
-//                                        var str = '<img data-toggle="tooltip"  src="img/off.png" onclick="toursensor(' + row.l_comaddr + ',' + row.name + ')" />';
-
+                                        var str = '<img   src="img/off.png" onclick="readSensor(\'' + row.l_comaddr + '\',\'' + row.infonum + '\'' + ')"/>';
                                         return  str;
                                     } else {
                                         var str = '<img   src="img/online1.png" onclick="readSensor(\'' + row.l_comaddr + '\',\'' + row.infonum + '\'' + ')"/>';
-                                        console.log(str);
-//                                                      var str = '<img data-toggle="tooltip"  src="img/online1.png" onclick="toursensor(' + row.l_comaddr + ',' + row.name + ')" />';
                                         return  str;
                                     }
                                 } else {
-//                                        var str = '<img data-toggle="tooltip"  src="img/off.png" onclick="toursensor(' + row.l_comaddr + ',' + row.name + ')" />';
-                                    return str;
+                                    var str = '<img   src="img/off.png" onclick="readSensor(\'' + row.l_comaddr + '\',\'' + row.infonum + '\'' + ')"/>';
+                                    return  str;
                                 }
                                 return  str;
                             }

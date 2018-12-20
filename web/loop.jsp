@@ -675,16 +675,18 @@
                         if (isJSON(timestr)) {
                             var objtime = eval('(' + timestr + ')');
                             $("#time" + o1 + o1).spinner('setValue', objtime.time);
-                           // $("#timeval" + o1 + o1).val(objtime.value);
+                            // $("#timeval" + o1 + o1).val(objtime.value);
                             $("#timeval" + o1 + o1).combobox('setValue', objtime.value);
                         }
 
                         if (select.l_deplayment == 1) {
                             $("#time" + o1 + o1).spinner('readonly', true);
-                            $("#timeval" + o1 + o1).attr('readonly', true);
+                            $("#timeval" + o1 + o1).combobox('readonly', true);
+                            
+                            
                         } else {
                             $("#time" + o1 + o1).spinner('readonly', false);
-                            $("#timeval" + o1 + o1).attr('readonly', false);
+                            $("#timeval" + o1 + o1).combobox('readonly', false);
                         }
 
 
@@ -713,6 +715,17 @@
                     var obj1 = eval('(' + select.l_val1 + ')');
                     $("#infonum1").combobox('setValue', obj1.infonum.toString());
                     $("#offset1").val(obj1.offset == null ? "0" : obj1.offset.toString());
+
+                      if (select.l_deplayment == 1) {
+                            $("#offset1").attr('readonly', true);
+                            $("#infonum1").combobox('readonly', true)
+                        } else {
+                             $("#offset1").attr('readonly', false);
+                             $("#infonum1").combobox('readonly', false)
+                        }
+
+
+
 
                     for (var i = 0; i < 4; i++) {
                         var o1 = (i + 1 + 1).toString();
@@ -1277,7 +1290,7 @@
                                 <td>
                                     <button  type="button" style="margin-left:20px;" onclick="search()" class="btn btn-success btn-xm">
                                         <!-- 搜索-->
-                                       筛选
+                                        筛选
                                     </button>&nbsp;
                                     <button  type="button" style="margin-left:20px;" onclick="deployLoop()" class="btn btn-success btn-xm">
                                         部署
@@ -1286,9 +1299,9 @@
                                     <button  type="button" style="margin-left:20px;" onclick="removeLoop()" class="btn btn-success btn-xm">
                                         移除
                                     </button>&nbsp;
-<!--                                    <button  type="button" style="margin-left:20px;" onclick="readinfo()" class="btn btn-success btn-xm">
-                                        读取
-                                    </button>&nbsp;-->
+                                    <!--                                    <button  type="button" style="margin-left:20px;" onclick="readinfo()" class="btn btn-success btn-xm">
+                                                                            读取
+                                                                        </button>&nbsp;-->
 
                                 </td>
                             </tr>
@@ -1672,11 +1685,19 @@
                                         </tbody>-->
                     <tbody>
                         <tr>
-                            <td></td>
-                            <td>信息点名</td>
-                            <td> <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum" name="infonum" style="width:150px; height: 30px"></select></td>
-                            <td>偏差值</td>
-                            <td><input id="offset" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="偏差值" type="text" /></td>
+                            <td colspan="5"align="left">
+
+                                <span>
+                                    信息点:
+                                </span>
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum" name="infonum" style="width:100px; height: 30px"></select>
+                                <span style=" margin-left: 100px;">
+                                    偏差值:
+                                </span>
+
+                                <input id="offset" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="偏差值" type="text" />
+                            </td>
+
                         </tr>
                         <tr style=" height: 40px;">
                             <th></th>
@@ -2042,13 +2063,19 @@
                                                     </td>
                                                 </tr>                      -->
                         <tr>
-                            <td></td>
-                            <td>信息点名</td>
-                            <td> 
-                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum1" name="infonum" style="width:70px; height: 30px"></select>
+
+                            <td colspan="5"align="left">
+
+                                <span>
+                                    信息点:
+                                </span>
+                                <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="infonum1" name="infonum" style="width:100px; height: 30px"></select>
+                                <span style=" margin-left: 100px;">
+                                    偏差值:
+                                </span>
+
+                                <input id="offset1" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="偏差值" type="text" />
                             </td>
-                            <td>偏差值</td>
-                            <td><input id="offset1" class="form-control"  name="offset" style="width:50px;display: inline;" placeholder="偏差值" type="text" /></td>
                         </tr>
                         <tr style=" height: 40px;">
                             <th></th>

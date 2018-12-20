@@ -209,6 +209,9 @@
 
                 $('#gayway').on('check.bs.table', function (row, element) {
                     var l_comaddr = element.comaddr;
+                    var vv = [];
+                    dealsend2("sensor", "00", "sensorCB", l_comaddr, 0, 0, 0);
+
                     var obj = {};
                     obj.l_comaddr = l_comaddr;
                     obj.pid = "${param.pid}";
@@ -253,6 +256,10 @@
             function formartcomaddr(value, row, index) {
                 if (index == 0) {
                     var l_comaddr = row.comaddr;
+
+                    var vv = [];
+                    dealsend2("sensor", "00", "sensorCB", l_comaddr, 0, 0, 0);
+
                     var l_comaddr = row.comaddr;
                     var obj = {};
                     obj.l_comaddr = l_comaddr;

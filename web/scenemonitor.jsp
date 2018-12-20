@@ -64,19 +64,6 @@
                                 return value;
                             }
                         },
-//                        , {
-//                            field: 'p_scenenum',
-//                            title: '场景号', //信息点
-//                            width: 25,
-//                            align: 'center',
-//                            valign: 'middle',
-//                            colspan: 1,
-//                            formatter: function (value, row, index, field) {
-//                                if (value != null) {
-//                                    return value.toString();
-//                                }
-//                            }
-//                        }
                          {
                             field: 'p_scene',
                             title: '条件1', //信息点
@@ -88,7 +75,7 @@
                                 if (isJSON(row.p_scene1)) {
                                     var obj = eval('(' + row.p_scene1 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString()   + "&emsp;"  + "上限:" + obj.up.toString() ;
                                     return str;
                                 }
                             }
@@ -103,7 +90,7 @@
                                 if (isJSON(row.p_scene2)) {
                                     var obj = eval('(' + row.p_scene2 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;"  + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
                                     return str;
                                 }
                             }
@@ -118,7 +105,7 @@
                                 if (isJSON(row.p_scene3)) {
                                     var obj = eval('(' + row.p_scene3 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;" +  "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString();
                                     return str;
                                 }
                             }
@@ -133,7 +120,7 @@
                                 if (isJSON(row.p_scene4)) {
                                     var obj = eval('(' + row.p_scene4 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;" + "下限:" + obj.down.toString()  + "&emsp;" + "上限:" + obj.up.toString() ;
                                     return str;
                                 }
                             }
@@ -148,7 +135,7 @@
                                 if (isJSON(row.p_scene5)) {
                                     var obj = eval('(' + row.p_scene5 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;"  + "下限:" + obj.down.toString() + "&emsp;" + "上限:" + obj.up.toString() ;
                                     return str;
                                 }
                             }
@@ -621,6 +608,7 @@
                         </tbody>
                     </table>
                 </form>
+                
                 <table id="table0" style="width:100%; " class="text-nowrap table table-hover table-striped">
 
                 </table> 

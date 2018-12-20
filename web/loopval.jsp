@@ -44,7 +44,6 @@
                     //url: "loop.loopForm.getLoopList.action",
                     columns: [
                         {
-                            //field: 'Number',//可不加  
                             title: '序号', //标题  可不加  
                             align: "center",
                             width: "132px",
@@ -231,40 +230,6 @@
                                 } else {
                                     return  str;
                                 }
-
-//                                var worktype = parseInt(row.l_worktype);
-//                                if (worktype >> 1 & 0x1 == 1) {
-//                                    var str = row.l_val1;
-//                                    var strtime = "";
-//                                    for (var i = 0; i < 5; i++) {
-//                                        var index = "l_val" + (i + 1).toString();
-//                                        var strobj = row[index];
-//                                        if (isJSON(strobj)) {
-//                                            var obj = eval('(' + strobj + ')');
-//                                            strtime = strtime + "时间:" + obj.time + "  " + " 值:" + obj.value + "&emsp;";
-//
-//                                        }
-//                                    }
-//                                    // strtime = strtime.substr(0, strtime.length - 1);
-//                                    return strtime;
-//                                } else if (worktype >> 3 & 0x1 == 1) {
-//                                    var strtime = "";
-//                                    for (var i = 0; i < 5; i++) {
-//                                        var index = "l_val" + (i + 1).toString();
-//                                        var strobj = row[index];
-//                                        if (isJSON(strobj)) {
-//                                            var obj = eval('(' + strobj + ')');
-//                                            if (i == 0) {
-//                                                strtime = strtime + "信息点号:" + obj.info + "  " + "偏差值:" + obj.value + "&emsp;";
-//                                            } else
-//                                            {
-//                                                strtime = strtime + "信:" + obj.info + "  " + "值:" + obj.value + "&emsp;";
-//                                            }
-//
-//                                        }
-//                                    }
-//                                    return  strtime;
-//                                }
                                 return value;
                             }
                         }, {

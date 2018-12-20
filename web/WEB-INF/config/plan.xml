@@ -28,11 +28,29 @@
                 <xflt id="CONDITION" nrp="" tpl="@p_comaddr AND @pid">
                     <xfltpara id="p_comaddr" nrp="1=2" para="p_comaddr" sql="p_comaddr = ':p_comaddr'">
                     </xfltpara>
-                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">  
                     </xfltpara>
                 </xflt>
             </xsql>
         </xhandle>
+
+
+        <xhandle desc="传感器场景方案3" id="getAllScennumName" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="SELECT p_scenenum as id,p_name as text FROM t_plan AS tp WHERE tp.p_attr=1 AND tp.p_type=1 AND p_show=1 AND  @CONDITION  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @pid">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="p_comaddr = ':l_comaddr'">
+                    </xfltpara>
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="pid = ':pid'">
+                    </xfltpara>  
+                </xflt>
+            </xsql>
+        </xhandle>
+
+
+
+
+
+
 
         <xhandle desc="添加场景场景方案" id="addSensorScenePlan2" rtn="rs" rtnype="JSON">
             <xsql id="a1" para="pid,p_comaddr,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name,p_show,p_scenenum" tpe="DDL" tpl="insert into t_plan(pid,p_comaddr,p_attr,p_type,p_scene1,p_scene2,p_scene3,p_scene4,p_scene5,p_name,p_show,p_scenenum) values(':pid',':p_comaddr',:p_attr,:p_type,':p_scene1',':p_scene2',':p_scene3',':p_scene4',':p_scene5',':p_name',1,:p_scenenum) " var="rs"></xsql>
@@ -58,6 +76,13 @@
                 </xflt>
             </xsql>
         </xhandle>
+
+
+
+
+
+
+
 
 
     </xform>

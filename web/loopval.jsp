@@ -21,7 +21,8 @@
             var o_pid = parent.parent.getpojectId();
             var lang = '${param.lang}';//'zh_CN';
             var langs1 = parent.parent.getLnas();
-
+            var infolist = {};
+            var infoscene = {};
             function layerAler(str) {
                 layer.alert(str, {
                     icon: 6,
@@ -44,6 +45,7 @@
                     //url: "loop.loopForm.getLoopList.action",
                     columns: [
                         {
+                            //field: 'Number',//可不加  
                             title: '序号', //标题  可不加  
                             align: "center",
                             width: "132px",
@@ -91,8 +93,6 @@
                             valign: 'middle',
                             formatter: function (value, row, index, field) {
                                 var type = parseInt(value);
-//                                var str = type & 0x1 == 1 ? "自动" : "手动";
-
                                 var str = "";
                                 if (type >> 1 & 0x1 == 1) {
                                     return "时间";
@@ -113,120 +113,55 @@
                             formatter: function (value, row, index, field) {
                                 var p_comaddr = row.l_comaddr;   //网关
                                 var type = parseInt(row.l_worktype);
-//                                var str = type & 0x1 == 1 ? "自动" : "手动";
-
                                 var str = "";
                                 if (type >> 1 & 0x1 == 1) {
-                                    var val1 = eval('(' + row.l_val1 + ')');  //时间1
-                                    var val2 = eval('(' + row.l_val2 + ')');  //时间2
-                                    var val3 = eval('(' + row.l_val3 + ')');  //时间3
-                                    var val4 = eval('(' + row.l_val4 + ')');  //时间4
-                                    var val5 = eval('(' + row.l_val5 + ')');  //时间5
-                                    var v1 = "";
-                                    var v2 = "";
-                                    var v3 = "";
-                                    var v4 = "";
-                                    var v5 = "";
-                                    if (val1.value == 1) {
-                                        v1 = "闭合";
-                                    } else {
-                                        v1 = "断开";
+                                    var strtime = "";
+                                    for (var i = 0; i < 5; i++) {
+                                        var index = "l_val" + (i + 1).toString();
+                                        var strobj = row[index];
+                                        if (isJSON(strobj)) {
+                                            var obj = eval('(' + strobj + ')');
+                                            var s1 = obj.value == 1 ? "闭合" : "断开";
+                                            strtime = strtime + obj.time + ":" + s1 + "&emsp;";
+                                        }
+
                                     }
-                                    if (val2.value == 1) {
-                                        v2 = "闭合";
-                                    } else {
-                                        v2 = "断开";
-                                    }
-                                    if (val3.value == 1) {
-                                        v3 = "闭合";
-                                    } else {
-                                        v3 = "断开";
-                                    }
-                                    if (val4.value == 1) {
-                                        v4 = "闭合";
-                                    } else {
-                                        v4 = "断开";
-                                    }
-                                    if (val5.value == 1) {
-                                        v5 = "闭合";
-                                    } else {
-                                        v5 = "断开";
-                                    }
-                                    //  console.log(typeof(val1));
-                                    var str = val1.time + ":" + v1 + "   " + val2.time + ":" + v2 + "   " + val3.time + ":" + v3 + "   " + val4.time + ":" + v4 + "   " + val5.time + ":" + v5;
-                                    return  str;
+                                    return strtime;
                                 } else if (type >> 2 & 0x1 == 1) {
-                                    var str = "";  //return 字符串
-                                    var pname = ""; //场景名称
-                                    var pvalue = "";  //场景值
-                                    for (var i = 1; i < 6; i++) {
 
-                                        var index = "l_val" + (i).toString();
+                                    var strret = "";
+                                    for (var i = 0; i < 5; i++) {
+                                        var index = "l_val" + (i + 1).toString();
                                         var strobj = row[index];
                                         if (isJSON(strobj)) {
                                             var obj = eval('(' + strobj + ')');
-                                            var pobj = {};
-                                            pobj.p_comaddr = p_comaddr;
-                                            pobj.p_scenenum = obj.scene;
-                                            $.ajax({url: "homePage.loopval.getl_name.action", async: false, type: "get", datatype: "JSON", data: pobj,
-                                                success: function (data) {
-                                                    var rs = data.rs;
-                                                    pname = rs[0].p_name;
-                                                },
-                                                error: function () {
-                                                    alert("提交添加失败！请刷新");
-                                                }
-                                            });
-                                            if (obj.value == 1) {
-                                                pvalue = "闭合";
-                                            } else {
-                                                pvalue = "断开";
-                                            }
-
+                                            var scenename = infoscene[obj.scene.toString()];
+                                            var s1 = obj.value == 1 ? "闭合" : "断开";
+                                            strret = strret + scenename + ":" + s1 + "&emsp;";
                                         }
-                                        str = str + pname + ":" + pvalue + "         ";
                                     }
-
-                                    return str;
+                                    return  strret;
                                 } else if (type >> 3 & 0x1 == 1) {
-                                    var name = "";
-                                    var svalue = "";
-                                    for (var i = 1; i < 6; i++) {
 
-                                        var index = "l_val" + (i).toString();
+                                    var strret = "";
+                                    for (var i = 0; i < 5; i++) {
+                                        var index = "l_val" + (i + 1).toString();
                                         var strobj = row[index];
                                         if (isJSON(strobj)) {
                                             var obj = eval('(' + strobj + ')');
-                                            if (index == "l_val1") {
-                                                console.log("i:"+i);
-                                                var pobj = {};
-                                                pobj.l_comaddr = p_comaddr;
-                                                pobj.infonum = obj.infonum;
-                                                $.ajax({url: "homePage.loopval.getInfoname.action", async: false, type: "get", datatype: "JSON", data: pobj,
-                                                    success: function (data) {
-                                                        var rs = data.rs;
-                                                        name = rs[0].name;
-                                                        str = "信息点名:"+name+ "         ";;
-                                                    },
-                                                    error: function () {
-                                                        alert("提交添加失败！请刷新");
-                                                    }
-                                                });
-                                            } else {
-                                                if (obj.value == 1) {
-                                                    svalue = "闭合";
-                                                } else {
-                                                    svalue = "断开";
-                                                }
-                                                str = str + "读数值:"+obj.info + "         "+"控制值:"+svalue+"         ";
+                                            if (i == 0) {
+                                                console.log(infolist[obj.infonum.toString()]);
+                                                //strtime = strtime + "信息点号:" + obj.infonum + "  " + "偏差值:" + obj.offset + "&emsp;";
+                                                strret = strret + infolist[obj.infonum.toString()] + "&emsp;偏差着:" + obj.offset + "&emsp;";
+                                            } else
+                                            {
+                                                var s1 = obj.value == 1 ? "闭合" : "断开";
+                                                strret = strret + obj.info + ":" + s1 + "&emsp;";
                                             }
-
-
 
                                         }
                                     }
-
-                                    return str;
+                                    return  strret;
                                 } else {
                                     return  str;
                                 }
@@ -296,13 +231,39 @@
                     var obj = {};
                     obj.l_comaddr = l_comaddr;
                     obj.pid = "${param.pid}";
-                    console.log(obj);
-//                    var opt = {
-//                        url: "loop.loopForm.getLoopList.action",
-//                        silent: true,
-//                        query: obj
-//                    };
-//                    $("#gravidaTable").bootstrapTable('refresh', opt);
+                    $.ajax({async: false, url: "sensor.sensorform.getInfoNumList2.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var o = data[i];
+                                infolist[o.id] = o.text;
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
+
+                    $.ajax({async: false, url: "plan.planForm.getAllScennumName.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var o = data[i];
+                                infoscene[o.id] = o.text;
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
+
+
+                    var opt = {
+                        url: "loop.loopForm.getLoopList.action",
+                        silent: false,
+                        query: obj
+                    };
+                    $("#gravidaTable").bootstrapTable('refresh', opt);
                 });
 
             })
@@ -313,13 +274,45 @@
                     obj.l_comaddr = l_comaddr;
                     obj.pid = "${param.pid}";
                     obj.l_deplayment = 1;
-                    console.log(obj);
                     var opt = {
                         url: "loop.loopForm.getLoopList.action",
                         silent: true,
                         query: obj
                     };
+
+                    $.ajax({async: false, url: "sensor.sensorform.getInfoNumList2.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var o = data[i];
+                                infolist[o.id] = o.text;
+
+                            }
+
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
+                    $.ajax({async: false, url: "plan.planForm.getAllScennumName.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var o = data[i];
+                                infoscene[o.id] = o.text;
+                            }
+                            console.log(infoscene);
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
                     $("#gravidaTable").bootstrapTable('refresh', opt);
+
+
+
+
+
                     return {disabled: false, checked: true//设置选中
                     };
 
@@ -383,7 +376,6 @@
             }
 
             function switchloop() {
-
                 var s2 = $('#gayway').bootstrapTable('getSelections');
                 if (s2.length == 0) {
                     layerAler('请勾选网关');  //请勾选网关
@@ -509,8 +501,6 @@
                 );
 
             }
-
-
             function readinfoCB(obj) {
                 var data = Str2BytesH(obj.data);
                 var v = "";
@@ -583,7 +573,7 @@
                        data-single-select="true"
                        data-striped="true"
                        data-click-to-select="true"
-                       data-search="false"
+                       data-search="true"
                        data-checkbox-header="true"
                        data-url="gayway.GaywayForm.getComaddrList.action?pid=${param.pid}&page=ALL" style="width:200px;" >
                     <thead >

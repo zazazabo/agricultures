@@ -448,10 +448,10 @@
                 var worktype = parseInt(ele.worktype);
                 vv.push(worktype >> 8 & 0xff)   //工作模式
                 vv.push(worktype & 0xff);
-                
+
                 vv.push(0)
                 vv.push(0)  //数值
-                
+
                 vv.push(0); //
                 vv.push(1);
 
@@ -676,7 +676,7 @@
                             align: 'center',
                             valign: 'middle',
                             sortable: true,
-                            sortOrder: "desc",
+                            //sortOrder: "desc",
                             formatter: function (value, row, index, field) {
                                 return  value.toString();
                             }
@@ -744,10 +744,10 @@
                     smartDisplay: false,
                     clickToSelect: true,
                     singleSelect: false,
-                    sortName: 'infonum',
+                    sortName: 's_index',
                     locale: 'zh-CN', //中文支持,
                     showColumns: true,
-                    sortOrder: 'desc',
+                    sortOrder: 'asc',
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
@@ -1027,12 +1027,11 @@
             }
 
             function bc() {
-                var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
+                // var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
                 var allTableData = $("#gravidaTable").bootstrapTable('getData');
-                console.log(allTableData.length);
-                console.log(allTableData[0]);
                 for (var i = 0; i < allTableData.length; i++) {
                     var sen = allTableData[i];
+                    console.log("i:" + allTableData[i].name);
                     var obj = {};
                     obj.id = sen.id;
                     obj.s_index = i;
@@ -1150,7 +1149,7 @@
             <button class="btn btn-danger ctrol" onclick="removeshow();">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;移除首页显示
             </button>
-            <button class="btn btn-success ctrol" onclick="sy()">
+<!--            <button class="btn btn-success ctrol" onclick="sy()">
                 &nbsp;上移
             </button>
             <button class="btn btn-success ctrol" onclick="xy()">
@@ -1158,7 +1157,7 @@
             </button>
             <button class="btn btn-success ctrol" onclick="bc()">
                 &nbsp;保存
-            </button>
+            </button>-->
         </div>
 
         <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped table-bordered">

@@ -305,65 +305,65 @@
             }
 
 
-
-            function  readSensorCB(obj) {
-                $('#panemask').hideLoading();
-                if (obj.status == "success") {
-                    var data = Str2BytesH(obj.data);
-                    var v = "";
-                    for (var i = 0; i < data.length; i++) {
-                        v = v + sprintf("%02x", data[i]) + " ";
-                    }
-                    console.log(v);
-                    if (data[1] == 0x03) {
-                        layerAler("读取成功");
-                        var len = data[2];
-                        var info = data[3] * 256 + data[4];
-                        var site = data[5] * 256 + data[6];
-                        var regpos = data[7] * 256 + data[8];
-                        var w1 = data[9];
-                        var w2 = data[10];
-                        var strw1 = w1 & 0x01 == 0x01 ? "开关量" : "模拟量";
-                        var strw2 = w2 & 0x01 == 0x01 ? "打开" : "关闭";
-                        ; //                        var worktype = data[9] * 256 + data[10];
-                        var dataval = data[11] * 256 + data[12];
-                        var f1 = data[13];
-                        var strw3 = f1 & 0x01 == 0x01 ? "有" : "无";
-                        var faultnum = data[15] * 256 + data[16];
-
-                        layerAler("信息点:" + info + "<br>" + "站号" + site + "<br>" + "数据位置"
-                                + regpos + "<br>" + "工作模式:" + strw1 + "<br>" + "通信故障参数:"
-                                + strw2 + "<br>" + "探测值：" + dataval + "<br>" + "故障:" + strw3 + "<br>"
-                                + "通信出错次数:" + faultnum);
-                    }
-
-                }
-                console.log(obj);
-            }
-
-            function readSensor() {
-                var selects = $('#gravidaTable').bootstrapTable('getSelections');
-                var o = $("#form1").serializeObject();
-
-                var vv = new Array();
-                if (selects.length == 0) {
-                    layerAler('请勾选表格数据'); //请勾选表格数据
-                    return;
-                }
-                var ele = selects[0];
-                o.l_comaddr = ele.l_comaddr;
-                var vv = [];
-                vv.push(1);
-                vv.push(3);
-                var info = parseInt(ele.infonum);
-                var infonum = (2000 + info * 10) | 0x1000;
-                vv.push(infonum >> 8 & 0xff);
-                vv.push(infonum & 0xff);
-                vv.push(0);
-                vv.push(7); //寄存器数目 2字节                         
-                var data = buicode2(vv);
-                dealsend2("03", data, "readSensorCB", o.l_comaddr, 0, ele.id, info);
-            }
+//
+//            function  readSensorCB(obj) {
+//                $('#panemask').hideLoading();
+//                if (obj.status == "success") {
+//                    var data = Str2BytesH(obj.data);
+//                    var v = "";
+//                    for (var i = 0; i < data.length; i++) {
+//                        v = v + sprintf("%02x", data[i]) + " ";
+//                    }
+//                    console.log(v);
+//                    if (data[1] == 0x03) {
+//                        layerAler("读取成功");
+//                        var len = data[2];
+//                        var info = data[3] * 256 + data[4];
+//                        var site = data[5] * 256 + data[6];
+//                        var regpos = data[7] * 256 + data[8];
+//                        var w1 = data[9];
+//                        var w2 = data[10];
+//                        var strw1 = w1 & 0x01 == 0x01 ? "开关量" : "模拟量";
+//                        var strw2 = w2 & 0x01 == 0x01 ? "打开" : "关闭";
+//                        ; //                        var worktype = data[9] * 256 + data[10];
+//                        var dataval = data[11] * 256 + data[12];
+//                        var f1 = data[13];
+//                        var strw3 = f1 & 0x01 == 0x01 ? "有" : "无";
+//                        var faultnum = data[15] * 256 + data[16];
+//
+//                        layerAler("信息点:" + info + "<br>" + "站号" + site + "<br>" + "数据位置"
+//                                + regpos + "<br>" + "工作模式:" + strw1 + "<br>" + "通信故障参数:"
+//                                + strw2 + "<br>" + "探测值：" + dataval + "<br>" + "故障:" + strw3 + "<br>"
+//                                + "通信出错次数:" + faultnum);
+//                    }
+//
+//                }
+//                console.log(obj);
+//            }
+//
+//            function readSensor() {
+//                var selects = $('#gravidaTable').bootstrapTable('getSelections');
+//                var o = $("#form1").serializeObject();
+//
+//                var vv = new Array();
+//                if (selects.length == 0) {
+//                    layerAler('请勾选表格数据'); //请勾选表格数据
+//                    return;
+//                }
+//                var ele = selects[0];
+//                o.l_comaddr = ele.l_comaddr;
+//                var vv = [];
+//                vv.push(1);
+//                vv.push(3);
+//                var info = parseInt(ele.infonum);
+//                var infonum = (2000 + info * 10) | 0x1000;
+//                vv.push(infonum >> 8 & 0xff);
+//                vv.push(infonum & 0xff);
+//                vv.push(0);
+//                vv.push(7); //寄存器数目 2字节                         
+//                var data = buicode2(vv);
+//                dealsend2("03", data, "readSensorCB", o.l_comaddr, 0, ele.id, info);
+//            }
 
             function deploySensorCB(obj) {
                 $('#panemask').hideLoading();
@@ -1091,7 +1091,7 @@
                                 </td>
                                 <td>
                                     <button  type="button" style="margin-left:20px;" onclick="search()" class="btn btn-success btn-xm">
-                                        搜索
+                                        筛选
                                     </button>&nbsp;
                                 </td>
 
@@ -1101,9 +1101,9 @@
                                 <td>
                                     <button style="margin-left:10px;" id="btnremoveSensor" type="button" onclick="removeSensor()" class="btn btn-success btn-sm">移除</button>
                                 </td>
-                                <td>
+<!--                                <td>
                                     <button style="margin-left:10px;"  type="button" onclick="readSensor()" class="btn btn-success btn-sm">读取</button>
-                                </td> 
+                                </td> -->
 
                             </tr>
                         </tbody>

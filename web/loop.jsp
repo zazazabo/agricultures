@@ -1277,7 +1277,7 @@
                                 <td>
                                     <button  type="button" style="margin-left:20px;" onclick="search()" class="btn btn-success btn-xm">
                                         <!-- 搜索-->
-                                        <span id="34" name="xxxx">搜索</span>
+                                       筛选
                                     </button>&nbsp;
                                     <button  type="button" style="margin-left:20px;" onclick="deployLoop()" class="btn btn-success btn-xm">
                                         部署
@@ -1286,9 +1286,9 @@
                                     <button  type="button" style="margin-left:20px;" onclick="removeLoop()" class="btn btn-success btn-xm">
                                         移除
                                     </button>&nbsp;
-                                    <button  type="button" style="margin-left:20px;" onclick="readinfo()" class="btn btn-success btn-xm">
+<!--                                    <button  type="button" style="margin-left:20px;" onclick="readinfo()" class="btn btn-success btn-xm">
                                         读取
-                                    </button>&nbsp;
+                                    </button>&nbsp;-->
 
                                 </td>
                             </tr>

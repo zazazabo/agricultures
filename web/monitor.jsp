@@ -24,6 +24,70 @@
                 });
             }
 
+
+
+            function  readSensorCB(obj) {
+                $('#panemask').hideLoading();
+                if (obj.status == "success") {
+                    var data = Str2BytesH(obj.data);
+                    var v = "";
+                    for (var i = 0; i < data.length; i++) {
+                        v = v + sprintf("%02x", data[i]) + " ";
+                    }
+                    console.log(v);
+                    if (data[1] == 0x03) {
+                        layerAler("读取成功");
+                        var len = data[2];
+                        var info = data[3] * 256 + data[4];
+                        var site = data[5] * 256 + data[6];
+                        var regpos = data[7] * 256 + data[8];
+                        var w1 = data[9];
+                        var w2 = data[10];
+                        var strw1 = w1 & 0x01 == 0x01 ? "开关量" : "模拟量";
+                        var strw2 = w2 & 0x01 == 0x01 ? "打开" : "关闭";
+                        ; //                        var worktype = data[9] * 256 + data[10];
+                        var dataval = data[11] * 256 + data[12];
+                        var f1 = data[13];
+                        var strw3 = f1 & 0x01 == 0x01 ? "有" : "无";
+                        var faultnum = data[15] * 256 + data[16];
+
+                        layerAler("信息点:" + info + "<br>" + "站号" + site + "<br>" + "数据位置"
+                                + regpos + "<br>" + "工作模式:" + strw1 + "<br>" + "通信故障参数:"
+                                + strw2 + "<br>" + "探测值：" + dataval + "<br>" + "故障:" + strw3 + "<br>"
+                                + "通信出错次数:" + faultnum);
+                    }
+
+                }
+                console.log(obj);
+            }
+
+            function readSensor(comaddr, infonum) {
+
+                var vv = [];
+                vv.push(1);
+                vv.push(3);
+                var info = parseInt(infonum);
+                var infonum = (2000 + info * 10) | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+                vv.push(0);
+                vv.push(7); //寄存器数目 2字节                         
+                var data = buicode2(vv);
+                dealsend2("03", data, "readSensorCB", comaddr, 0, 0, infonum);
+            }
+
+
+
+
+
+
+
+
+
+            function toursensor(comaddr, infonum) {
+              console.log(comaddr);
+              console.log(infonum);
+            }
             $(function () {
                 $('#gravidaTable').bootstrapTable({
                     showExport: true, //是否显示导出
@@ -94,14 +158,17 @@
                                 if (row.online1 == "1") {
                                     if (row.errflag == "1") {
 
-                                        var str = '<img   src="img/off.png" onclick="tourlamp(' + row.l_comaddr + ',' + row.l_code + ')" />';
+//                                        var str = '<img data-toggle="tooltip"  src="img/off.png" onclick="toursensor(' + row.l_comaddr + ',' + row.name + ')" />';
+
                                         return  str;
                                     } else {
-                                        var str = '<img   src="img/online1.png" onclick="tourlamp(' + row.l_comaddr + ',' + row.l_code + ')" />';
+                                        var str = '<img   src="img/online1.png" onclick="readSensor(\'' + row.l_comaddr + '\',\'' + row.infonum + '\'' + ')"/>';
+                                        console.log(str);
+//                                                      var str = '<img data-toggle="tooltip"  src="img/online1.png" onclick="toursensor(' + row.l_comaddr + ',' + row.name + ')" />';
                                         return  str;
                                     }
                                 } else {
-                                    var str = '<img   src="img/off.png" onclick="tourlamp(' + row.l_comaddr + ',' + row.l_code + ')" />';
+//                                        var str = '<img data-toggle="tooltip"  src="img/off.png" onclick="toursensor(' + row.l_comaddr + ',' + row.name + ')" />';
                                     return str;
                                 }
                                 return  str;

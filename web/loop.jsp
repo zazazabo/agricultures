@@ -158,7 +158,7 @@
                 }
 
                 var namesss = false;
-                addlogon(u_name, "添加", o_pid, "回路管理", "添加回路");
+                addlogon(u_name, "添加", o_pid, "回路管理", "添加回路【"+o.l_name+"】");
 
                 if (isNumber(o.l_site) == false || isNumber(o.l_pos) == false) {
                     layerAler("数据位置站号是数字");
@@ -249,7 +249,6 @@
                     offset: 'center',
                     title: langs1[174][lang]  //提示
                 }, function (index) {
-                    addlogon(u_name, "删除", o_pid, "回路管理", "删除回路");
                     for (var i = 0; i < selects.length; i++) {
                         var select = selects[i];
                         var l_deployment = select.deplayment;
@@ -261,6 +260,7 @@
                                 success: function (data) {
                                     var arrlist = data.rs;
                                     if (arrlist.length == 1) {
+                                        addlogon(u_name, "删除", o_pid, "回路管理", "删除回路【"+select.l_name+"】");
                                         layer.open({
                                             content: '删除成功', //删除成功
                                             icon: 1,
@@ -830,13 +830,15 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle'
-                        }, {
-                            field: 'l_comaddr',
-                            title: '网关地址',
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
+                        },
+//                        {
+//                            field: 'l_comaddr',
+//                            title: '网关地址',
+//                            width: 25,
+//                            align: 'center',
+//                            valign: 'middle'
+//                        }, 
+                        {
                             field: 'l_name',
                             title: "回路名称",
                             width: 25,
@@ -848,19 +850,19 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle'
-                        }, {
-                            field: 'l_info',
-                            title: '控制点号', //信息点号
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
+                        },{
                             field: 'l_pos',
                             title: '寄存器位置', //信息点号
                             width: 25,
                             align: 'center',
                             valign: 'middle'
-                        }, {
+                        },{
+                            field: 'l_info',
+                            title: '控制点号', //信息点号
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
+                        },{
                             field: 'l_worktype',
                             title: '工作模式', //控制方式
                             width: 25,

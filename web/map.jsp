@@ -333,7 +333,10 @@
                             title: '所属网关', //所属网关
                             width: 25,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                return  value.replace(/\b(0+)/gi, "");
+                            }
                         },
                         {
                             field: 'longitude',
@@ -442,7 +445,10 @@
                             title: lans[25][lang], //网关地址
                             width: 25,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
+                            formatter: function (value, row, index, field) {
+                                return  value.replace(/\b(0+)/gi, "");
+                            }
                         }, {
                             field: 'Longitude',
                             title: lans[59][lang], //经度
@@ -544,14 +550,14 @@
             }
             // 百度地图API功能
             var map = new BMap.Map("allmap", {enableMapClick: false}); // 创建Map实例
-            map.centerAndZoom(new BMap.Point(116.404, 39.915), 11); // 初始化地图,设置中心点坐标和地图级别
+            map.centerAndZoom(new BMap.Point(116.404, 39.915), 15); // 初始化地图,设置中心点坐标和地图级别
             //添加地图类型控件
             map.addControl(new BMap.MapTypeControl({
                 mapTypes: [
                     BMAP_NORMAL_MAP,
                     BMAP_HYBRID_MAP
                 ]}));
-            map.centerAndZoom("湛江", 15); // 设置地图显示的城市 此项是必须设置的
+          //  map.centerAndZoom("湛江", 15); // 设置地图显示的城市 此项是必须设置的
             map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
 
             var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT}); // 左上角，添加比例尺
@@ -1383,7 +1389,7 @@
                                     <table style='text-align:center'>\n\
                                         <tr>\n\
                                             <td>" + lans[25][lang] + ":</td>\n\
-                                            <td>" + obj.comaddr + "</td>\n\
+                                            <td>" + obj.comaddr.replace(/\b(0+)/gi, "") + "</td>\n\
                                             <td></td>\n\
                                             <td>" + "名称" + ":</td>\n\
                                             <td>" + obj.name + "</td>\n\
@@ -1474,7 +1480,7 @@
                                 });
 
                             });
-                            marker1.setTitle(obj.comaddr + "," + Iszx);   //这里设置maker的title (鼠标放到marker点上,会出现它的title,所以我这里把name,放到title里)
+                            marker1.setTitle(obj.comaddr.replace(/\b(0+)/gi, "") + "," + Iszx);   //这里设置maker的title (鼠标放到marker点上,会出现它的title,所以我这里把name,放到title里)
                             map.addOverlay(marker1);
                             map.panTo(point);
                         }
@@ -1562,7 +1568,7 @@
                                             <td>" + obj.name + "</td>\n\
                                             <td>&nbsp;&nbsp;</td>\n\
                                             <td>" + "所属网关" + ":</td>\n\
-                                            <td>" + obj.l_comaddr + "</td>\n\
+                                            <td>" + obj.l_comaddr.replace(/\b(0+)/gi, "") + "</td>\n\
                                         </tr>\n\
                                         <tr>\n\
                                             <td>" + "型号" + ":</td>\n\

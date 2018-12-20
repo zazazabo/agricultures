@@ -663,19 +663,17 @@
                             formatter: function (value, row, index, field) {
                                 return  value.toString();
                             }
-                        }
-                        , {
-                            field: 'Longitude',
-                            title: '经度',
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
                         }, {
-                            field: 'latitude',
-                            title: '纬度',
+                            field: 'infonum',
+                            title: '信息点',
                             width: 25,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
+                            sortable: true,
+                            sortOrder: "desc",
+                            formatter: function (value, row, index, field) {
+                                return  value.toString();
+                            }
                         }, {
                             field: 'type',
                             title: '类型', //部署情况
@@ -692,16 +690,17 @@
                                 }
                             }
                         }, {
-                            field: 'infonum',
-                            title: '信息点',
+                            field: 'Longitude',
+                            title: '经度',
                             width: 25,
                             align: 'center',
-                            valign: 'middle',
-                            sortable: true,
-                            sortOrder: "desc",
-                            formatter: function (value, row, index, field) {
-                                return  value.toString();
-                            }
+                            valign: 'middle'
+                        }, {
+                            field: 'latitude',
+                            title: '纬度',
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
                         }, {
                             field: 'show',
                             title: '是否首页显示', //部署情况
@@ -1254,15 +1253,15 @@
                                 <input id="dreg1" class="form-control" name="dreg" style="width:150px;display: inline;" placeholder="数据位置" type="text">
                             </td>
                             <td></td>
-<!--                            <td>
-                                <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                                                <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
-                                <select class="easyui-combobox" id="worktype1" name="worktype" style="width:150px; height: 30px">
-                                    <option value="0" >模拟量</option>
-                                    <option value="1" >开关量</option>  
-                                </select>
-                            </td>-->
-                              <td>
+                            <!--                            <td>
+                                                            <span style="margin-left:10px;" >工作模式</span>&nbsp;
+                                                                                            <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
+                                                            <select class="easyui-combobox" id="worktype1" name="worktype" style="width:150px; height: 30px">
+                                                                <option value="0" >模拟量</option>
+                                                                <option value="1" >开关量</option>  
+                                                            </select>
+                                                        </td>-->
+                            <td>
                                 <span style="margin-left:10px;" >&#8195;&#8195;类型</span>&nbsp;
                                 <select class="easyui-combobox" id="type1" name="type" style="width:150px; height: 30px">
                                     <option value="1" >温度</option>
@@ -1281,7 +1280,7 @@
                             </td>
                             <td></td>
                             <td></td>
-                           
+
 
 
                         </tr> 

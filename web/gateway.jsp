@@ -382,7 +382,11 @@
                             title: '编号',
                             width: 25,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
+                            formatter: function (value, row, index) {
+                                return  value.replace(/\b(0+)/gi,"");
+
+                            }
                         }, {
                             field: 'Longitude',
                             title: '经度',

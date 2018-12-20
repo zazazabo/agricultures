@@ -251,11 +251,12 @@
                 }, function (index) {
                     for (var i = 0; i < selects.length; i++) {
                         var select = selects[i];
-                        var l_deployment = select.deplayment;
+                        var l_deployment = select.l_deplayment;
                         if (l_deployment == 1) {
                             layerAler('已部署不能删除');  //已部署不能删除
                             continue;
                         } else {
+                          
                             $.ajax({url: "loop.loopForm.deleteLoop.action", type: "POST", datatype: "JSON", data: {id: select.id},
                                 success: function (data) {
                                     var arrlist = data.rs;

@@ -13,7 +13,7 @@
         <script type="text/javascript" src="SheetJS-js-xlsx/dist/xlsx.core.min.js"></script>
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript" src="js/getdate.js"></script>
-<!--        <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>-->
+        <!--        <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>-->
         <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
         <script>
             var lang = '${param.lang}';//'zh_CN';
@@ -97,8 +97,8 @@
 
             function  editlamp() {
                 var o = $("#form2").serializeObject();
-                var worktype = $("#worktype1").val();
-                o.worktype = worktype;
+//                var worktype = $("#worktype1").val();
+//                o.worktype = worktype;
                 addlogon(u_name, "修改", o_pid, "传感器管理", "修改传感器");
                 $.ajax({async: false, url: "sensor.sensorform.modifySensor.action", type: "get", datatype: "JSON", data: o,
                     success: function (data) {
@@ -631,13 +631,15 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle'
-                        }, {
-                            field: 'model',
-                            title: '备注', //灯具名称
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
+                        },
+//                        {
+//                            field: 'model',
+//                            title: '备注', //
+//                            width: 25,
+//                            align: 'center',
+//                            valign: 'middle'
+//                        }, 
+                        {
                             field: 'sitenum',
                             title: '站号', //组号
                             width: 25,
@@ -734,7 +736,7 @@
                             }
                         }
                     ],
-                    smartDisplay:false,
+                    smartDisplay: false,
                     clickToSelect: true,
                     singleSelect: false,
                     sortName: 'infonum',
@@ -748,7 +750,7 @@
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
-                    pageList: [10, 20, 40,'ALL'],
+                    pageList: [10, 20, 40, 'ALL'],
                     sortable: true, //是否启用排序 
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
@@ -830,7 +832,7 @@
                     pagination: true,
                     pageNumber: 1,
                     pageSize: 20,
-                    pageList: [20, 40, 60,'ALL']
+                    pageList: [20, 40, 60, 'ALL']
 
                 });
 
@@ -989,11 +991,16 @@
             function  sy() {
                 $("#gravidaTable").find(":checkbox:checked").each(function () {
                     var $tr = $(this).parents("tr");
-                    var id = $(this).parents("tr").find("td:first").html();
-                    console.log(id);
+//                    var id = $(this).parents("tr").find("td:first").html();
+//                    console.log(id);
                     if ($tr.index() == 0) {
                         layerAler("数据已是第一行");
                         return;
+                    } else {
+//                      $tr.fadeOut().fadeIn();
+                        //           $tr.prev().before($tr);
+                        $tr.fadeOut().fadeIn();
+                        $tr.prev().before($tr);
                     }
                 });
 
@@ -1101,9 +1108,9 @@
                                 <td>
                                     <button style="margin-left:10px;" id="btnremoveSensor" type="button" onclick="removeSensor()" class="btn btn-success btn-sm">移除</button>
                                 </td>
-<!--                                <td>
-                                    <button style="margin-left:10px;"  type="button" onclick="readSensor()" class="btn btn-success btn-sm">读取</button>
-                                </td> -->
+                                <!--                                <td>
+                                                                    <button style="margin-left:10px;"  type="button" onclick="readSensor()" class="btn btn-success btn-sm">读取</button>
+                                                                </td> -->
 
                             </tr>
                         </tbody>
@@ -1188,11 +1195,17 @@
                             </td>
                             <td></td>
                             <td>
-                                <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                <!--                                <input id="worktype" class="form-control" value="0"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">-->
-                                <select class="easyui-combobox" id="worktype" name="worktype" style="width:150px; height: 30px">
-                                    <option value="0" >模拟量</option>
-                                    <option value="1" >开关量</option>  
+                                <!--                                <span style="margin-left:10px;" >工作模式</span>&nbsp;
+                                                                                                <input id="worktype" class="form-control" value="0"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
+                                                                <select class="easyui-combobox" id="worktype" name="worktype" style="width:150px; height: 30px">
+                                                                    <option value="0" >模拟量</option>
+                                                                    <option value="1" >开关量</option>  
+                                                                </select>-->
+                                <span style="margin-left:10px;" >&#8195;&#8195;类型</span>&nbsp;
+                                <select class="easyui-combobox" id="type" name="type" style="width:150px; height: 30px">
+                                    <option value="1" >温度</option>
+                                    <option value="2" >湿度</option>  
+                                    <option value="3" >开关</option>  
                                 </select>
                             </td>
 
@@ -1210,19 +1223,7 @@
                                 <!--                                <input id="worktype" class="form-control" value="0"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">-->
                                 <input id="model" value="" class="form-control" name="model" style="width:150px;display: inline;" placeholder="备注" type="text">
                             </td>
-                        </tr> 
-                        <tr>
-                            <td>
-                                <span style="margin-left:20px;" >&#8195;&#8195;类型</span>&nbsp;
-                                <select class="easyui-combobox" id="type" name="type" style="width:150px; height: 30px">
-                                    <option value="1" >温度</option>
-                                    <option value="2" >湿度</option>  
-                                    <option value="3" >开关</option>  
-                                </select>
-                            </td>
-                            <td></td>
-
-                        </tr> 
+                        </tr>  
                     </tbody>
                 </table>
             </form>                        
@@ -1253,20 +1254,16 @@
                                 <input id="dreg1" class="form-control" name="dreg" style="width:150px;display: inline;" placeholder="数据位置" type="text">
                             </td>
                             <td></td>
-                            <td>
+<!--                            <td>
                                 <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                <!--                                <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">-->
+                                                                <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
                                 <select class="easyui-combobox" id="worktype1" name="worktype" style="width:150px; height: 30px">
                                     <option value="0" >模拟量</option>
                                     <option value="1" >开关量</option>  
                                 </select>
-                            </td>
-
-                        </tr>                  
-                        <tr>
-
-                            <td>
-                                <span style="margin-left:20px;" >&#8195;&#8195;类型</span>&nbsp;
+                            </td>-->
+                              <td>
+                                <span style="margin-left:10px;" >&#8195;&#8195;类型</span>&nbsp;
                                 <select class="easyui-combobox" id="type1" name="type" style="width:150px; height: 30px">
                                     <option value="1" >温度</option>
                                     <option value="2" >湿度</option>  
@@ -1274,12 +1271,17 @@
                                 </select>
 
                             </td>  
-                            <td></td>
+
+                        </tr>                  
+                        <tr>
 
                             <td>
-                                <span style="margin-left:10px;" >&#8195;&#8195;备注</span>&nbsp;
-                                <input id="model1"  class="form-control" name="model" style="width:150px;display: inline;" placeholder="型号" type="text">
+                                <span style="margin-left:20px;" >&#8195;&#8195;备注</span>&nbsp;
+                                <input id="model1"  class="form-control" name="model" style="width:150px;display: inline;" placeholder="备注" type="text">
                             </td>
+                            <td></td>
+                            <td></td>
+                           
 
 
                         </tr> 

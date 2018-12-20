@@ -28,6 +28,15 @@
             .a-upload:hover { color: #444; background: #eee; border-color: #ccc; text-decoration: none } 
 
             .bodycenter { text-align: -webkit-center; text-align: -moz-center; width: 600px; margin: auto; } 
+            
+            .t tr td{
+                border: 1px solid #16645629;
+                text-align:center;
+            }
+            .t tr th{
+                border: 1px solid #16645629;
+                text-align:center;
+            }
         </style>
         <script>
             var infolist = {};
@@ -39,6 +48,21 @@
                 obj.l_comaddr = ooo.l_comaddr;
                 obj.p_comaddr = ooo.l_comaddr;
                 obj.pid = "${param.pid}";
+                var opt = {
+//                                    url: "plan.planForm.getSensorPlan.action",
+                    query: obj,
+                    silent: false
+                };
+                $("#table0").bootstrapTable('refresh', opt);
+            }
+
+            function  Search1() {
+                var obj = {};
+                var ooo = $("#form1").serializeObject();
+                obj.l_comaddr = ooo.l_comaddr;
+                obj.p_comaddr = ooo.l_comaddr;
+                obj.pid = "${param.pid}";
+                obj.p_deployment = ooo.deplayment;
                 var opt = {
 //                                    url: "plan.planForm.getSensorPlan.action",
                     query: obj,
@@ -129,13 +153,21 @@
 
                         }, {
                             field: 'p_comaddr',
-                            title: '网关', //信息点
+                            title: '网关名称',
                             width: 25,
                             align: 'center',
                             valign: 'middle',
                             colspan: 1,
-                            formatter: function (value, row, index, field) {
-                                return value;
+                            formatter: function (value) {
+                                var str = "";
+                                var obj = {};
+                                obj.comaddr = value;
+                                $.ajax({async: false, url: "homePage.gayway.getnamebycode.action", type: "get", datatype: "JSON", data: obj,
+                                    success: function (data) {
+                                        str = data.rs[0].name;
+                                    }
+                                });
+                                return str;
                             }
                         },
                         {
@@ -171,7 +203,7 @@
                                 if (isJSON(row.p_scene1)) {
                                     var obj = eval('(' + row.p_scene1 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限:" + obj.up.toString() + "&emsp;" + "下限:" + obj.down.toString();
                                     return str;
                                 }
                             }
@@ -186,7 +218,7 @@
                                 if (isJSON(row.p_scene2)) {
                                     var obj = eval('(' + row.p_scene2 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限:" + obj.up.toString() + "&emsp;" + "下限:" + obj.down.toString();
                                     return str;
                                 }
                             }
@@ -201,7 +233,7 @@
                                 if (isJSON(row.p_scene3)) {
                                     var obj = eval('(' + row.p_scene3 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限:" + obj.up.toString() + "&emsp;" + "下限:" + obj.down.toString();
                                     return str;
                                 }
                             }
@@ -216,7 +248,7 @@
                                 if (isJSON(row.p_scene4)) {
                                     var obj = eval('(' + row.p_scene4 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限:" + obj.up.toString() + "&emsp;" + "下限:" + obj.down.toString();
                                     return str;
                                 }
                             }
@@ -231,7 +263,7 @@
                                 if (isJSON(row.p_scene5)) {
                                     var obj = eval('(' + row.p_scene5 + ')');
                                     var o1 = obj.info.toString();
-                                    var str = infolist[o1] + "&emsp;" + "上限值:" + obj.up.toString() + "&emsp;" + "下限值:" + obj.down.toString();
+                                    var str = infolist[o1] + "&emsp;" + "上限:" + obj.up.toString() + "&emsp;" + "下限:" + obj.down.toString();
                                     return str;
                                 }
                             }
@@ -626,7 +658,7 @@
 
                 var ooo = $("#formadd").serializeObject();
                 ooo.p_attr = 1;
-                ooo.p_type=1;
+                ooo.p_type = 1;
                 for (var i = 0; i < 5; i++) {
                     var ii = (i + 1).toString();
                     var info = "info" + ii;
@@ -838,6 +870,22 @@
                                        data-options="editable:true,valueField:'id', textField:'text' " />
                             </span>  
                         </td>
+                        <td>
+                            <span style="margin-left:10px;">
+                                部署情况
+                                &nbsp;</span>
+                        </td>
+                        <td>
+                            <select class="easyui-combobox" name="deplayment"  id="busu" style="width:150px; height: 30px">
+                                <option value="1">已部署</option>     
+                                <option value="0">未部署</option> 
+                            </select>                           
+                        </td>
+                        <td>
+                            <button  type="button" style="margin-left:20px;" onclick="Search1()" class="btn btn-success btn-sm">
+                                筛选
+                            </button>&nbsp;
+                        </td>
 
 
 
@@ -915,107 +963,121 @@
                     </tbody>
                 </table>
 
-                <table id="scentable" style="border-collapse:separate;  border-spacing:0px 10px;border: 1px solid #16645629; margin-left: 10px; margin-top: 10px; align-content:  center" >
+                <table id="scentable" style="border-collapse:separate; border: 1px solid #16645629; margin-left: 10px; margin-top: 10px; width: 90%" class="t" >
                     <tbody>
+                        <tr style=" text-align: center; height: 40px;">
+                            <th>信息点号</th>
+                            <th>下限值</th>
+                            <th>上限值</th>
+                        </tr>
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号一</span>&nbsp;
+                               
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info1" name="info1" style="width:100px; height: 30px">
                                 </select>
                             </td>
+                            
+                            <td>
+                               
+                                <input id="down1" style="width:100px; height: 30px;" value="0" name="down1">
+                            </td>
 
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
+                                
                                 <input id="up1" style="width:100px; height: 30px;" value="0" name="up1">
 
                             </td>
 
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down1" style="width:100px; height: 30px;" value="0" name="down1">&emsp;
-                            </td>
+                          
 
                         </tr>
 
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号二</span>&nbsp;
+                               
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info2" name="info2" style="width:100px; height: 30px">
                                 </select>
                             </td>
+                            
+                            <td>
+                                
+                                <input id="down2" style="width:100px; height: 30px;" value="0" name="down2">
+                            </td>
 
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
+                                
                                 <input id="up2" style="width:100px; height: 30px;" value="0" name="up2">
 
                             </td>
 
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down2" style="width:100px; height: 30px;" value="0" name="down2">
-                            </td>
 
 
                         </tr>
 
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号三</span>&nbsp;
+                                
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info3" name="info3" style="width:100px; height: 30px">
                                 </select>
                             </td>
+                            
+                            <td>
+                                <input id="down3" style="width:100px; height: 30px;" value="0" name="down3">
+                            </td>
 
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
+
                                 <input id="up3" style="width:100px; height: 30px;" value="0" name="up3">
 
                             </td>
 
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down3" style="width:100px; height: 30px;" value="0" name="down3">
-                            </td>
+                            
 
 
                         </tr>
 
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号四</span>&nbsp;
+                                
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info4" name="info4" style="width:100px; height: 30px">
                                 </select>
                             </td>
+                            
+                             <td>
+                               
+                                <input id="down4" style="width:100px; height: 30px;" value="0" name="down4">
+                            </td>
+                            
 
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
+                               
                                 <input id="up4" style="width:100px; height: 30px;" value="0" name="up4">
 
                             </td>
 
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down4" style="width:100px; height: 30px;" value="0" name="down4">
-                            </td>
+                           
 
                         </tr>
 
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号五</span>&nbsp;
+                                
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info5" name="info5" style="width:100px; height: 30px">
                                 </select>
                             </td>
+                            
+                            <td>
+                                
+                                <input id="down5" style="width:100px; height: 30px;" value="0" name="down5">
+                            </td>
 
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
+                              
                                 <input id="up5" style="width:100px; height: 30px;" value="0" name="up5">
 
                             </td>
 
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down5" style="width:100px; height: 30px;" value="0" name="down5">
-                            </td>
+                      
 
                         </tr>
                     </tbody>
@@ -1061,106 +1123,98 @@
 
                     </tbody>
                 </table>
-                <table id="scentable" style="border-collapse:separate;  border-spacing:0px 10px;border: 1px solid #16645629; margin-left: 10px; margin-top: 10px; align-content:  center" >
+                <table id="scentable" style="border-collapse:separate; border: 1px solid #16645629; margin-left: 10px; margin-top: 10px; align-content:  center; width: 90%;"  class="t">
                     <tbody>
+                        <tr style=" height: 40px;">
+                            <th>信息点</th>
+                            <th>下限值</th>
+                            <th>上限值</th> 
+                        </tr>
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号一</span>&nbsp;
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info11" name="info1" style="width:100px; height: 30px">
                                 </select>
                             </td>
 
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
+                                <input id="down11" style="width:100px; height: 30px;" value="0" name="down1">
+                            </td>
+                            <td>
                                 <input id="up11" style="width:100px; height: 30px;" value="0" name="up1">
 
                             </td>
 
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down11" style="width:100px; height: 30px;" value="0" name="down1">&emsp;
-                            </td>
 
                         </tr>
 
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号二</span>&nbsp;
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info22" name="info2" style="width:100px; height: 30px">
                                 </select>
                             </td>
+                            
+                            <td>
+                                <input id="down22" style="width:100px; height: 30px;" value="0" name="down2">
+                            </td>
 
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
                                 <input id="up22" style="width:100px; height: 30px;" value="0" name="up2">
 
                             </td>
 
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down22" style="width:100px; height: 30px;" value="0" name="down2">
-                            </td>
-
-
                         </tr>
 
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号三</span>&nbsp;
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info33" name="info3" style="width:100px; height: 30px">
                                 </select>
                             </td>
-
+                            
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
-                                <input id="up33" style="width:100px; height: 30px;" value="0" name="up3">
-
-                            </td>
-
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
                                 <input id="down33" style="width:100px; height: 30px;" value="0" name="down3">
                             </td>
 
 
+                            <td>
+                                <input id="up33" style="width:100px; height: 30px;" value="0" name="up3">
+
+                            </td>
+
+
                         </tr>
 
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号四</span>&nbsp;
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info44" name="info4" style="width:100px; height: 30px">
                                 </select>
                             </td>
+                            
+                             <td>
+                                <input id="down44" style="width:100px; height: 30px;" value="0" name="down4">
+                            </td>
 
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
                                 <input id="up44" style="width:100px; height: 30px;" value="0" name="up4">
 
                             </td>
 
-                            <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down44" style="width:100px; height: 30px;" value="0" name="down4">
-                            </td>
 
                         </tr>
 
                         <tr >
                             <td>
-                                <span style="margin-left:20px;" >&emsp;信息点号五</span>&nbsp;
                                 <select class="easyui-combobox" data-options="editable:false,valueField:'id', textField:'text'" id="info55" name="info5" style="width:100px; height: 30px">
                                 </select>
                             </td>
-
+                            
+                            
                             <td>
-                                <span style="margin-left:20px;">上限值</span>&nbsp;
-                                <input id="up55" style="width:100px; height: 30px;" value="0" name="up5">
-
+                                <input id="down55" style="width:100px; height: 30px;" value="0" name="down5">
                             </td>
 
                             <td>
-                                <span style="margin-left:20px;" >下限值</span>&nbsp;
-                                <input id="down55" style="width:100px; height: 30px;" value="0" name="down5">
+                                <input id="up55" style="width:100px; height: 30px;" value="0" name="up5">
+
                             </td>
 
                         </tr>

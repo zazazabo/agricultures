@@ -29,34 +29,9 @@
                 $('#oplogtabel').bootstrapTable({
                     url: 'login.oplog.oplogInfo.action?pid=' + pid,
                     columns: [
-                        
-                        {
-                            field: 'o_type',
-                            title: langs1[130][lang], //操作类型
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: 'o_page',
-                            title: langs1[131][lang], //操作页面
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
-                            field: 'o_comaddr',
-                            title: langs1[50][lang], //操作类型
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        },{
-                            field: 'o_comment',
-                            title: langs1[132][lang], //详细内容
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
-                        }, {
+                         {
                             field: 'o_time',
-                            title: langs1[82][lang],  //时间
+                            title: "时间",  //时间
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -72,16 +47,48 @@
                                 var newTime = year + '-' + (preArr[month] || month) + '-' + (preArr[day] || day) + ' ' + (preArr[hour] || hour) + ':' + (preArr[min] || min) + ':' + (preArr[sec] || sec);
                                 return newTime;
                             }
-                        }, {
-                            field: 'o_name',
-                            title: langs1[133][lang],  //操作人
+                        },  {
+                            field: 'o_page',
+                            title: "操作页面", //操作页面
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            sortable: true,
+                            sortOrder: "desc"
+                        },{
+                            field: 'o_type',
+                            title: "操作类型", //操作类型
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            sortable: true,
+                            sortOrder: "desc"
+                        },
+//                        {
+//                            field: 'o_comaddr',
+//                            title: langs1[50][lang], //操作类型
+//                            width: 25,
+//                            align: 'center',
+//                            valign: 'middle'
+//                        },
+                        {
+                            field: 'o_comment',
+                            title: "详细内容", //详细内容
                             width: 25,
                             align: 'center',
                             valign: 'middle'
+                        },{
+                            field: 'o_name',
+                            title: "操作人",  //操作人
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            sortable: true,
+                            sortOrder: "desc"
                         }],
                     clickToSelect: true,
                     singleSelect: true,
-                    sortName: 'id',
+                    sortName: 'o_time',
                     locale: 'zh-CN', //中文支持,
                     showColumns: true,
                     sortOrder: 'desc',
@@ -99,14 +106,17 @@
                     },
 
                     //服务器url
-                    queryParams: function (params)  {   //配置参数     
+                    queryParams: function (params)  {   //配置参数 
+                        var v1 = params.sort + " " + params.order;    
                         var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
                             search: params.search,
                             skip: params.offset,
                             limit: params.limit,
+                            sort: v1, //排序字段 和 （desc、ase）
+                            sortOrder: params.order,
                             statr:$("#sday").val(),
                             end :$("#eday").val(),
-                            type_id: "1"    
+                            pid:pid 
                         };      
                         return temp;  
                     },

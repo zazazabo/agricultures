@@ -163,15 +163,27 @@
                             width: 10,
                             align: 'center',
                             valign: 'middle'
-                        }, {
+                        },{
                             title: "序号", //序号
                             field: '序号',
                             width: 20,
                             align: 'center',
                             valign: 'middle'
-                        }, {
+                        },{
                             title: "编号",
-                            field: '编号', //网关名称
+                            field: '编号', //编号
+                            width: 80,
+                            align: 'center',
+                            valign: 'middle'
+                        },{
+                            title: "无效期",
+                            field: '无效期', //无效期
+                            width: 80,
+                            align: 'center',
+                            valign: 'middle'
+                        },{
+                            title: "备注",
+                            field: '备注', //备注
                             width: 80,
                             align: 'center',
                             valign: 'middle'
@@ -210,9 +222,10 @@
                                 // break; // 如果只取第一张表，就取消注释这行
                             }
                         }
-                        var headStr = '序号,编号';
+                        var headStr = '序号,编号,无效期,备注';
+                        var headStr2 = '序号,编号,无效期';
                         for (var i = 0; i < persons.length; i++) {
-                            if (Object.keys(persons[i]).join(',') !== headStr) {
+                            if (Object.keys(persons[i]).join(',') !== headStr && Object.keys(persons[i]).join(',') !== headStr2) {
                                 alert("导入文件格式不正确"); //导入文件格式不正确
                                 persons = [];
                             }
@@ -386,6 +399,12 @@
                             if (arrlist.length == 0) {
                                 var adobj = {};
                                 adobj.comaddr = comaddr;
+                                var inserpeople = parent.getusername();
+                                var feebleday = selects[i].无效期;
+                                var remarks = selects[i].备注;
+                                adobj.remarks = remarks;
+                                adobj.feebleday = feebleday;
+                                adobj.inserpeople = inserpeople;
                                 $.ajax({url: "homePage.gatewaymanage.addcode.action", async: false, type: "get", datatype: "JSON", data: adobj,
                                     success: function (data) {
                                         var arrlist = data.rs;
@@ -562,10 +581,14 @@
                 <tr>
                     <td>序号</td>
                     <td>编号</td>
+                    <td>无效期</td>
+                    <td>备注</td>
                 </tr>
                 <tr>
                     <td>如1、2、3</td>
                     <td>编号不可重复</td>
+                    <td>格式为：yyyy-mm-dd(文本类型)</td>
+                    <td>备注</td>
                 </tr>
             </table>
         </div>

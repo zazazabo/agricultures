@@ -159,12 +159,12 @@
                 <tr>
                     <td><span name="xxxx" id="299">传感器离线</span>:</td>
                     <td style=" color: #93a1a1;">-----------------</td>
-                    <td><img src="img/lhui.png"></td>
+                    <td><img src="img/cglan.png" style=" margin-left: -10px;"></td>
                 </tr>
                 <tr>
                     <td><span name="xxxx" id="300">传感器异常</span>:</td>
                     <td style=" color: red;">-----------------</td>
-                    <td><img src="img/lred3.png"></td>
+                    <td><img src="img/cgred.png" style=" margin-left: -10px;"></td>
                 </tr>
                 <tr>
                     <td><span name="xxxx" id="296">网关在线</span>:</td>
@@ -260,15 +260,15 @@
                 //anchor: new BMap.Size(0, 0)      //这个是信息窗口位置（可以改改看看效果）
             });
             //创建传感器离线图标
-            var lhui = new BMap.Icon('./img/lhui.png', new BMap.Size(27, 32), {//20，30是图片大小
+            var lhui = new BMap.Icon('./img/cglan.png', new BMap.Size(27, 32), {//20，30是图片大小
                 // anchor: new BMap.Size(0, 0)      //这个是信息窗口位置（可以改改看看效果）
             });
             //创建传感器在线图标
-            var lgreen = new BMap.Icon('./img/yl.png', new BMap.Size(27, 32), {//20，30是图片大小
+            var lgreen = new BMap.Icon('./img/cglv.png', new BMap.Size(27, 32), {//20，30是图片大小
                 //anchor: new BMap.Size(0, 0)      //这个是信息窗口位置（可以改改看看效果）
             });
             //创建传感器异常图标
-            var lred = new BMap.Icon('./img/lred3.png', new BMap.Size(27, 32), {//20，30是图片大小
+            var lred = new BMap.Icon('./img/cgred.png', new BMap.Size(27, 32), {//20，30是图片大小
                 //anchor: new BMap.Size(0, 0)      //这个是信息窗口位置（可以改改看看效果）
             });
             //创建传感器亮灯图标

@@ -448,10 +448,10 @@
                 var worktype = parseInt(ele.worktype);
                 vv.push(worktype >> 8 & 0xff)   //工作模式
                 vv.push(worktype & 0xff);
-                
+
                 vv.push(0)
                 vv.push(0)  //数值
-                
+
                 vv.push(0); //
                 vv.push(1);
 
@@ -669,19 +669,17 @@
                             formatter: function (value, row, index, field) {
                                 return  value.toString();
                             }
-                        }
-                        , {
-                            field: 'Longitude',
-                            title: '经度',
-                            width: 25,
-                            align: 'center',
-                            valign: 'middle'
                         }, {
-                            field: 'latitude',
-                            title: '纬度',
+                            field: 'infonum',
+                            title: '信息点',
                             width: 25,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
+                            sortable: true,
+                            //sortOrder: "desc",
+                            formatter: function (value, row, index, field) {
+                                return  value.toString();
+                            }
                         }, {
                             field: 'type',
                             title: '类型', //部署情况
@@ -698,16 +696,17 @@
                                 }
                             }
                         }, {
-                            field: 'infonum',
-                            title: '信息点',
+                            field: 'Longitude',
+                            title: '经度',
                             width: 25,
                             align: 'center',
-                            valign: 'middle',
-                            sortable: true,
-                            sortOrder: "desc",
-                            formatter: function (value, row, index, field) {
-                                return  value.toString();
-                            }
+                            valign: 'middle'
+                        }, {
+                            field: 'latitude',
+                            title: '纬度',
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle'
                         }, {
                             field: 'show',
                             title: '是否首页显示', //部署情况
@@ -745,10 +744,10 @@
                     smartDisplay: false,
                     clickToSelect: true,
                     singleSelect: false,
-                    sortName: 'infonum',
+                    sortName: 's_index',
                     locale: 'zh-CN', //中文支持,
                     showColumns: true,
-                    sortOrder: 'desc',
+                    sortOrder: 'asc',
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
@@ -1028,12 +1027,11 @@
             }
 
             function bc() {
-                var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
+                // var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
                 var allTableData = $("#gravidaTable").bootstrapTable('getData');
-                console.log(allTableData.length);
-                console.log(allTableData[0]);
                 for (var i = 0; i < allTableData.length; i++) {
                     var sen = allTableData[i];
+                    console.log("i:" + allTableData[i].name);
                     var obj = {};
                     obj.id = sen.id;
                     obj.s_index = i;
@@ -1151,7 +1149,7 @@
             <button class="btn btn-danger ctrol" onclick="removeshow();">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;移除首页显示
             </button>
-            <button class="btn btn-success ctrol" onclick="sy()">
+<!--            <button class="btn btn-success ctrol" onclick="sy()">
                 &nbsp;上移
             </button>
             <button class="btn btn-success ctrol" onclick="xy()">
@@ -1159,7 +1157,7 @@
             </button>
             <button class="btn btn-success ctrol" onclick="bc()">
                 &nbsp;保存
-            </button>
+            </button>-->
         </div>
 
         <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped table-bordered">
@@ -1260,15 +1258,15 @@
                                 <input id="dreg1" class="form-control" name="dreg" style="width:150px;display: inline;" placeholder="数据位置" type="text">
                             </td>
                             <td></td>
-<!--                            <td>
-                                <span style="margin-left:10px;" >工作模式</span>&nbsp;
-                                                                <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
-                                <select class="easyui-combobox" id="worktype1" name="worktype" style="width:150px; height: 30px">
-                                    <option value="0" >模拟量</option>
-                                    <option value="1" >开关量</option>  
-                                </select>
-                            </td>-->
-                              <td>
+                            <!--                            <td>
+                                                            <span style="margin-left:10px;" >工作模式</span>&nbsp;
+                                                                                            <input id="worktype1" class="form-control"  name="worktype" style="width:150px;display: inline;" placeholder="工作模式" type="text">
+                                                            <select class="easyui-combobox" id="worktype1" name="worktype" style="width:150px; height: 30px">
+                                                                <option value="0" >模拟量</option>
+                                                                <option value="1" >开关量</option>  
+                                                            </select>
+                                                        </td>-->
+                            <td>
                                 <span style="margin-left:10px;" >&#8195;&#8195;类型</span>&nbsp;
                                 <select class="easyui-combobox" id="type1" name="type" style="width:150px; height: 30px">
                                     <option value="1" >温度</option>
@@ -1287,7 +1285,7 @@
                             </td>
                             <td></td>
                             <td></td>
-                           
+
 
 
                         </tr> 

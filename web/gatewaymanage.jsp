@@ -34,10 +34,10 @@
         <script src="bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
         <script src="bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
         <script>
-            var u_name = parent.parent.getusername();
-            var o_pid = parent.parent.getpojectId();
+            var u_name = parent.getusername();
+            var o_pid = parent.getpojectId();
             var lang = '${param.lang}';//'zh_CN';
-            var langs1 = parent.parent.getLnas();
+            var langs1 = parent.getLnas();
             function excel() {
                 $('#dialog-excel').dialog('open');
                 return false;
@@ -62,9 +62,10 @@
                         for (var i = 0; i < num; i++) {
                             var obj = {};
                             obj.id = selects[i].id;
+                            addlogon(u_name, "删除", o_pid, "后台数据管理", "删除【" + selects[i].comaddr.replace(/\b(0+)/gi,"") + "】");
                             $.ajax({url: "homePage.gatewaymanage.delcode.action", type: "POST", datatype: "JSON", data: obj,
                                 success: function (data) {
-
+                         
                                 }
                             });
 
@@ -117,6 +118,7 @@
                     success: function (data) {
                         var rs = data.rs;
                         if (rs.length > 0) {
+                            addlogon(u_name, "修改", o_pid, "后台数据管理", "修改【" + obj.comaddr.replace(/\b(0+)/gi,"") + "】");
                             $("#dialog-edit").dialog("close");
                             $("#gravidaTable").bootstrapTable('refresh');
                         }
@@ -409,6 +411,7 @@
                                     success: function (data) {
                                         var arrlist = data.rs;
                                         if (arrlist.length == 1) {
+                                            addlogon(u_name, "添加", o_pid, "后台数据管理", "导入excel添加【" + comaddr.replace(/\b(0+)/gi,"") + "】");
                                             var ids = [];//定义一个数组
                                             var xh = selects[i].序号;
                                             ids.push(xh);//将要删除的id存入数组
@@ -459,6 +462,7 @@
                                 success: function (data) {
                                     var rs = data.rs;
                                     if (rs.length > 0) {
+                                        addlogon(u_name, "添加", o_pid, "后台数据管理", "添加【" + comaddr.replace(/\b(0+)/gi,"") + "】");
                                         $("#dialog-add").dialog("close");
                                         $("#gravidaTable").bootstrapTable('refresh');
                                     }

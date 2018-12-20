@@ -381,14 +381,19 @@
                 }
                 var l_comaddr = s2[0].comaddr;
                 var o1 = $("#form1").serializeObject();
-                console.log(o1);
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 if (selects.length == 0) {
                     layerAler('请勾选表格数据');  //
                     return;
                 }
                 var ele = selects[0];
-                addlogon(u_name, "设置", o_pid, "回路监控", "设置回路【" + ele.l_name + "】状态");
+                var star = "";
+                if(o1.switch =="1"){
+                    star="闭合";
+                }else{
+                    star = "断开";
+                }
+                addlogon(u_name, "设置", o_pid, "回路监控", star+"回路【" + ele.l_name + "】");
                 var o = {};
                 o.l_comaddr = ele.l_comaddr;
                 console.log(ele);
@@ -468,6 +473,7 @@
                     return;
                 }
                 var ele = selects[0];
+                addlogon(u_name, "恢复自动运行", o_pid, "回路监控", "回路【" + ele.l_name + "】");
                 var o = {};
                 o.l_comaddr = ele.l_comaddr;
                 console.log(ele);

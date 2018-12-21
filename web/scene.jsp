@@ -849,7 +849,7 @@
         </script>
         <title>JSP Page</title>
     </head>
-    <body id="panemask">
+    <body id="panemask"> 
         <form id="form1">
 
             <input type="hidden" name="p_type" readonly="true"/>

@@ -491,11 +491,10 @@
     </head>
     <body id="panemask">
 
-        <div class="row "   >
-            <div class="col-xs-2 " >
-
+        <div>
+            <div style=" width: 15%; float: left;">
+<!--                data-height="800"-->
                 <table id="gayway" style="width:100%;"    data-toggle="table" 
-                       data-height="800"
                        data-single-select="true"
                        data-striped="true"
                        data-click-to-select="true"
@@ -515,7 +514,7 @@
                                 </div>    -->
 
             </div>   
-            <div class="col-xs-10">
+            <div style=" width: 83%; float: left; margin-left: 2%; ">
 
                 <form id="form1">
                     <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629; margin-top: 10px; align-content:  center">

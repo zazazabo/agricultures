@@ -388,12 +388,12 @@
                 }
                 var ele = selects[0];
                 var star = "";
-                if(o1.switch =="1"){
-                    star="闭合";
-                }else{
+                if (o1.switch == "1") {
+                    star = "闭合";
+                } else {
                     star = "断开";
                 }
-                addlogon(u_name, "设置", o_pid, "回路监控", star+"回路【" + ele.l_name + "】");
+                addlogon(u_name, "设置", o_pid, "回路监控", star + "回路【" + ele.l_name + "】");
                 var o = {};
                 o.l_comaddr = ele.l_comaddr;
                 console.log(ele);
@@ -570,11 +570,10 @@
     </head>
     <body id="panemask">
 
-        <div class="row "   >
-            <div class="col-xs-2 " >
-
+        <div>
+            <div style=" width: 15%;float: left; height: 100%;">
+                <!--                  data-height="800"-->
                 <table id="gayway" style="width:100%;"    data-toggle="table" 
-                       data-height="800"
                        data-single-select="true"
                        data-striped="true"
                        data-click-to-select="true"
@@ -594,7 +593,7 @@
                                 </div>    -->
 
             </div>   
-            <div class="col-xs-10">
+            <div style=" width: 83%; float: left; margin-left: 2%;">
 
                 <form id="form1">
                     <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629; margin-top: 10px; align-content:  center">

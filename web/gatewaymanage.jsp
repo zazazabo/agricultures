@@ -103,7 +103,7 @@
                     var s = $("#gravidaTable").bootstrapTable("getSelections")[0];
                     console.log(s);
                     $("#id_").val(s.id);
-                    $("#comaddr_").val(s.comaddr);
+                    $("#comaddr_").val(s.comaddr.replace(/\b(0+)/gi, ""));
                     $("#feebleday1").val(s.feebleday);
                     $("#remarks1").val(s.remarks);
                     $('#dialog-edit').dialog('open');
@@ -304,7 +304,11 @@
                             title: '编号',
                             width: 150,
                             align: 'center',
-                            valign: 'middle'
+                            valign: 'middle',
+                            formatter: function (value, row, index) {
+                                return  value.replace(/\b(0+)/gi, "");
+
+                            }
                         }, {
                             field: 'inserday',
                             title: '添加日期',

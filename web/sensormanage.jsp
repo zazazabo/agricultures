@@ -751,7 +751,7 @@
                     pagination: true,
                     sidePagination: 'server',
                     pageNumber: 1,
-                    pageSize: 20,
+                    pageSize: 10,
                     showRefresh: true,
                     showToggle: true,
                     // 设置默认分页为 50
@@ -1064,15 +1064,14 @@
             .a-upload:hover { color: #444; background: #eee; border-color: #ccc; text-decoration: none } 
 
             .bodycenter { text-align: -webkit-center; text-align: -moz-center; width: 600px; margin: auto; }        
-
         </style>
 
     </head>
 
-    <body id="panemask">
-        <div class="row" >
+    <body id="panemask" >
+        <div>
             <form id="formsearch">
-                <div class="col-xs-12">
+                <div>
                     <table style="border-collapse:separate;  border-spacing:0px 10px;border: 1px solid #16645629; margin-left: 10px; margin-top: 10px; align-content:  center">
                         <tbody>
                             <tr>
@@ -1160,7 +1159,7 @@
             </button>-->
         </div>
 
-        <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped table-bordered">
+        <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped">
         </table>
 
 

@@ -1259,9 +1259,9 @@
         <!--        <a data-toggle="modal" href="lamp.jsp" data-target="#modal">Click me</a>-->
 
 
-        <div class="row" >
+        <div>
             <form id="formsearch">
-                <div class="col-xs-12">
+                <div>
                     <table style="border-collapse:separate;  border-spacing:0px 10px;border: 1px solid #16645629; margin-left: 10px; margin-top: 10px; align-content:  center">
                         <tbody>
                             <tr>

@@ -283,10 +283,10 @@
         </script>
     </head>
     <body id="panemask">
-        <div class="row "   >
-            <div class="col-xs-2 " >
+        <div>
+            <div  style=" width: 15% ; float: left;" >
+                <!--                data-height="800"-->
                 <table id="gayway" style="width:100%;"    data-toggle="table" 
-                       data-height="800"
                        data-single-select="true"
                        data-striped="true"
                        data-click-to-select="true"
@@ -303,7 +303,7 @@
 
                 </table>
             </div>   
-            <div class="col-xs-10">
+            <div  style=" width: 83%; float: left; margin-left: 2%;">
 
                 <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped">
                 </table>

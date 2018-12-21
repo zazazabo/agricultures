@@ -411,7 +411,7 @@ function dealsend2(msg, data, fn, func, comaddr, type, param, val) {
 
 
 
-function dealsend2(msg, data, func, comaddr, type, param, val, res = 1) {
+function dealsend2(msg, data, func, comaddr, type, param, val) {
     var user = new Object();
     user.begin = '6A';
     user.res = 1;

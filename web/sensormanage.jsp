@@ -1068,7 +1068,7 @@
 
     </head>
 
-    <body id="panemask" >
+    <body id="panemask">
         <div>
             <form id="formsearch">
                 <div>

@@ -14,285 +14,313 @@
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-
-
+        <script type="text/javascript" src="js/genel.js"></script>
+        <script src="echarts/dist/echarts_3.8.5_echarts.min.js"></script>
+        <script src="js/chart/chart.js"></script>
+        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css" type="text/css">
         <style type="text/css">
-            body {
-                /*               background:url(./img/ny.jpg)  no-repeat; background-size:contain; -moz-background-size:100% 100%;*/
-                background:url(./img/jdbj.jpg)  no-repeat center center;
+            .topCenter1 {
 
-                background-size:cover;
-
-                background-attachment:fixed;
-
-                background-color:#CCCCCC;
-
-            } 
-            .top{
-                /*                display: flex;*/
-                justify-content: space-around;
-                align-items: center;
+                margin-left: 3%;
+                margin-top: 20px;
             }
-            .div1{
-                width: 50%; height: 128px;text-align: center;padding-top: 10%; float: left;font-size: 2em;position:relative;
-            }
-            .div2{
-                width: 50%; height: 128px;text-align: center;padding-top: 10%; float: left;font-size: 2em;position:relative;
-            }
-            .div3{
-                width: 30%; height: 128px;text-align: center;padding-top: 10%; float: left;position:relative;
-            }
-            .div4{
-                width: 70%; height:128px;text-align: center;padding-top: 10%;float: left;font-size: 2em;position:relative;
-            }
-
-            .wd{
-                border: 1px solid black; width: 13%; float: left; height: 256px;   margin-left: 3%; margin-top: 2%;
-            }
-
-            .sd{
-                border: 1px solid black; width: 13%; float: left; height: 256px;margin-left: 3%; margin-top: 2%; 
-            }
-
-            .kg{ border: 1px solid black; width: 13%; float: left; height: 256px;    margin-left: 3%; margin-top: 2%;}
-
-            .hl{ border: 1px solid black; width: 13%; float: left; height: 256px; margin-left: 3%; margin-top: 2%;  }
-            .hlzx{ background:rgba(144, 238 ,144,0.6); filter:alpha(opacity=60);}
-            .lx{background:rgba(96, 96 ,96,0.6); filter:alpha(opacity=60);}
-            .cgqzx{background:rgba(255,165,0,0.6); filter:alpha(opacity=60);}
-            img{ width:100%;height:100%;}
 
         </style>
-        <script type="text/javascript" src="js/genel.js"></script>
-        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css" type="text/css">
-        <script>
-            function layerAler(str) {
-                layer.alert(str, {
-                    icon: 6,
-                    offset: 'center'
-                });
-            }
-            function  getinfo() {
-                $.ajax({async: false, url: "homePage.homePage.getSensorList.action", type: "get", datatype: "JSON", data: {},
-                    success: function (data) {
-                        var value = data.rs;
-                        var loops = data.looprs;
-                        for (var i = 0; i < value.length; i++) {
-                            var v1 = value[i];
-                            var strid = "infonum" + v1.id;
-                            // var str = v1.type == "1" ? "℃" : "%";
-                            var str = "";
-                            var pd = 0;
-                            if (v1.type == "1") {
-                                str = "℃";
 
-                            } else if (v1.type == "2") {
-                                str = "%RH";
-
-                            } else if (v1.type == 3) {
-                                if (v1.numvalue != null && v1.numvalue != "" && v1.numvalue != 0) {
-                                    str = "闭合";
-                                } else {
-                                    str = "断开";
-                                }
-                                pd = 1;
-                            }
-                            var val = "";
-                            if (pd == 1) {
-                                val = str;
-                            } else {
-                                var numvalue = parseInt(v1.numvalue);
-                                if (numvalue != 0) {
-                                    numvalue = numvalue / 10;
-                                }
-                                val = numvalue + "<br>" + str;
-                            }
-                            $("#" + strid).innerHTML = val;
-                        }
-
-                        for (var j = 0; j < loops.length; j++) {
-                            var loop = loops[j];
-                            var lid = "loop" + loop.id;
-                            var limg = "limg" + loop.id;
-                            var str = "闭合";
-                            if (loop.l_switch == 1) {
-                                str = "闭合";
-                                $("#" + limg).attr("src", "./img/l.png");
-                            } else {
-                                str = "断开";
-                                $("#" + limg).attr("src", "./img/h.png");
-                            }
-                            $("#" + lid).html(str);
-
-
-                        }
-                    },
-                    error: function () {
-                        alert("提交失败！");
-                    }
-                });
-            }
-
-            //计算时间差
-            function TimeDifference(time1, time2)
-            {
-
-                time1 = new Date(time1.replace(/-/g, '/'));
-                time2 = new Date(time2.replace(/-/g, '/'));
-                var ms = Math.abs(time1.getTime() - time2.getTime());
-                return ms / 1000 / 60;
-
-            }
-            $(function () {
-                var pid = parent.parent.getpojectId();
-                var slen = 0;
-                $.ajax({url: "homePage.homePage.getSensorList.action", type: "POST", datatype: "JSON", data: {pid: pid},
-                    success: function (data) {
-                        var arrlist = data.rs;
-                        var loops = data.looprs;
-                        slen = arrlist.length + loops.length;
-                        if (loops.length > 0) {
-                            for (var j = 0; j < loops.length; j++) {
-                                var loop = loops[j];
-                                var bodydiv2 = document.createElement("div");
-                                var img2 = document.createElement("img");
-                                $(img2).attr("id", "limg" + loop.id);
-                                $(bodydiv2).addClass("hl");
-                                if (loop.line == 1) {
-                                    $(bodydiv2).addClass("hlzx");
-                                } else {
-                                    $(bodydiv2).addClass("lx");
-                                }
-                                str = "断开"; //状态
-                                if (loop.l_switch == 1) {
-                                    str = "闭合";
-                                    img2.src = "./img/l.png";
-                                } else {
-                                    str = "断开";
-                                    img2.src = "./img/h.png";
-                                }
-                                var div11 = document.createElement("div");
-                                $(div11).addClass("div1");
-                                div11.innerHTML = "状态";
-                                var div22 = document.createElement("div");
-                                $(div22).addClass("div2");
-                                $(div22).attr("id", "loop" + loop.id);
-                                div22.innerHTML = str;
-                                var div33 = document.createElement("div");
-                                $(div33).addClass("div3");
-                                $(div33).append(img2);
-                                var div44 = document.createElement("div");
-                                $(div44).addClass("div4");
-                                $(div44).append(loop.l_name);
-                                $(bodydiv2).append(div11);
-                                $(bodydiv2).append(div22);
-                                $(bodydiv2).append(div33);
-                                $(bodydiv2).append(div44);
-                                $("#parentdiv").append(bodydiv2);
-
-                            }
-                        }
-
-                        if (arrlist.length > 0) {
-                            for (var i = 0; i < arrlist.length; i++) {
-                                var sensor = arrlist[i];
-                                var bodydiv = document.createElement("div");
-                                var img = document.createElement("img");
-                                var str = "";
-                                var str2 = "";  //湿度温度描述
-                                var pd = 0;
-//                                var time1 = sensor.onlinetime.substring(0, 16);
-//                                var time2 = sensor.dtime.substring(0, 16);
-//                                var stime = TimeDifference(time1, time2);
-                                if (sensor.errflag=="1") {
-                                    $(bodydiv).addClass("lx");  //离线
-                                } else {
-                                    $(bodydiv).addClass("cgqzx");  //在线 
-                                }
-                                if (sensor.type == 1) {   //温度
-                                    $(bodydiv).addClass("wd");
-                                    img.src = "./img/wd.png";
-                                    str = "℃";
-                                    str2 = "数值";
-                                } else if (sensor.type == 2) {  //湿度
-                                    $(bodydiv).addClass("sd");
-                                    img.src = "./img/sd.png";
-                                    str = "%RH";
-                                    str2 = "数值";
-                                } else if (sensor.type == 3) {
-                                    $(bodydiv).addClass("kg");
-                                    if (sensor.numvalue != null && sensor.numvalue != "" && sensor.numvalue != 0) {
-                                        str = "闭合";
-                                        img.src = "./img/k.png";
-                                    } else {
-                                        str = "断开";
-                                        img.src = "./img/g.png";
-                                    }
-                                    pd = 1;
-                                    str2 = "状态";
-                                }
-//                                var div1 = document.createElement("div");
-//
-//                                $(div1).addClass("div1");
-//                                $(div1).append(sensor.name);
-//                                var div3 = document.createElement("div");
-//                                $(div3).addClass("div3");
-//                                var div2 = document.createElement("div");
-//                                $(div2).addClass("div2");
-//                                $(div2).append(img);
-//                                
-//                                $(div3).attr("id", "infonum" + sensor.infonum);
-                                var numvalue = parseInt(sensor.numvalue);
-                                if (numvalue != 0) {
-                                    numvalue = numvalue / 10;
-                                }
-                                var val = "";
-                                if (pd == 1) {
-                                    val = str;
-                                } else {
-                                    val = numvalue + "<br>" + str;
-                                }
-                                var div1 = document.createElement("div");
-                                $(div1).addClass("div1");
-                                div1.innerHTML = str2;
-                                var div2 = document.createElement("div");
-                                $(div2).addClass("div2");
-                                $(div2).attr("id", "infonum" + sensor.id);
-                                div2.innerHTML = val;
-                                var div3 = document.createElement("div");
-                                $(div3).addClass("div3");
-                                $(div3).append(img);
-                                var div4 = document.createElement("div");
-                                $(div4).addClass("div4");
-                                $(div4).append(sensor.name);
-                                $(bodydiv).append(div1);
-                                $(bodydiv).append(div2);
-                                $(bodydiv).append(div3);
-                                $(bodydiv).append(div4);
-                                $("#parentdiv").append(bodydiv);
-                            }
-                        }
-                    },
-                    error: function () {
-                        layerAler("提交失败");
-                    }
-                });
-
-                setInterval('getinfo()', 10000);
-
-                if (slen <= 12) {
-                    //$("#activity_pane").style.height = 700px;
-                    document.getElementById("activity_pane").style.height = 850 + "px";
-                }
-
-            });
-
-        </script>
 
 
     </head>
-    <body id="activity_pane">
-        <div style=" width: 100%;" class='top' id="parentdiv">
+    <body id="activity_pane" style=" height: 100%;">
+        <div style=" width: 70%; height: 800px; float: left">
+            <div class="topCenter1" id="echarts1" style="width: 90%; height: 98%; ">
+
+            </div>
+        </div>
+<!--        <div style=" width: 70%; height: 400px; float:  left; margin-top: 20px;">
+            <div class="topCenter1" id="echarts2" style="width: 90%; height: 98%; ">
+
+            </div>
+        </div>-->
+        <div style=" width: 30%; height: 800px; float: left; margin-top: 10px; overflow-x: scroll;">
+            <table id="kgtype"></table>
         </div>
     </body>
+    <script>
+        //动态创建折线对象
+
+        function functionNodname(data) {
+            console.log(data);
+            var series = [];
+            for (var p = 0; p < data.length; p++) {
+                var xyData = [];
+                xyData = data[p].data;
+                var item = {
+                    name: data[p].name,
+                    type: 'line',
+                    data: xyData
+                };
+
+                series.push(item);
+            }
+
+            return series;
+
+        }
+        //温度
+        function wd(id, qxbs, xdata, data, unit) {
+            wdChart = echarts.init(document.getElementById(id));
+            option = {
+                title: {
+                    text: '温度曲线图'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: qxbs
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: xdata
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} ' + unit
+                    }
+                },
+                series: functionNodname(data)
+            };
+            wdChart.setOption(option);
+        }
+        //湿度
+        function echarts3(id, qxbs, xdata, data) {
+            myChart3 = echarts.init(document.getElementById(id));
+            option = {
+                title: {
+                    text: '湿度曲线图'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: qxbs
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: xdata
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} '
+                    }
+                },
+                series: functionNodname(data)
+            };
+            myChart3.setOption(option);
+        }
+
+        $(function () {
+            var wdrs;
+            var sdrs;
+            var pid = parent.getpojectId();
+            var obj = {};
+            obj.pid = pid;
+
+            $.ajax({async: false, url: "homePage.homePage.getSensorList.action", type: "get", datatype: "JSON", data: obj,
+                success: function (data) {
+                    wdrs = data.wdrs;
+                    sdrs = data.sdrs;
+                },
+                error: function () {
+                    alert("提交失败！");
+                }
+            });
+
+            //['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎', 'wshadd']
+//            var qxbs = [];  //曲线标识
+//            var xdata = [];      //x轴描述 ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+//            var data = [];
+//            if (wdrs.length > 0) {
+//                var name = "";
+//                for (var i = 0; i < wdrs.length; i++) {
+//                    xdata.push(wdrs[i].times.substring(0,5));
+//                    if (name == wdrs[i].name) {
+//                        continue;
+//                    } else {
+//                        name = wdrs[i].name;
+//                        qxbs.push(wdrs[i].name);
+//                    }
+//                }
+//            }
+//
+//            if (qxbs.length > 0) {
+//                for (var i = 0; i < qxbs.length; i++) {
+//                    var obj = {};  
+//                    var vals = []; //数值数组
+//                    for (var j = 0; j < wdrs.length; j++) {
+//                         if(qxbs[i]==wdrs[j].name){
+//                             //.vals.push(wdrs[j].value);
+//                              var  value = parseInt(wdrs[j].value);
+//                             if(value>0){
+//                                value = (value/10).toFixed(1);
+//                             }
+//                             vals.push(value);
+//                         }
+//                    }
+//                    obj.name = qxbs[i];
+//                    obj.data = vals;
+//                    data.push(obj);
+//                }
+//            }
+
+            var sdqxbs = [];  //湿度曲线标识
+            var qxbstype = [];  //曲线标识类型
+            var sdxdata = [];      //x轴描述 ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            var sddata = [];   //填充数据
+            if (sdrs.length > 0) {
+                var wdname = "";   //温度传感器标识
+                var sdname = "";   //湿度传感器标识
+                for (var i = 0; i < sdrs.length; i++) {
+                    // console.log(wdname +"///"+sdrs[i].name+"///"+);
+                    if (wdname != sdrs[i].name && sdrs[i].type == "1") {
+                        wdname = sdrs[i].name;
+                        qxbstype.push(1);
+                        sdqxbs.push(sdrs[i].name);
+                    } else if (sdname != sdrs[i].name && sdrs[i].type == "2") {
+                        sdname = sdrs[i].name;
+                        sdqxbs.push(sdrs[i].name);
+                        qxbstype.push(2);
+                    } else {
+                        continue;
+                    }
+                }
+               
+                for (var i = 0; i < sdrs.length;i = i+sdqxbs.length) {
+                    
+                    sdxdata.push(sdrs[i].times.substring(0, 5));
+                   
+                }
+            }
+
+            if (sdqxbs.length > 0) {
+                for (var i = 0; i < sdqxbs.length; i++) {
+                    var obj = {};
+                    var wdvals = []; //数值数组
+                    var sdvals = []; //数值数组
+                    for (var j = 0; j < sdrs.length; j++) {
+                        if (sdqxbs[i] == sdrs[j].name && sdrs[j].type == 1) {
+                            var value = parseInt(sdrs[j].value);
+                            if (value > 0) {
+                                value = (value / 10).toFixed(1);
+                            }
+                            wdvals.push(value);
+                        }
+                        if (sdqxbs[i] == sdrs[j].name && sdrs[j].type == 2) {
+                            var value = parseInt(sdrs[j].value);
+                            if (value > 0) {
+                                value = (value / 10).toFixed(1);
+                            }
+                            sdvals.push(value);
+                        }
+                    }
+                    obj.name = sdqxbs[i];
+                    console.log("1:" + sdqxbs[i]);
+                    if (qxbstype[i] == 1) {
+                        obj.data = wdvals;
+                    } else {
+                        obj.data = sdvals;
+                    }
+
+                    sddata.push(obj);
+                }
+            }
+            echarts3("echarts1", sdqxbs, sdxdata, sddata);
+
+          //  wd("echarts2", qxbs, xdata, data, "℃");
+
+            $('#kgtype').bootstrapTable({
+                url: 'homePage.homePage.getkgList.action?pid=' + pid,
+                columns: [
+                    {
+                        field: 'name',
+                        title: "名称",
+                        width: 25,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        field: 'numvalue',
+                        title: "状态",
+                        width: 25,
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: function (value, row, index, field) {
+                            if (value == 1) {
+                                return "闭合";
+                            } else {
+                                return "断开";
+                            }
+                        }
+                    }],
+                clickToSelect: true,
+                singleSelect: false,
+                sortName: 'id',
+                locale: 'zh-CN', //中文支持,
+                showColumns: false,
+                sortOrder: 'desc',
+                pagination: true,
+                sidePagination: 'server',
+                pageNumber: 1,
+                pageSize: 96,
+                // 设置默认分页为 50
+                pageList: [96],
+                onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
+                    //                        console.info("加载成功");
+                },
+                //服务器url
+                queryParams: function (params)  {   //配置参数     
+                    var temp  =   {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的 
+                        search: params.search,
+                        skip: params.offset,
+                        limit: params.limit,
+                        type_id: "1"    
+                    };      
+                    return temp;  
+                },
+            });
+        });
+        //浏览器大小改变时重置大小
+        window.onresize = function () {
+
+            myChart3.resize();
+
+            wdChart.resize();
+
+        };
+    </script>
 </html>

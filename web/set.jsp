@@ -822,7 +822,7 @@
                                         <tr>
 
                                             <td>
-                                                <span style="margin-left:10px;" >网关地址</span>&nbsp;
+                                                <span style="margin-left:10px;" >网关</span>&nbsp;
 
                                                 <span class="menuBox">
                                                     <input id="l_comaddr" class="easyui-combobox" name="l_comaddr" style="width:150px; height: 30px" 

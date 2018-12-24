@@ -142,7 +142,7 @@
             </xsql>
         </xhandle>
         <xhandle desc="查询所有网关" id="getallcomaddr" rtnype="JSON">
-            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="SELECT comaddr as id,comaddr as text  FROM t_baseinfo where @CONDITION" var="list">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="SELECT comaddr as id,name as text  FROM t_baseinfo where @CONDITION" var="list">
                 <xflt id="CONDITION" nrp="" tpl="@pid">
                     <xfltpara id="pid" nrp="1=1" para="pid" sql="pid = ':pid'">
                     </xfltpara>

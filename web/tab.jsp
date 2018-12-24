@@ -34,6 +34,16 @@
                     win[func](obj);
                 }
             }
+            function size() {
+                var iframeHeight = $(window).height() - 70;
+                $("#myiframe").css("height", iframeHeight);
+            }
+            window.onresize = function () {
+                size();
+            };
+            $(function (){
+                size();
+            });
         </script>
     </head>
 
@@ -50,7 +60,7 @@
             </div>
 
             <div  id="content-main">
-                <iframe id="myiframe" class="J_iframe" name="iframe0" src="#"  seamless="" width="100%" frameborder="0"  height="800px"></iframe>
+                <iframe id="myiframe" class="J_iframe" name="iframe0" src="#"  seamless="" width="100%" frameborder="0" ></iframe>
             </div>
         </div>
         <!--<script type="text/javascript" src="abc_files/jquery.js"></script>-->

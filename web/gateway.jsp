@@ -281,10 +281,12 @@
                                 // break; // 如果只取第一张表，就取消注释这行
                             }
                         }
-                        var headStr = '序号,网关名称,网关编号,经度,纬度';
+                        var headStr = '序号,网关名称,网关编号,型号,经度,纬度';
                         var headStr2 = '序号,网关名称,网关编号';
+                        var headStr3 = '序号,网关名称,网关编号,经度,纬度';
+                        var headStr4 = '序号,网关名称,网关编号,型号';
                         for (var i = 0; i < persons.length; i++) {
-                            if (Object.keys(persons[i]).join(',') !== headStr && Object.keys(persons[i]).join(',') !== headStr2) {
+                            if (Object.keys(persons[i]).join(',') !== headStr && Object.keys(persons[i]).join(',') !== headStr2 && Object.keys(persons[i]).join(',') !== headStr3 && Object.keys(persons[i]).join(',') !== headStr4) {
                                 alert("导入文件格式不正确"); //导入文件格式不正确
                                 persons = [];
                             }
@@ -461,43 +463,131 @@
                 var pid = parent.parent.getpojectId();
                 for (var i = 0; i <= selects.length - 1; i++) {
                     var comaddr = selects[i].网关编号;
+                    while (comaddr.length < 18) {
+                        comaddr = "0" + comaddr;
+                    }
                     var obj = {};
                     obj.comaddr = comaddr;
-                    $.ajax({async: false, url: "login.gateway.iscomaddr.action", type: "POST", datatype: "JSON", data: obj,
+                    $.ajax({url: "homePage.gatewaymanage.existence.action", async: false, type: "get", datatype: "JSON", data: obj,
                         success: function (data) {
                             var arrlist = data.rs;
-                            if (arrlist.length == 0) {
-                                var adobj = {};
-                                adobj.model = "L-30MT-ES2";
-                                adobj.comaddr = comaddr;
-                                adobj.name = selects[i].网关名称;
-                                adobj.Longitude = selects[i].经度;
-                                adobj.latitude = selects[i].纬度;
-                                adobj.pid = pid;
-                                $.ajax({url: "login.gateway.addbase.action", async: false, type: "get", datatype: "JSON", data: adobj,
+                            if (arrlist.length > 0) {  //网关编号是合法编号
+                                $.ajax({async: false, url: "login.gateway.iscomaddr.action", type: "POST", datatype: "JSON", data: obj,
                                     success: function (data) {
                                         var arrlist = data.rs;
-                                        if (arrlist.length == 1) {
-                                            var ids = [];//定义一个数组
-                                            var xh = selects[i].序号;
-                                            ids.push(xh);//将要删除的id存入数组
-                                            addlogon(u_name, "添加", o_pid, "网关管理", "添加网关【" + selects[i].网关名称 + "】");
-                                            $("#warningtable").bootstrapTable('remove', {field: '序号', values: ids});
+                                        if (arrlist.length == 0) {  //网关编号未使用
+                                            var model = selects[i].型号;
+                                            if (model == "L-30MT-ES2") {
+                                                for (var i = 0; i < 16; i++) {
+                                                    var z = i + 4100;
+                                                    var j = i >= 8 ? 10 + (i - 8) : i;
+                                                    var ooo = {};
+                                                    ooo.sitenum = 1;
+                                                    ooo.name = "X" + j.toString();
+                                                    ooo.worktype = 0;
+                                                    ooo.dreg = z;
+                                                    ooo.type = 3;
+                                                    ooo.model = obj.model;
+                                                    ooo.l_comaddr = obj.comaddr;
+                                                    $.ajax({url: "sensor.sensorform.addsensor.action", async: false, type: "get", datatype: "JSON", data: ooo,
+                                                        success: function (data) {
+                                                            var arrlist = data.rs;
+                                                            if (arrlist.length == 1) {
+                                                            }
+                                                        },
+                                                        error: function () {
+                                                            alert("提交添加失败！");
+                                                        }
+                                                    });
+                                                }
+
+
+                                                //添加回路
+                                                for (var i = 0; i < 14; i++) {
+                                                    var z = i + 4200;
+                                                    var j = i >= 8 ? 10 + (i - 8) : i;
+                                                    var ooo = {};
+                                                    ooo.l_site = 1;
+                                                    ooo.l_name = "Y" + j.toString();
+                                                    ooo.l_comaddr = comaddr;
+                                                    ooo.l_pos = z;
+                                                    ooo.l_port = i;
+
+                                                    //ooo.l_worktype = 2;
+//                                    ooo.l_plan = 1;
+                                                    ooo.l_val1 = 0;
+                                                    ooo.l_val2 = 0;
+                                                    ooo.l_val3 = 0;
+                                                    ooo.l_val4 = 0;
+                                                    ooo.l_val5 = 0;
+//                                    ooo.l_info = i
+                                                    console.log(ooo);
+                                                    $.ajax({url: "loop.loopForm.addLoop.action", async: false, type: "get", datatype: "JSON", data: ooo,
+                                                        success: function (data) {
+                                                            var arrlist = data.rs;
+                                                            if (arrlist.length == 1) {
+                                                            }
+                                                        },
+                                                        error: function () {
+                                                            alert("提交添加失败！");
+                                                        }
+                                                    });
+                                                }
+
+
+                                                $.ajax({async: false, cache: false, url: "gayway.GaywayForm.addGateway.action", type: "GET", data: obj,
+                                                    success: function (data) {
+                                                        var arrlist = data.rs;
+                                                        if (arrlist.length == 1) {
+                                                            var ids = [];//定义一个数组
+                                                            var xh = selects[i].序号;
+                                                            ids.push(xh);//将要删除的id存入数组
+                                                            addlogon(u_name, "添加", o_pid, "网关管理", "添加网关【" + selects[i].网关名称 + "】");
+                                                            $("#warningtable").bootstrapTable('remove', {field: '序号', values: ids});
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        layer.alert('系统错误，刷新后重试', {
+                                                            icon: 6,
+                                                            offset: 'center'
+                                                        });
+                                                    }
+                                                });
+
+                                            } else {
+                                                var adobj = {};
+                                                adobj.model = "";
+                                                adobj.comaddr = comaddr;
+                                                adobj.name = selects[i].网关名称;
+                                                adobj.Longitude = selects[i].经度;
+                                                adobj.latitude = selects[i].纬度;
+                                                adobj.pid = pid;
+                                                $.ajax({url: "login.gateway.addbase.action", async: false, type: "get", datatype: "JSON", data: adobj,
+                                                    success: function (data) {
+                                                        var arrlist = data.rs;
+                                                        if (arrlist.length == 1) {
+                                                            var ids = [];//定义一个数组
+                                                            var xh = selects[i].序号;
+                                                            ids.push(xh);//将要删除的id存入数组
+                                                            addlogon(u_name, "添加", o_pid, "网关管理", "添加网关【" + selects[i].网关名称 + "】");
+                                                            $("#warningtable").bootstrapTable('remove', {field: '序号', values: ids});
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        alert("提交添加失败！");
+                                                    }
+                                                });
+                                            }
+
                                         }
                                     },
                                     error: function () {
-                                        alert("提交添加失败！");
+                                        layerAler("提交失败");
                                     }
                                 });
-
-
                             }
-                        },
-                        error: function () {
-                            layerAler("提交失败");
                         }
                     });
-
                 }
                 $("#gravidaTable").bootstrapTable('refresh');
             }
@@ -642,7 +732,7 @@
                         } else {
                             layerAler("此网关编号为非法编号");
                             namesss = false;
-                            return ;
+                            return;
                         }
                     },
                     error: function () {
@@ -775,7 +865,7 @@
                             <td>
                             </td>
                             <td>
-                                
+
                             </td>
                         </tr>
 
@@ -812,6 +902,7 @@
                     <td>序号</td>
                     <td>网关名称</td>
                     <td>网关编号</td>
+                    <td>型号</td>
                     <td>经度</td>
                     <td>纬度</td>
                 </tr>
@@ -819,6 +910,7 @@
                     <td>如1、2、3</td>
                     <td>网关名称</td>
                     <td>网关编号不可重复</td>
+                    <td>可以不输入</td>
                     <td>可以不输入</td>
                     <td>可以不输入</td>
                 </tr>

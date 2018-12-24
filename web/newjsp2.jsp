@@ -24,24 +24,35 @@
                 margin-left: 3%;
                 margin-top: 20px;
             }
+            html {
+                height: 100%;
+                width: 100%;
+                display: table;
+            }
+
+            body {
+                display: table-cell;
+                height: 100%;
+                width: 100%;
+            }
 
         </style>
 
 
 
     </head>
-    <body id="activity_pane" style=" height: 100%;">
-        <div style=" width: 70%; height: 800px; float: left">
+    <body id="activity_pane">
+        <div style=" width: 70%; height:90%; float: left">
             <div class="topCenter1" id="echarts1" style="width: 90%; height: 98%; ">
 
             </div>
         </div>
-<!--        <div style=" width: 70%; height: 400px; float:  left; margin-top: 20px;">
-            <div class="topCenter1" id="echarts2" style="width: 90%; height: 98%; ">
-
-            </div>
-        </div>-->
-        <div style=" width: 30%; height: 800px; float: left; margin-top: 10px; overflow-x: scroll;">
+        <!--        <div style=" width: 70%; height: 400px; float:  left; margin-top: 20px;">
+                    <div class="topCenter1" id="echarts2" style="width: 90%; height: 98%; ">
+        
+                    </div>
+                </div>-->
+        <div style=" width: 30%; height:90%; float: left; margin-top:10px; overflow-x: scroll;">
             <table id="kgtype"></table>
         </div>
     </body>
@@ -110,7 +121,7 @@
             myChart3 = echarts.init(document.getElementById(id));
             option = {
                 title: {
-                    text: '湿度曲线图'
+                    text: '曲线示意图'
                 },
                 tooltip: {
                     trigger: 'axis'
@@ -220,11 +231,11 @@
                         continue;
                     }
                 }
-               
-                for (var i = 0; i < sdrs.length;i = i+sdqxbs.length) {
-                    
+
+                for (var i = 0; i < sdrs.length; i = i + sdqxbs.length) {
+
                     sdxdata.push(sdrs[i].times.substring(0, 5));
-                   
+
                 }
             }
 
@@ -250,7 +261,6 @@
                         }
                     }
                     obj.name = sdqxbs[i];
-                    console.log("1:" + sdqxbs[i]);
                     if (qxbstype[i] == 1) {
                         obj.data = wdvals;
                     } else {
@@ -262,7 +272,7 @@
             }
             echarts3("echarts1", sdqxbs, sdxdata, sddata);
 
-          //  wd("echarts2", qxbs, xdata, data, "℃");
+            //  wd("echarts2", qxbs, xdata, data, "℃");
 
             $('#kgtype').bootstrapTable({
                 url: 'homePage.homePage.getkgList.action?pid=' + pid,

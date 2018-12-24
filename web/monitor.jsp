@@ -12,6 +12,18 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style>
             .btn { margin-left: 10px;}
+             html {
+                height: 100%;
+                width: 100%;
+                display: table;
+            }
+
+            body {
+                display: table-cell;
+                height: 100%;
+                width: 100%;
+            }
+
         </style>
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript"  src="js/getdate.js"></script>

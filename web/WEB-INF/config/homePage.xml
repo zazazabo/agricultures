@@ -21,7 +21,7 @@
             </xsql>
 <!--            select b.online as line,l_name,l_switch,show  from t_loop,t_baseinfo as b where b.comaddr = l_comaddr and show=1 AND l_deplayment=1-->
 <!--            select * from t_loop where show=1 AND l_deplayment=1 -->
-            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select convert(char(10),collectime,108) as times,value,ts.name as name,tc.type as type from t_sensorecord as tc,t_sensor as ts where tc.type != 3 and convert(char(10),collectime,120) = convert(char(10),GetDate(),120) and tc.comaddr = ts.l_comaddr and tc.infonum = ts.infonum and tc.sitenum = ts.sitenum and ts.show = 1 and @CONDITION  " var="sdrs">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select convert(char(10),collectime,108) as times,value,tc.name as name,tc.type as type from t_sensorecord as tc,t_sensor as ts where tc.type != 3 and convert(char(10),collectime,120) = convert(char(10),GetDate(),120) and tc.comaddr = ts.l_comaddr and tc.infonum = ts.infonum and tc.sitenum = ts.sitenum and ts.show = 1 and @CONDITION  " var="sdrs">
                 <xflt id="CONDITION" nrp="" tpl="@pid">
                     <xfltpara id="pid" nrp="1=2" para="pid" sql="comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid') order by times asc"></xfltpara>
                 </xflt>

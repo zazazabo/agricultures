@@ -525,7 +525,7 @@
         </script>
 
     </head>
-    <body id="panemask">
+    <body id="panemask" >
 
         <div class="btn-group zuheanniu" id="zuheanniu" style="float:left;position:relative;z-index:100;margin:12px 0 0 10px;">
             <button class="btn btn-success ctrol" data-toggle="modal" data-target="#pjj" id="add">
@@ -539,7 +539,7 @@
             </button> 
         </div>
 
-        <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped"></table>  
+        <table id="gravidaTable" style="width:100%; height: 100%;" class="text-nowrap table table-hover table-striped"></table>  
 
 
 

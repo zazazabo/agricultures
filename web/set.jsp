@@ -810,7 +810,7 @@
                 <h3 class="panel-title"><span >网关参数设置</span></h3>
             </div>
             <div class="panel-body" >
-                <div class="container" style=" height:400px;"  >
+                <div class="container">
 
 
 

@@ -289,7 +289,7 @@
 
         </div>
         <div class="bootstrap-table">
-            <div class="fixed-table-container" style="height: 350px; padding-bottom: 0px;">
+            <div class="fixed-table-container">
                 <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped">
                 </table>  
             </div>

@@ -1066,7 +1066,7 @@
                     autoOpen: false,
                     modal: true,
                     width: 700,
-                    height: 500,
+                    height: 390,
                     position: ["top", "top"],
                     buttons: {
                         添加: function () {
@@ -1081,7 +1081,7 @@
                     autoOpen: false,
                     modal: true,
                     width: 700,
-                    height: 500,
+                    height: 390,
                     position: "top",
                     buttons: {
                         修改: function () {

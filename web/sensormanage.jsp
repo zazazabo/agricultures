@@ -993,64 +993,61 @@
 
             });
 
-            function  sy() {
-                $("#gravidaTable").find(":checkbox:checked").each(function () {
-                    var $tr = $(this).parents("tr");
-//                    var id = $(this).parents("tr").find("td:first").html();
-//                    console.log(id);
-                    if ($tr.index() == 0) {
-                        layerAler("数据已是第一行");
-                        return;
-                    } else {
-//                      $tr.fadeOut().fadeIn();
-                        //           $tr.prev().before($tr);
-                        $tr.fadeOut().fadeIn();
-                        $tr.prev().before($tr);
-                    }
-                });
-
-            }
-
-            function xy() {
-                $("#gravidaTable").find(":checkbox:checked").each(function () {
-                    var $tr = $(this).parents("tr");
-                    $tr.fadeOut().fadeIn();
-                    $tr.next().after($tr);
-                    console.log($tr.index());
-                });
-                //下移
-                /*var $tr = $(this).parents("tr"); 
-                 if ($tr.index() != len - 1) { 
-                 $tr.fadeOut().fadeIn(); 
-                 $tr.next().after($tr); 
-                 } */
-            }
-
-            function bc() {
-                // var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
-                var allTableData = $("#gravidaTable").bootstrapTable('getData');
-                for (var i = 0; i < allTableData.length; i++) {
-                    var sen = allTableData[i];
-                    console.log("i:" + allTableData[i].name);
-                    var obj = {};
-                    obj.id = sen.id;
-                    obj.s_index = i;
-                    $.ajax({async: false, url: "homePage.sensormanage.updesc.action", type: "get", datatype: "JSON", data: obj,
-                        success: function (data) {
-
-                        },
-                        error: function () {
-                            alert("提交失败！");
-                        }
-                    });
-
-                }
-                layerAler("成功！");
-
-            }
-//            $.extend($.fn.dataTableExt.oStdClasses,{
-//                "sWrapper":"dataTables_wrapper form-inline"
-//            });
+//            function  sy() {
+//                $("#gravidaTable").find(":checkbox:checked").each(function () {
+//                    var $tr = $(this).parents("tr");
+////                    var id = $(this).parents("tr").find("td:first").html();
+////                    console.log(id);
+//                    if ($tr.index() == 0) {
+//                        layerAler("数据已是第一行");
+//                        return;
+//                    } else {
+////                      $tr.fadeOut().fadeIn();
+//                        //           $tr.prev().before($tr);
+//                        $tr.fadeOut().fadeIn();
+//                        $tr.prev().before($tr);
+//                    }
+//                });
+//
+//            }
+//
+//            function xy() {
+//                $("#gravidaTable").find(":checkbox:checked").each(function () {
+//                    var $tr = $(this).parents("tr");
+//                    $tr.fadeOut().fadeIn();
+//                    $tr.next().after($tr);
+//                    console.log($tr.index());
+//                });
+//                //下移
+//                /*var $tr = $(this).parents("tr"); 
+//                 if ($tr.index() != len - 1) { 
+//                 $tr.fadeOut().fadeIn(); 
+//                 $tr.next().after($tr); 
+//                 } */
+//            }
+//
+//            function bc() {
+//                // var number = $("#gravidaTable").bootstrapTable('getOptions').pageNumber;
+//                var allTableData = $("#gravidaTable").bootstrapTable('getData');
+//                for (var i = 0; i < allTableData.length; i++) {
+//                    var sen = allTableData[i];
+//                    console.log("i:" + allTableData[i].name);
+//                    var obj = {};
+//                    obj.id = sen.id;
+//                    obj.s_index = i;
+//                    $.ajax({async: false, url: "homePage.sensormanage.updesc.action", type: "get", datatype: "JSON", data: obj,
+//                        success: function (data) {
+//
+//                        },
+//                        error: function () {
+//                            alert("提交失败！");
+//                        }
+//                    });
+//
+//                }
+//                layerAler("成功！");
+//
+//            }
 
         </script>
 
@@ -1307,7 +1304,7 @@
                     <td>站号</td>
                     <td>传感器名</td>
                     <td>数据位置</td>
-                    <td>工作模式</td>
+                    <td>类型</td>
                     <td>型号</td>
                 </tr>
                 <tr>
@@ -1316,7 +1313,7 @@
                     <td>网关下站号不可重复</td>
                     <td>传感器名</td>
                     <td>数据位置</td>
-                    <td>工作模式 0代表模拟量、1代表开关量，填入0 或1 即可</td>
+                    <td>类型 1代表温度 2代表湿度 3代表开关 填入1或2或3即可</td>
                     <td>型号</td>
                 </tr>
             </table>

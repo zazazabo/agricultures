@@ -23,7 +23,6 @@
                 height: 100%;
                 width: 100%;
             }
-
         </style>
         <script type="text/javascript" src="js/genel.js"></script>
         <script type="text/javascript"  src="js/getdate.js"></script>

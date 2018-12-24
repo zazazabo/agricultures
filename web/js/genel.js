@@ -47,10 +47,6 @@ String.prototype.trim = function () {
 }
 
 
-
-
-
-
 function str_repeat(i, m) {
     for (var o = []; m > 0; o[--m] = i)
         ;
@@ -133,9 +129,6 @@ function isJSON(str) {
     console.log('It is not a string!')
 }
 
-
-
-
 function Str2Bytes(str) {
     var pos = 0;
     var len = str.length;
@@ -180,7 +173,6 @@ function get2byte(num) {
 }
 
 
-
 function b2s(param) {
     var retstr;
     var s = param.toString(16);
@@ -200,11 +192,6 @@ function randnum(n, m) {
 
 }
 
-
-
-
-
-
 function buicode2(paraArr) {
     var ByteToSend = "";
     for (var i = 0; i < paraArr.length; i++) {
@@ -213,75 +200,6 @@ function buicode2(paraArr) {
         //console.log(hexData[i].toString(16));
     }
     return  ByteToSend;
-}
-
-
-
-
-//地址域 字符串  控制域:整数   AFN:功能码 整数   SEQ:帧序列 整数 0x72    DA 整数  DT 整数  参数数组:
-function buicode(comaddr, C, AFN, SEQ, DA, DT, paraArr) {
-
-
-    var addrArea = Str2BytesH(comaddr);
-
-    var rda = sprintf("%04d", DA);
-    var rdt = sprintf("%04d", DT);
-    var datemp = Str2BytesH(rda);
-    var dttemp = Str2BytesH(rdt);
-
-    var hexData = new Array();
-    hexData[0] = 0x68;
-    hexData[5] = 0x68;
-    hexData[6] = C;//0x4;   //控制域
-    hexData[7] = addrArea[1]; //parseInt(sprintf("0x%02d", addrArea[1]), 16)             //地址域
-    hexData[8] = addrArea[0];              //parseInt(sprintf("0x%02d", addrArea[0]), 16)   //地址域
-    hexData[9] = addrArea[3];                           //parseInt(sprintf("0x%02d", addrArea[3]), 16)
-    hexData[10] = addrArea[2];         //parseInt(sprintf("0x%02d", addrArea[2]), 16)
-    hexData[11] = 0x02  //地址C  单地址或组地址
-    hexData[12] = AFN;  //功能码
-    hexData[13] = 0x70;//SEQ  //帧序列  
-
-    hexData[14] = datemp[1]; //   DA1
-    hexData[15] = datemp[0];
-
-    hexData[16] = dttemp[1];
-    hexData[17] = dttemp[0];
-
-    for (var j = 0; j < paraArr.length; j++) {
-        hexData.push(paraArr[j]);
-    }
-
-    var len1 = 18 - 6 + paraArr.length;   //18是固定长度  6报文头  
-    var len2 = len1 << 2 | 2;
-
-    var a = len2 >> 8 & 0x000F;
-    var b = len2 & 0x00ff;
-
-
-
-    hexData[1] = b               //len1 << 2 | 2;
-    hexData[2] = a
-
-    hexData[3] = b         //len1 << 2 | 2;
-    hexData[4] = a
-
-    var v1 = 0;
-    for (var i = 6; i < hexData.length; i++) {
-        //console.log(parseInt(hexData[i]));
-        v1 = v1 + hexData[i];
-    }
-    //    console.log(v1);
-    hexData.push(v1 % 256);
-    hexData.push(0x16);
-
-    var ByteToSend = "";
-    for (var i = 0; i < hexData.length; i++) {
-        // console.log(hexData[i]);
-        ByteToSend = ByteToSend + b2s(hexData[i]) + " ";
-        //console.log(hexData[i].toString(16));
-    }
-
-    return ByteToSend;
 }
 
 
@@ -296,75 +214,6 @@ function delendchar(str) {
 }
 
 
-/**
- *  先把父亲节点取出来，放进一个数组dataArray
- * @param {Object} datas 所有数据
- */
-function data2tree(datas) {
-    var dataArray = [];
-    datas.forEach(function (data) {
-        var CATL_PARENT = data.m_parent;
-        if (CATL_PARENT == '0') {
-            var CATL_CODE = data.m_code;
-            var CATL_NAME = data.m_title;
-            var action = data.m_action;
-            var icon = data.m_icon;
-            var objTemp = {
-                parent: CATL_PARENT,
-                code: CATL_CODE,
-                title: CATL_NAME,
-                action: action,
-                icon: icon
-            }
-            dataArray.push(objTemp);
-        }
-    });
-    return data2treeDG(datas, dataArray);
-}
-
-
-/**
- * 
- * @param {Object} datas  所有数据
- * @param {Object} dataArray 父节点组成的数组
- */
-function data2treeDG(datas, dataArray) {
-    for (var j = 0; j < dataArray.length; j++) {
-        var dataArrayIndex = dataArray[j];
-        var childrenArray = [];
-        var CATL_CODEP = dataArrayIndex.code;
-
-        for (var i = 0; i < datas.length; i++) {
-            var data = datas[i];
-            var CATL_PARENT = data.m_parent;
-            if (CATL_PARENT == CATL_CODEP) {//判断是否为儿子节点
-                var CATL_CODE = data.m_code;
-                var CATL_NAME = data.m_title;
-                var action = data.m_action;
-                var icon = data.m_icon;
-                var objTemp = {
-                    parent: CATL_PARENT,
-                    code: CATL_CODE,
-                    title: CATL_NAME,
-                    action: action,
-                    icon: icon
-                }
-                childrenArray.push(objTemp);
-            }
-
-        }
-        dataArrayIndex.children = childrenArray;
-        if (childrenArray.length > 0) {//有儿子节点则递归
-            data2treeDG(datas, childrenArray);
-        }
-
-    }
-    return dataArray;
-}
-
-
-
-
 function isNumber(val) {
 
     var regPos = /^\d+(\.\d+)?$/; //非负浮点数
@@ -377,78 +226,19 @@ function isNumber(val) {
 
 }
 
-/**
- * msg 功能
- * data 发关的数据
- * fn功能号
- * func 回调函数
- * comaddr 网关地址
- * type 类型
- * param 参数
- * val   值
- * */
-
-function dealsend2(msg, data, fn, func, comaddr, type, param, val) {
-    var user = new Object();
-    user.begin = '6A';
-    user.res = 1;
-    user.status = "";
-    user.comaddr = comaddr;
-    user.fn = fn;
-    user.function = func;
-    user.param = param;
-    user.page = 2;
-    user.frame = -1;
-    user.msg = msg;
-    user.val = val;
-    user.type = type;
-    user.data = data;
-    user.len = data.length;
-    user.end = '6A';
-    console.log(user);
-    parent.parent.sendData(user);
-}
-
-
-
 function dealsend2(msg, data, func, comaddr, type, param, val) {
     var user = new Object();
-    user.begin = '6A';
     user.res = 1;
     user.status = "";
     user.comaddr = comaddr;
     user.function = func;
     user.param = param;
     user.page = 2;
-    user.frame = -1;
     user.msg = msg;
     user.val = val;
     user.type = type;
     user.data = data;
     user.len = data.length;
-    user.end = '6A';
-    console.log(user);
-    parent.parent.sendData(user);
-}
-
-
-function dealsend3(msg, data, fn, func, comaddr, type, param, val) {
-    var user = new Object();
-    user.begin = '6A';
-    user.res = 0;
-    user.status = "";
-    user.comaddr = comaddr;
-    user.fn = fn;
-    user.function = func;
-    user.param = param;
-    user.page = 1;
-    user.frame = -1;
-    user.msg = msg;
-    user.val = val;
-    user.type = type;
-    user.data = data;
-    user.len = data.length;
-    user.end = '6A';
     console.log(user);
     parent.parent.sendData(user);
 }

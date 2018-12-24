@@ -557,7 +557,7 @@
                             <td>
                                 <input id="id_" name="id" type="hidden">
                                 <span style="margin-left:10px;" >网关编号</span>&nbsp;
-                                <input id="comaddr_" class="form-control" name="comaddr" disabled="disabled" style="width:150px;display: inline;"  type="text">
+                                <input id="comaddr_" class="form-control" name="comaddr" readonly="readonly" style="width:150px;display: inline;"  type="text">
                             </td>
                         </tr>
                         <tr>

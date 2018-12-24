@@ -252,11 +252,11 @@
 
         <script type="text/javascript">
             //创建网关在线图标
-            var wggreenicon = new BMap.Icon('./img/wlx.png', new BMap.Size(27, 32), {//20，30是图片大小
+            var wggreenicon = new BMap.Icon('./img/wzx.png', new BMap.Size(27, 32), {//20，30是图片大小
                 //anchor: new BMap.Size(0, 0)      //这个是信息窗口位置（可以改改看看效果）
             });
             //创建网关离线图标
-            var wghuiicon = new BMap.Icon('./img/wzx.png', new BMap.Size(27, 32), {//20，30是图片大小
+            var wghuiicon = new BMap.Icon('./img/wlx.png', new BMap.Size(27, 32), {//20，30是图片大小
                 //anchor: new BMap.Size(0, 0)      //这个是信息窗口位置（可以改改看看效果）
             });
             //创建传感器离线图标
@@ -462,7 +462,7 @@
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: 'presence',
+                            field: 'online',
                             title: lans[61][lang], //在线状态
                             width: 25,
                             align: 'center',

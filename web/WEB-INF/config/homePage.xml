@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xforms>
     <xform desc="首页" id="homePage">
-        <xhandle desc="首页显示传感" id="getSensorList" rtnype="JSON">
+<!--        <xhandle desc="首页显示传感" id="getSensorList" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where show=1 AND deplayment=1 AND @CONDITION order by s_index   " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@pid">
                     <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
                 </xflt>
             </xsql>
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select b.online as line,l_name,l_switch,show  from t_loop,t_baseinfo as b where b.comaddr = l_comaddr and show=1 AND l_deplayment=1 AND @CONDITION  " var="looprs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>-->
+         <xhandle desc="首页显示传感" id="getSensorList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select convert(char(10),collectime,108) as times,value,ts.name as name from t_sensorecord as tc,t_sensor as ts where tc.type = 1 and convert(char(10),collectime,120) = convert(char(10),GetDate(),120) and tc.comaddr = ts.l_comaddr and tc.infonum = ts.infonum and tc.sitenum = ts.sitenum and ts.show = 1 and @CONDITION " var="wdrs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid') order by times asc"></xfltpara>
+                </xflt>
+            </xsql>
 <!--            select b.online as line,l_name,l_switch,show  from t_loop,t_baseinfo as b where b.comaddr = l_comaddr and show=1 AND l_deplayment=1-->
 <!--            select * from t_loop where show=1 AND l_deplayment=1 -->
-            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select b.online as line,l_name,l_switch,show  from t_loop,t_baseinfo as b where b.comaddr = l_comaddr and show=1 AND l_deplayment=1 AND @CONDITION  " var="looprs">
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl="select convert(char(10),collectime,108) as times,value,ts.name as name,tc.type as type from t_sensorecord as tc,t_sensor as ts where tc.type != 3 and convert(char(10),collectime,120) = convert(char(10),GetDate(),120) and tc.comaddr = ts.l_comaddr and tc.infonum = ts.infonum and tc.sitenum = ts.sitenum and ts.show = 1 and @CONDITION  " var="sdrs">
+                <xflt id="CONDITION" nrp="" tpl="@pid">
+                    <xfltpara id="pid" nrp="1=2" para="pid" sql="comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid') order by times asc"></xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>
+        <xhandle desc="首页显示开关传感器" id="getkgList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_sensor where type = 3 and show = 1 and @CONDITION " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@pid">
                     <xfltpara id="pid" nrp="1=2" para="pid" sql="l_comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid')"></xfltpara>
                 </xflt>

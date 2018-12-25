@@ -347,7 +347,18 @@
                                 success: function (data) {
                                     var arrlist = data.rs;
                                     if (arrlist.length == 1) {
-                                        $("#table_loop").bootstrapTable('refresh');
+                                        layerAler(str);
+                                        var o = {};
+                                        o.l_comaddr = obj.comaddr;
+                                        o.pid = "${param.pid}";
+                                        o.l_deplayment = 1;
+                                        var opt = {
+                                            url: "loop.loopForm.getLoopList.action",
+                                            silent: false,
+                                            query: o
+                                        };
+                                        $("#gravidaTable").bootstrapTable('refresh', opt);
+
                                     }
                                 },
                                 error: function () {
@@ -355,13 +366,7 @@
                                 }
                             });
 
-                            layerAler(str);
-                            var opt = {
-                                url: "loop.loopForm.getLoopList.action",
-                                silent: true,
-                                query: obj
-                            };
-                            $("#gravidaTable").bootstrapTable('refresh', opt);
+
 
 
 

@@ -29,6 +29,60 @@
                 return reg.test(ip);
             }
 
+            function refreshControlCB(obj) {
+                if (obj.status == "success") {
+                    var data = Str2BytesH(obj.data);
+                    var v = "";
+                    for (var i = 0; i < data.length; i++) {
+
+                        v = v + sprintf("%02x", data[i]) + " ";
+                    }
+                    var infonum = obj.val;
+                    var infonum = infonum | 0x1000;
+                    var high = infonum >> 8 & 0xff;
+                    var low = infonum & 0xff;
+                    if (data[2] == high && data[3] == low) {
+                        layerAler("刷新成功");
+//                        var o2 = {pid: "${param.pid}", comaddr: obj.comaddr, l_deplayment: 0};
+//                        $.ajax({async: false, url: "gayway.GaywayForm.ClearData.action", type: "get", datatype: "JSON", data: o2,
+//                            success: function (data) {
+//                                var arrlist = data.rs;
+//                                if (arrlist.length == 1) {
+//                                }
+//                            },
+//                            error: function () {
+//                                alert("提交失败！");
+//                            }
+//                        });
+                    }
+
+                    console.log(v);
+                }
+            }
+            function refreshControl() {
+                var obj = $("#form1").serializeObject();
+                if (obj.l_comaddr == "") {
+                    layerAler('网关不能为空'); //
+                    return;
+                }
+                var obj1 = $("#form2").serializeObject();
+                console.log(obj1);
+                var vv = [];
+                vv.push(1);
+                vv.push(0x10);
+                var infonum = 3901 | 0x1000;
+                vv.push(infonum >> 8 & 0xff);
+                vv.push(infonum & 0xff);
+                vv.push(0);
+                vv.push(1); //寄存器数目 2字节   
+                vv.push(2);
+                var val = parseInt(obj1.controlval);
+
+                vv.push(val >> 8 & 0xff);
+                vv.push(val & 0xff);
+                var data = buicode2(vv);
+                dealsend2("10", data, "refreshControlCB", obj.l_comaddr, 0, 0, 3901);
+            }
 
             function readTrueTimeCB(obj) {
                 if (obj.status == "success") {
@@ -86,14 +140,6 @@
                 dealsend2("03", data, "readTrueTimeCB", obj.l_comaddr, 0, 0, 0);
 
 
-
-
-//                var o1 = $("#form1").serializeObject();
-//                var vv = [0];
-//                var l_comaddr = o1.l_comaddr;
-//                var num = randnum(0, 9) + 0x70;
-//                var data = buicode(l_comaddr, 0x04, 0xAC, num, 0, 1, vv); //01 03
-//                dealsend2("AC", data, 1, "readTrueTimeCB", l_comaddr, 0, 0, 0);
             }
 
             function setCheckTimeCB(obj) {
@@ -207,7 +253,7 @@
                 var data = buicode2(vv);
                 dealsend2("10", data, "initDataCB", obj.l_comaddr, 0, 0, 3928);
             }
-            
+
             function dateFormatter(value) {
                 var date = new Date(value);
                 var year = date.getFullYear().toString();
@@ -838,6 +884,7 @@
                                                         <option value="2">读取网关时间</option> 
                                                         <option value="3">数据初始化</option> 
                                                         <option value="4">设置巡测时间</option> 
+                                                        <option value="5">刷新控制</option> 
                                                         <!--                                                        <option value="2">设置换日冻结时间参数</option>    
                                                                                                                 <option value="3">设置通信巡检次数</option> 
                                                                                                                 <option value="4">读取网关时间</option> 
@@ -849,9 +896,7 @@
                                                     </select>
                                                 </span>  
                                             </td>
-                                            <!--                                            <td>
-                                                                                            <button type="button"  onclick="refleshgayway()" class="btn  btn-success btn-sm" style="margin-left: 2px;">刷新网关在线列表</button>
-                                                                                        </td>-->
+
                                         </tr>
                                     </tbody>
                                 </table> 
@@ -989,6 +1034,41 @@
                                 </table>
                             </div>
                         </div>                
+
+                        <div class="row" id="row5"  style=" display: none">
+                            <div class="col-xs-12">
+                                <table style="border-collapse:separate; border-spacing:0px 10px;border: 1px solid #16645629;">
+                                    <tbody>
+                                        <tr>
+
+                                            <td>
+
+
+                                                <span  style="  margin-right: 2px;" >刷新控制</span>
+
+                                                <select class="easyui-combobox" id="controlval" name="controlval" style="width:150px; height: 30px">
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>   
+                                                </select>    
+
+
+
+
+
+
+
+                                                <!--<input id="checktime"  class="form-control" name="checktime" style="width:150px;"  placeholder="时间" type="text">-->
+
+                                                <button  type="button" onclick="refreshControl()"  class="btn btn-success btn-sm"><span >控制</sspan>
+                                                </button>&nbsp; 
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>                      
 
                     </form>
                 </div>

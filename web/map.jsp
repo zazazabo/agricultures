@@ -14,7 +14,7 @@
 
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
         <style type="text/css">
-            body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+            body, html {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
             .search>tr>td {
                 padding-top: 20px;
             }
@@ -32,7 +32,7 @@
             #up-map-div{
                 width:300px;
                 top:10%;
-                left:60%;
+                left:50%;
                 position:absolute;
                 z-index:9999;
                 border:1px solid blue;
@@ -141,8 +141,12 @@
             <button onclick="cgq()" id="dj"><span >传感器</span></button>
             <button id="bzzt"><span>标识状态</span></button>
         </div>
-        <div id="allmap">
+        <div id="allmap" style=" width: 85%; height: 100%; float: left;">
 
+        </div>
+        <div style=" width: 15%; height: 100%; float: left;">
+            <h4 id="righttext"></h4>
+            <div id="textdiv" style=" margin-left: 10px;  height: 91%; overflow-x: scroll;"></div>
         </div>
         <div id="up-map-div" style=" display: none">
             <table style=" margin-left: 10%; width: 80%;">
@@ -557,7 +561,7 @@
                     BMAP_NORMAL_MAP,
                     BMAP_HYBRID_MAP
                 ]}));
-          //  map.centerAndZoom("湛江", 15); // 设置地图显示的城市 此项是必须设置的
+            //  map.centerAndZoom("湛江", 15); // 设置地图显示的城市 此项是必须设置的
             map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
 
             var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT}); // 左上角，添加比例尺
@@ -1368,9 +1372,9 @@
                         var obj = arrlist[i];
                         var Longitude = obj.Longitude;
                         var latitude = obj.latitude;
-                        var Iszx = lans[285][lang];   //离线    
+                        var Iszx = "离线";   //离线    
                         if (obj.online == 1) {
-                            Iszx = lans[284][lang];   //在线    
+                            Iszx = "在线";   //在线    
                         }
                         if (Longitude != "" && latitude != "") {
                             var point = new BMap.Point(Longitude, latitude);
@@ -1388,14 +1392,14 @@
                                    \n\
                                     <table style='text-align:center'>\n\
                                         <tr>\n\
-                                            <td>" + lans[25][lang] + ":</td>\n\
+                                            <td>" + "网关地址" + ":</td>\n\
                                             <td>" + obj.comaddr.replace(/\b(0+)/gi, "") + "</td>\n\
                                             <td></td>\n\
                                             <td>" + "名称" + ":</td>\n\
                                             <td>" + obj.name + "</td>\n\
                                         </tr>\n\
                                         <tr>\n\
-                                            <td>" + lans[12][lang] + ":</td>\n\
+                                            <td>" + "状态" + ":</td>\n\
                                             <td>" + Iszx + "</td>\n\
                                              <td>&nbsp&nbsp</td>\n\
                                         </tr>\n\ \n\
@@ -1404,6 +1408,10 @@
                             var infoWindow = new BMap.InfoWindow(textvalue, opts); // 创建信息窗口对象，引号里可以书写任意的html语句。
                             marker1.addEventListener("mouseover", function () {
                                 this.openInfoWindow(infoWindow);
+                            });
+                            //点击事件
+                            marker1.addEventListener("click", function () {
+                                rightshow(obj);
                             });
                             marker1.addEventListener("rightclick", function () {
                                 //移动、移除
@@ -1725,6 +1733,53 @@
 //                        $(this).combobox("select", data[0].id);
 //                        $(this).val(data[0].text);
 //                    }
+                });
+            }
+            function  rightshow(obj) {
+                $("#righttext").html(obj.name);
+                var obj1 = {};
+                obj1.l_comaddr = obj.comaddr;
+                $.ajax({url: "homePage.sensormanage.getsensorBycomaddr.action", async: false, type: "get", datatype: "JSON", data: obj1,
+                    success: function (data) {
+                        var arrlist = data.rs;
+                        if (arrlist.length > 0) {
+                            for (var i = 0; i < arrlist.length; i++) {
+                                // div11.innerHTML = "状态";
+                                var sensor = arrlist[i];
+                                var p = document.createElement("p");
+                                var name = sensor.name;
+                                var val = "";
+                                if(sensor.type=="1"){
+                                    var num;
+                                    if(sensor.numvalue>0){
+                                        num = sensor.numvalue/10;
+                                    }else{
+                                        num = sensor.numvalue;
+                                    }
+                                    val = num.toString()+"℃";
+                                }else if(sensor.type=="2"){
+                                    var num;
+                                    if(sensor.numvalue>0){
+                                        num = sensor.numvalue/10;
+                                    }else{
+                                        num = sensor.numvalue;
+                                    }
+                                    val = num.toString()+"%RH";
+                                }else if(sensor.type=="3"){
+                                     if(sensor.numvalue=="1"){
+                                        val="闭合";
+                                    }else{
+                                       val="断开";
+                                    }
+                                }
+                                p.innerHTML = name+":      "+ val;
+                                $("#textdiv").append(p);
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("提交添加失败！请刷新");
+                    }
                 });
             }
         </script>

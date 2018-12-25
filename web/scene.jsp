@@ -922,10 +922,6 @@
             <button class="btn btn-danger ctrol" onclick="removeshow()"  id="shanchu">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;删除
             </button>
-            <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
-                <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
-                <span >导入Excel</span>
-            </button>
             <button type="button" id="btn_download" class="btn btn-primary" onClick ="$('#gravidaTable').tableExport({type: 'excel', escape: 'false'})">
                 <span >导出Excel</span>
             </button>

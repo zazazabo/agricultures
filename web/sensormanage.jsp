@@ -42,6 +42,77 @@
                     layerAler(langs1[350][lang]);  //请选择您要保存的数据
                     return;
                 }
+                for (var i = 0; i < selects.length; i++) {
+                    var select = selects[i];
+                    var l_comaddr = select.网关编号;
+                    l_comaddr = l_comaddr.toString();
+                    var obj = {};
+                    while (l_comaddr.length < 18) {
+                        l_comaddr = "0" + l_comaddr;
+                    }
+                    obj.comaddr = l_comaddr;
+                    $.ajax({async: false, url: "homePage.gayway.getnamebycode.action", type: "get", datatype: "JSON", data: obj,
+                        success: function (data) {
+                            var rs = data.rs;
+                            if (rs.length > 0) {
+                                obj.l_comaddr = l_comaddr;
+                                var sitenum = select.站号;
+                                var dreg = select.数据位置;
+                                obj.sitenum = sitenum;
+                                obj.dreg = dreg;
+                                $.ajax({async: false, url: "homePage.sensormanage.getIsSiten.action", type: "get", datatype: "JSON", data: obj,
+                                    success: function (data) {
+                                        var rs = data.rs;
+                                        if (rs.length > 0) {
+
+                                        } else {
+                                            // model,dreg,name,sitenum,l_comaddr,type
+                                            var model = select.备注;
+                                            var name = select.传感器名;
+                                            var type = select.类型;
+                                            obj.model = model;
+                                            obj.name = name;
+                                            obj.type = type;
+                                            $.ajax({async: false, url: "homePage.sensormanage.add.action", type: "get", datatype: "JSON", data: obj,
+                                                success: function (data) {
+                                                    var rs = data.rs;
+                                                    if (rs.length > 0) {
+                                                        var ids = [];//定义一个数组
+                                                        var xh = selects[i].序号;
+                                                        ids.push(xh);//将要删除的id存入数组
+                                                        addlogon(u_name, "添加", o_pid, "传感器管理", "添加传感器【" + name + "】");
+                                                        $("#warningtable").bootstrapTable('remove', {field: '序号', values: ids});
+                                                    }
+                                                },
+                                                error: function () {
+                                                    alert("提交失败！");
+                                                }
+                                            });
+
+                                        }
+                                    },
+                                    error: function () {
+                                        alert("提交失败！");
+                                    }
+                                });
+
+                            }
+                        },
+                        error: function () {
+                            alert("提交失败！");
+                        }
+                    });
+
+                }
+                var obj1 = {};
+                obj1.l_comaddr = $("#l_comaddr2").val();
+                obj1.pid = "${param.pid}";
+                var opt = {
+                    url: "sensor.sensorform.getSensorList.action",
+                    query: obj1,
+                    silent: false
+                };
+                $("#gravidaTable").bootstrapTable('refresh', opt);
 
             }
             function showDialog() {
@@ -442,15 +513,15 @@
                 vv.push(site & 0xff);
 
                 var reg = parseInt(ele.dreg);
-                vv.push(reg >> 8 & 0xff)   //寄存器变量值
+                vv.push(reg >> 8 & 0xff);  //寄存器变量值
                 vv.push(reg & 0xff);
 
                 var worktype = parseInt(ele.worktype);
-                vv.push(worktype >> 8 & 0xff)   //工作模式
+                vv.push(worktype >> 8 & 0xff);   //工作模式
                 vv.push(worktype & 0xff);
 
-                vv.push(0)
-                vv.push(0)  //数值
+                vv.push(0);
+                vv.push(0);  //数值
 
                 vv.push(0); //
                 vv.push(1);
@@ -501,7 +572,7 @@
                 vv.push(0);
 
 
-                vv.push(0)   //寄存器变量值
+                vv.push(0);  //寄存器变量值
                 vv.push(0);
 
                 var data = buicode2(vv);
@@ -819,14 +890,14 @@
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: '工作模式', //纬度
-                            title: "工作模式",
+                            field: '类型', //纬度
+                            title: "类型",
                             width: 25,
                             align: 'center',
                             valign: 'middle'
                         }, {
-                            field: '型号', //纬度
-                            title: "型号",
+                            field: '备注', //纬度
+                            title: "备注",
                             width: 25,
                             align: 'center',
                             valign: 'middle'
@@ -891,8 +962,8 @@
                                 // break; // 如果只取第一张表，就取消注释这行
                             }
                         }
-                        var headStr = '序号,网关编号,站号,传感器名,数据位置,工作模式,型号';
-                        var headStr2 = '序号,网关编号,站号,传感器名,数据位置,工作模式';
+                        var headStr = '序号,网关编号,站号,传感器名,数据位置,类型,备注';
+                        var headStr2 = '序号,网关编号,站号,传感器名,数据位置,类型';
                         for (var i = 0; i < persons.length; i++) {
                             if (Object.keys(persons[i]).join(',') !== headStr && Object.keys(persons[i]).join(',') !== headStr2) {
                                 alert(langs1[366][lang]);  //导入文件格式不正确
@@ -1145,15 +1216,15 @@
             <button class="btn btn-danger ctrol" onclick="removeshow();">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;移除首页显示
             </button>
-<!--            <button class="btn btn-success ctrol" onclick="sy()">
-                &nbsp;上移
-            </button>
-            <button class="btn btn-success ctrol" onclick="xy()">
-                &nbsp;下移
-            </button>
-            <button class="btn btn-success ctrol" onclick="bc()">
-                &nbsp;保存
-            </button>-->
+            <!--            <button class="btn btn-success ctrol" onclick="sy()">
+                            &nbsp;上移
+                        </button>
+                        <button class="btn btn-success ctrol" onclick="xy()">
+                            &nbsp;下移
+                        </button>
+                        <button class="btn btn-success ctrol" onclick="bc()">
+                            &nbsp;保存
+                        </button>-->
         </div>
 
         <table id="gravidaTable" style="width:100%;" class="text-nowrap table table-hover table-striped">
@@ -1305,16 +1376,16 @@
                     <td>传感器名</td>
                     <td>数据位置</td>
                     <td>类型</td>
-                    <td>型号</td>
+                    <td>备注</td>
                 </tr>
                 <tr>
                     <td>如1、2、3</td>
-                    <td>网关编号不可重复</td>
+                    <td>网关编号必须是已存在的</td>
                     <td>网关下站号不可重复</td>
                     <td>传感器名</td>
                     <td>数据位置</td>
                     <td>类型 1代表温度 2代表湿度 3代表开关 填入1或2或3即可</td>
-                    <td>型号</td>
+                    <td>备注</td>
                 </tr>
             </table>
         </div>

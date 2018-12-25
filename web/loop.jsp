@@ -1020,47 +1020,47 @@
                     }
                 });
 
-                $('#excel-file').change(function (e) {
-                    var files = e.target.files;
-                    var fileReader = new FileReader();
-                    fileReader.onload = function (ev) {
-                        try {
-                            var data = ev.target.result,
-                                    workbook = XLSX.read(data, {
-                                        type: 'binary'
-                                    }), // 以二进制流方式读取得到整份excel表格对象
-                                    persons = []; // 存储获取到的数据
-                        } catch (e) {
-                            alert(langs1[348][lang]);  //文件类型不正确
-                            return;
-                        }
-                        // 表格的表格范围，可用于判断表头是否数量是否正确
-                        var fromTo = '';
-                        // 遍历每张表读取
-                        for (var sheet in workbook.Sheets) {
-                            if (workbook.Sheets.hasOwnProperty(sheet)) {
-                                fromTo = workbook.Sheets[sheet]['!ref'];
-                                console.log(fromTo);
-                                persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
-                                // break; // 如果只取第一张表，就取消注释这行
-                            }
-                        }
-                        var headStr = '序号,网关名称,网关地址,回路名称,回路编号,回路组号';
-                        for (var i = 0; i < persons.length; i++) {
-                            if (Object.keys(persons[i]).join(',') !== headStr) {
-                                alert(langs1[366][lang]);   //导入文件格式不正确                                 persons = [];
-                            }
-                        }
-                        console.log("p2:" + persons.length);
-                        $("#warningtable").bootstrapTable('load', []);
-                        if (persons.length > 0) {
-                            $('#warningtable').bootstrapTable('load', persons);
-
-                        }
-                    };
-                    // 以二进制方式打开文件
-                    fileReader.readAsBinaryString(files[0]);
-                });
+//                $('#excel-file').change(function (e) {
+//                    var files = e.target.files;
+//                    var fileReader = new FileReader();
+//                    fileReader.onload = function (ev) {
+//                        try {
+//                            var data = ev.target.result,
+//                                    workbook = XLSX.read(data, {
+//                                        type: 'binary'
+//                                    }), // 以二进制流方式读取得到整份excel表格对象
+//                                    persons = []; // 存储获取到的数据
+//                        } catch (e) {
+//                            alert(langs1[348][lang]);  //文件类型不正确
+//                            return;
+//                        }
+//                        // 表格的表格范围，可用于判断表头是否数量是否正确
+//                        var fromTo = '';
+//                        // 遍历每张表读取
+//                        for (var sheet in workbook.Sheets) {
+//                            if (workbook.Sheets.hasOwnProperty(sheet)) {
+//                                fromTo = workbook.Sheets[sheet]['!ref'];
+//                                console.log(fromTo);
+//                                persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+//                                // break; // 如果只取第一张表，就取消注释这行
+//                            }
+//                        }
+//                        var headStr = '序号,网关名称,网关地址,回路名称,回路编号,回路组号';
+//                        for (var i = 0; i < persons.length; i++) {
+//                            if (Object.keys(persons[i]).join(',') !== headStr) {
+//                                alert(langs1[366][lang]);   //导入文件格式不正确                                 persons = [];
+//                            }
+//                        }
+//                        console.log("p2:" + persons.length);
+//                        $("#warningtable").bootstrapTable('load', []);
+//                        if (persons.length > 0) {
+//                            $('#warningtable').bootstrapTable('load', persons);
+//
+//                        }
+//                    };
+//                    // 以二进制方式打开文件
+//                    fileReader.readAsBinaryString(files[0]);
+//                });
                 //####### Dialogs
                 $("#dialog-add").dialog({
                     autoOpen: false,
@@ -1336,10 +1336,10 @@
             <button class="btn btn-danger ctrol" onclick="removeshow()">
                 <span class="glyphicon glyphicon-trash"></span>&nbsp;移除首页显示
             </button>
-            <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
+<!--            <button class="btn btn-success ctrol" onclick="excel()" id="addexcel" >
                 <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
                 <span >导入Excel</span>
-            </button>
+            </button>-->
             <button type="button" id="btn_download" class="btn btn-primary" onClick ="$('#gravidaTable').tableExport({type: 'excel', escape: 'false'})">
                 <span >导出Excel</span>
             </button>

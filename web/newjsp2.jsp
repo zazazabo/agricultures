@@ -148,7 +148,7 @@
                 yAxis: {
                     type: 'value',
                     axisLabel: {
-                        formatter: '{value} '
+                        formatter: '{value} '+"%RH/℃"
                     }
                 },
                 series: functionNodname(data)

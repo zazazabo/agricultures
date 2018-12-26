@@ -269,7 +269,15 @@
         <xhandle desc="获取人员列表" id="query" rtnype="JSON">
             <xsql desc="查询该用户的子用户" id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_user    WHERE   @CONDITION AND  prohibit = 0   " var="bootstrap">
                 <xflt id="CONDITION" nrp="" tpl="@u_parent_id">
-                    <xfltpara id="u_parent_id" nrp="1=1" para="u_parent_id" sql="u_parent_id = ':u_parent_id'"> 
+                    <xfltpara id="u_parent_id" nrp="1=2" para="u_parent_id" sql="u_parent_id = ':u_parent_id'"> 
+                    </xfltpara>           
+                </xflt>        
+            </xsql>               
+        </xhandle> 
+        <xhandle desc="获取子用户" id="query2" rtnype="JSON">
+            <xsql desc="查询该用户的子用户" id="a1" list="true" page="true" tpe="SQL" tpl="select * from  t_user    WHERE   @CONDITION AND  prohibit = 0   " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@u_parent_id">
+                    <xfltpara id="u_parent_id" nrp="1=2" para="u_parent_id" sql="u_parent_id = ':u_parent_id'"> 
                     </xfltpara>           
                 </xflt>        
             </xsql>               
@@ -350,9 +358,9 @@
         <xhandle desc="权限分配" id="getpower" rtn="rs" rtnype="JSON">
             <xsql id="a1" para="enable"  tpe="DDL" tpl=" update t_role set enable=':enable' where @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@code AND @roletype">
-                    <xfltpara id="code" nrp="1=1" para="code" sql="code=:code">
+                    <xfltpara id="code" nrp="1=2" para="code" sql="code=:code">
                     </xfltpara>
-                    <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype=:roletype">
+                    <xfltpara id="roletype" nrp="1=2" para="roletype" sql="roletype=:roletype">
                     </xfltpara>
                 </xflt>
                 
@@ -410,7 +418,7 @@
             </xsql>               
         </xhandle> 
         
-        <xhandle desc="查询角色是否拥有该权限" id="iscode" rtnype="JSON">
+        <xhandle desc="查询角色该权限是否开启" id="iscode" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select code from t_role where enable = 1 and @CONDITION " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@roletype AND @code ">
                     <xfltpara id="roletype" nrp="1=1" para="roletype" sql="roletype = ':roletype' ">
@@ -440,7 +448,39 @@
                     </xfltpara>
                 </xflt>
             </xsql>
+        </xhandle>  
+        <xhandle desc="根据角色编号判断是否拥有子角色" id="zirole" rtn="rs" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select * from t_role where  @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@parent_id">
+                    <xfltpara id="parent_id" nrp="1=1" para="roletype" sql="parent_id = ':roletype' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+            <xsql id="a2" list="true" page="true" tpe="SQL" tpl=" SELECT DISTINCT name, roletype FROM t_role where  @CONDITION " var="rolers">
+                <xflt id="CONDITION" nrp="" tpl="@parent_id">
+                    <xfltpara id="parent_id" nrp="1=1" para="roletype" sql="parent_id = ':roletype' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+        </xhandle>  
+        
+        <xhandle desc="查询角色是否拥有该权限" id="havecode" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select code from t_role where @CONDITION " var="rs">
+                <xflt id="CONDITION" nrp="" tpl="@roletype AND @code ">
+                    <xfltpara id="roletype" nrp="1=2" para="roletype" sql="roletype = ':roletype' ">
+                    </xfltpara>
+                    <xfltpara id="code" nrp="1=2" para="code" sql="code = ':code' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select parent_id from t_role where @CONDITION " var="prs">
+                <xflt id="CONDITION" nrp="" tpl="@roletype AND @code ">
+                    <xfltpara id="roletype" nrp="1=2" para="roletype" sql="roletype = ':roletype' ">
+                    </xfltpara>
+                </xflt>
+            </xsql>
         </xhandle>    
+        
     </xform>
     
     <xform desc="报警设置" id="warnning">

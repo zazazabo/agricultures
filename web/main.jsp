@@ -927,7 +927,7 @@
                 });
 
                 function size() {
-                    var iframeHeight = $(window).height() - 70;
+                    var iframeHeight = $(window).height() - 60;
                     $("#iframe").css("height", iframeHeight);
                 }
                 size();

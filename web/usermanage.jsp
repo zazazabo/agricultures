@@ -313,12 +313,12 @@
                 $("#pjj2").modal();
                 $("#updaterole").combobox('setValue', select.m_code);
                 var pid = select.pid;
+                $("#hpid").val(pid);
                 var pid2 = pid.split(",");
                 $('#sel_menu1').val(pid2).trigger('change');
             }
             //修改
             function editaction() {
-
                 var pid = $("#sel_menu1").val(); //项目
                 var pids = "";
                 for (var i = 0; i < pid.length; i++) {
@@ -329,6 +329,7 @@
                     }
 
                 }
+
                 var formobj = $("#Form_Edit").serializeObject();
                 formobj.email = formobj.email_edit;
                 formobj.department = formobj.department_edit;
@@ -390,6 +391,38 @@
                     });
                     layer.close(index);
                     //此处请求后台程序，下方是成功后的前台处理……
+                });
+            }
+            //删除子孙用户
+            function  deletesumUser(id) {
+
+                $.ajax({async: false, url: "login.usermanage.loopsunuser.action", type: "POST", datatype: "JSON", data: {id: id},
+                    success: function (data) {
+                        var arrlist = data.rs;
+                        var uid = id;
+                        if (arrlist.length > 0) {
+                            for (var i = 0; i < arrlist.length; i++) {
+                                uid = arrlist.id;
+                                deletesumUser(uid);
+                            }
+                        }
+                    },
+                    error: function () {
+                        layerAler("提交失败");
+                    }
+                });
+
+                $.ajax({async: false, url: "login.usermanage.deleteUser.action", type: "POST", datatype: "JSON", data: {id: id},
+                    success: function (data) {
+                        var arrlist = data.rs;
+                        if (arrlist.length == 1) {
+                            $("#gravidaTable").bootstrapTable('refresh');
+                            addlogon(u_name, "删除", o_pid, "用户管理", "删除用户");
+                        }
+                    },
+                    error: function () {
+                        layerAler("提交失败");
+                    }
                 });
             }
             //重置密码
@@ -533,6 +566,7 @@
                         <h4 class="modal-title" style="display: inline;"><span name="xxx" id="234">修改用户信息</span></h4></div>
                     <form action="" method="POST" id="Form_Edit" onsubmit="return checkLampModify()">     
                         <input type="hidden" id="id" name="id" />
+                        <input type="hidden" id="hpid"  />
                         <div class="modal-body">
                             <table>
                                 <tbody>

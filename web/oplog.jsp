@@ -29,9 +29,9 @@
                 $('#oplogtabel').bootstrapTable({
                     url: 'login.oplog.oplogInfo.action?pid=' + pid,
                     columns: [
-                         {
+                        {
                             field: 'o_time',
-                            title: "时间",  //时间
+                            title: "时间", //时间
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -47,7 +47,7 @@
                                 var newTime = year + '-' + (preArr[month] || month) + '-' + (preArr[day] || day) + ' ' + (preArr[hour] || hour) + ':' + (preArr[min] || min) + ':' + (preArr[sec] || sec);
                                 return newTime;
                             }
-                        },  {
+                        }, {
                             field: 'o_page',
                             title: "操作页面", //操作页面
                             width: 25,
@@ -55,7 +55,7 @@
                             valign: 'middle',
                             sortable: true,
                             sortOrder: "desc"
-                        },{
+                        }, {
                             field: 'o_type',
                             title: "操作类型", //操作类型
                             width: 25,
@@ -63,23 +63,39 @@
                             valign: 'middle',
                             sortable: true,
                             sortOrder: "desc"
-                        },
-//                        {
-//                            field: 'o_comaddr',
-//                            title: langs1[50][lang], //操作类型
-//                            width: 25,
-//                            align: 'center',
-//                            valign: 'middle'
-//                        },
-                        {
+                        }, {
                             field: 'o_comment',
                             title: "详细内容", //详细内容
                             width: 25,
                             align: 'center',
                             valign: 'middle'
-                        },{
+                        },
+                        {
+                            field: 'o_comaddr',
+                            title: "网关名称",
+                            width: 25,
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value) {
+                                var name;
+                                if (value != "" && value != null) {
+                                    var obj = {};
+                                    obj.comaddr = value;
+                                    $.ajax({url: "homePage.gayway.getnamebycode.action", async: false, type: "get", datatype: "JSON", data: obj,
+                                        success: function (data) {
+                                            var rs = data.rs;
+                                            name = rs[0].name;
+                                        },
+                                        error: function () {
+                                            console.log("提交失败");
+                                        }
+                                    });
+                                }
+                                return  name;
+                            }
+                        }, {
                             field: 'o_name',
-                            title: "操作人",  //操作人
+                            title: "操作人", //操作人
                             width: 25,
                             align: 'center',
                             valign: 'middle',
@@ -100,7 +116,7 @@
                     showToggle: true,
                     // 设置默认分页为 50
                     pageList: [5, 10, 15, 20, 25],
-                    striped : true,
+                    striped: true,
                     onLoadSuccess: function () {  //加载成功时执行  表格加载完成时 获取集中器在线状态
 //                        console.info("加载成功");
                     },
@@ -114,9 +130,9 @@
                             limit: params.limit,
                             sort: v1, //排序字段 和 （desc、ase）
                             sortOrder: params.order,
-                            statr:$("#sday").val(),
-                            end :$("#eday").val(),
-                            pid:pid 
+                            statr: $("#sday").val(),
+                            end: $("#eday").val(),
+                            pid: pid 
                         };      
                         return temp;  
                     },

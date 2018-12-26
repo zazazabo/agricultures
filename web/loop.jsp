@@ -950,7 +950,8 @@
                             skip: params.offset,
                             limit: params.limit,
                             type_id: "1",
-                            pid: "${param.pid}"   
+                            pid: "${param.pid}",
+                            l_comaddr:$("#l_comaddr").val()   
                         };      
                         return temp;  
                     }, });

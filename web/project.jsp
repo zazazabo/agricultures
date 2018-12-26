@@ -59,17 +59,16 @@
                         var rs = data.rs;
                         if (rs.length > 0) {
                             for (var i = 0; i < rs.length; i++) {
-
                                 if (rs[i].code == "800301" && rs[i].enable != 0) {
                                     $("#add").attr("disabled", false);
                                     continue;
                                 }
                                 if (rs[i].code == "800302" && rs[i].enable != 0) {
-                                    $("#del").attr("disabled", false);
+                                    $("#update").attr("disabled", false);
                                     continue;
                                 }
                                 if (rs[i].code == "800303" && rs[i].enable != 0) {
-                                    $("#update").attr("disabled", false);
+                                    $("#del").attr("disabled", false);
                                     continue;
                                 }
                             }

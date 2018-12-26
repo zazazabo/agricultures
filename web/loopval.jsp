@@ -398,7 +398,7 @@
                 } else {
                     star = "断开";
                 }
-                addlogon(u_name, "设置", o_pid, "回路监控", star + "回路【" + ele.l_name + "】");
+                addlogon(u_name, "设置", o_pid, "回路监控", star + "回路【" + ele.l_name + "】",l_comaddr);
                 var o = {};
                 o.l_comaddr = ele.l_comaddr;
                 console.log(ele);

@@ -34,6 +34,7 @@
                 display: table-cell;
                 height: 100%;
                 width: 100%;
+              
             }
 
         </style>
@@ -42,6 +43,7 @@
 
     </head>
     <body id="activity_pane">
+        <h4 style=" margin-left: 20px; color: #FFB800;">温度单位：℃ &nbsp; &nbsp;湿度单位：%RH</h4>
         <div style=" width: 70%; height:90%; float: left">
             <div class="topCenter1" id="echarts1" style="width: 90%; height: 98%; ">
 
@@ -148,7 +150,7 @@
                 yAxis: {
                     type: 'value',
                     axisLabel: {
-                        formatter: '{value} '+"%RH/℃"
+                        formatter: '{value} '
                     }
                 },
                 series: functionNodname(data)
@@ -215,20 +217,29 @@
             var sdxdata = [];      //x轴描述 ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
             var sddata = [];   //填充数据
             if (sdrs.length > 0) {
-                var wdname = "";   //温度传感器标识
-                var sdname = "";   //湿度传感器标识
+               
                 for (var i = 0; i < sdrs.length; i++) {
-                    // console.log(wdname +"///"+sdrs[i].name+"///"+);
-                    if (wdname != sdrs[i].name && sdrs[i].type == "1") {
-                        wdname = sdrs[i].name;
-                        qxbstype.push(1);
+                    if (sdqxbs.length == 0) {
                         sdqxbs.push(sdrs[i].name);
-                    } else if (sdname != sdrs[i].name && sdrs[i].type == "2") {
-                        sdname = sdrs[i].name;
-                        sdqxbs.push(sdrs[i].name);
-                        qxbstype.push(2);
+                        if (sdrs[i].type == "1") {
+                            qxbstype.push(1);
+                        } else if (sdrs[i].type == "2") {
+                            qxbstype.push(2);
+                        }
                     } else {
-                        continue;
+                        for (var j = 0; j < sdqxbs.length; j++) {
+                            if (sdqxbs[j] == sdrs[i].name) {
+                                break;
+                            } else if (j == sdqxbs.length - 1) {
+                                sdqxbs.push(sdrs[i].name);
+                                if (sdrs[i].type == "1") {
+                                    qxbstype.push(1);
+                                } else if (sdrs[i].type == "2") {
+                                    qxbstype.push(2);
+                                }
+                            }
+
+                        }
                     }
                 }
 
@@ -242,8 +253,8 @@
             if (sdqxbs.length > 0) {
                 for (var i = 0; i < sdqxbs.length; i++) {
                     var obj = {};
-                    var wdvals = []; //数值数组
-                    var sdvals = []; //数值数组
+                    var wdvals = []; //温度数值数组
+                    var sdvals = []; //温度数值数组
                     for (var j = 0; j < sdrs.length; j++) {
                         if (sdqxbs[i] == sdrs[j].name && sdrs[j].type == 1) {
                             var value = parseInt(sdrs[j].value);
@@ -270,6 +281,12 @@
                     sddata.push(obj);
                 }
             }
+            if (sdxdata.length == 0) {
+                sdxdata = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'];
+                sdqxbs = ['虚拟数据'];
+                sddata = [{name: "虚拟数据", data: [1, 3, 2, 5, 4, 7, 6]}];
+            }
+
             echarts3("echarts1", sdqxbs, sdxdata, sddata);
 
             //  wd("echarts2", qxbs, xdata, data, "℃");
@@ -329,7 +346,7 @@
 
             myChart3.resize();
 
-            wdChart.resize();
+            // wdChart.resize();
 
         };
     </script>

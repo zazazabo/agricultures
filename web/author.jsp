@@ -274,7 +274,7 @@
                                                 //console.log(data);
                                             },
                                             error: function () {
-                                                alert("提交失败！");
+                                                alert("提交失败1！");
                                             }
                                         });
                                     } else {
@@ -291,13 +291,13 @@
                                                 //console.log(data);
                                             },
                                             error: function () {
-                                                alert("提交失败！");
+                                                alert("提交失败2！");
                                             }
                                         });
                                     }
                                 },
                                 error: function () {
-                                    alert("提交失败！");
+                                    alert("提交失败3！");
                                 }
                             });
 

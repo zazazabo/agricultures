@@ -58,26 +58,26 @@
                             width: 25,
                             align: 'center',
                             valign: 'middle',
-                             formatter: function (value, row, index, field) {
-                               if(row.type == "1"){
-                                   if(parseInt(value)>0){
-                                       return (parseInt(value)/10).toString()+"℃";
-                                   }else{
-                                       return value+"℃";
-                                   }
-                               }else if(row.type =="2"){
-                                   if(parseInt(value)>0){
-                                       return (parseInt(value)/10).toString()+"%RH";
-                                   }else{
-                                       return value+"%RH";
-                                   }
-                               }else if(row.type=="3"){
-                                   if(parseInt(value)=="1"){
-                                       return "闭合";
-                                   }else{
-                                       return "断开";
-                                   }
-                               }
+                            formatter: function (value, row, index, field) {
+                                if (row.type == "1") {
+                                    if (parseInt(value) > 0) {
+                                        return (parseInt(value) / 10).toString() + "℃";
+                                    } else {
+                                        return value + "℃";
+                                    }
+                                } else if (row.type == "2") {
+                                    if (parseInt(value) > 0) {
+                                        return (parseInt(value) / 10).toString() + "%RH";
+                                    } else {
+                                        return value + "%RH";
+                                    }
+                                } else if (row.type == "3") {
+                                    if (parseInt(value) == "1") {
+                                        return "闭合";
+                                    } else {
+                                        return "断开";
+                                    }
+                                }
                             }
                         }
                     ],
@@ -127,7 +127,7 @@
                         obj.statr = statr;
                     }
                     if (end == "") {
-   
+
                     } else {
                         obj.end = end;
                     }
@@ -147,17 +147,33 @@
                     todayBtn: 1,
                     autoclose: 1
                 });
+                $("#l_comaddr2").combobox({
+                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
+                    onLoadSuccess: function (data) {
+                        $(this).combobox('select', data[0].id);
+                    },
+                    onSelect: function (record) {
+                        console.log(record);
+                        var l_comaddr = record.id;
+                        $("#sensorlist").combobox({
+                            url: "homePage.function.gesensroList.action?l_comaddr="+l_comaddr,
+                            onLoadSuccess: function (data) {
+                                $(this).combobox('select', data[0].id);
+                            }
+                        });
+                    }
+                });
             });
         </script>
     </head>
     <body>
-        <div>
-            <span style=" margin-left: 10px;">类型：</span>
-            <select class="easyui-combobox" id="querytype" data-options='editable:false,valueField:"id", textField:"text" ' name="querytype" style="width:150px; height: 30px">
-                <option value="1">温度</option>
-                <option value="2">湿度</option>
-                <option value="3">开关</option>
-            </select>  
+        <div> 
+            <span style=" margin-left: 10px;">网关名称：</span>
+            <input id="l_comaddr2" name="l_comaddr" class="easyui-combobox"  style="width:150px; height: 30px" 
+                   data-options="editable:true,valueField:'id', textField:'text' " />
+            <span style=" margin-left: 10px;">传感器：</span>
+            <input id="sensorlist" class="easyui-combobox"  style="width:150px; height: 30px" 
+                   data-options="editable:true,valueField:'id', textField:'text' " />
         </div>
 
         <div style="margin-top:15px; font-size: 18px;margin-left: 10px;" id="Day">

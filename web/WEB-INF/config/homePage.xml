@@ -198,12 +198,20 @@
                 </xflt>
             </xsql> 
         </xhandle>  
-        <xhandle desc="查询信息点名称" id="getInfoname" rtnype="JSON">
+        <xhandle desc="查询传感器名称名称" id="getInfoname" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select name from t_sensor WHERE   @CONDITION  " var="rs">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr AND @infonum">
                     <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>
                     <xfltpara id="infonum" nrp="1=2" para="infonum" sql="infonum = ':infonum'">
+                    </xfltpara>
+                </xflt>
+            </xsql> 
+        </xhandle> 
+        <xhandle desc="查询网关下传感器" id="gesensroList" rtnype="JSON">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select id as id,name as text from t_sensor WHERE   @CONDITION  " var="list">
+                <xflt id="CONDITION" nrp="" tpl="@l_comaddr">
+                    <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>
                 </xflt>
             </xsql> 

@@ -319,6 +319,7 @@
             }
             //修改
             function editaction() {
+
                 var pid = $("#sel_menu1").val(); //项目
                 var pids = "";
                 for (var i = 0; i < pid.length; i++) {
@@ -352,8 +353,97 @@
                         alert("提交添加失败！");
                     }
                 });
+                //查看是否存在子孙用户
+                var uid = formobj.id;
+                $.ajax({async: false, url: "login.usermanage.loopsunuser.action", type: "POST", datatype: "JSON", data: {id: uid},
+                    success: function (data) {
+                        var arrlist = data.rs;
+                        if (arrlist.length > 0) {
+                            for (var i = 0; i < arrlist.length; i++) {
+                                var id = arrlist[i].id;
+                                upsunmUserP(id, pid);
+                            }
+                        }
+                    },
+                    error: function () {
+                        layerAler("提交失败");
+                    }
+                });
             }
 
+            //修改子孙用户权限
+            function upsunmUserP(id, pid) {
+                //pid 为父项目id
+                //查看子用户管理的项目
+                var sumpid = []; //子用户项目id
+                $.ajax({async: false, url: "login.project.getuserProject.action", type: "POST", datatype: "JSON", data: {id: id},
+                    success: function (data) {
+                        var rs = data.rs;
+                        console.log("p:"+rs[0].pid);
+                        if (rs[0].pid != "" && rs[0].pid != null) {
+                            sumpid = rs[0].pid.split(",");
+                            console.log("0"+sumpid);
+                            for (var i = 0; i < sumpid.length; i++) {
+                                for (var j = 0; j < pid.length; j++) {
+                                    if (pid[j] == sumpid[i]) {
+                                        continue;
+                                    } else if (j == pid.length - 1) {
+                                        sumpid.splice(i, 1);  //移除不相同的；
+                                    }
+                                }
+
+                            }
+                        }
+
+                        console.log("l:"+sumpid.length);
+                        console.log("list:"+sumpid);
+                        var sumpids = "";  //子用户管理项目字符串
+                        if (sumpid.length > 0) {
+                            for (var k = 0; k < sumpid.length; k++) {
+                                if (k == sumpid.length - 1) {
+                                    sumpids += pid[k];
+                                } else {
+                                    sumpids += sumpid[k] + ",";
+                                }
+                            }
+                        }
+                        //修改子用户项目
+                        var obj = {};
+                        obj.id = id;
+                        obj.pid = sumpids;
+                        $.ajax({async: false, url: "login.usermanage.editUpid.action", type: "POST", datatype: "JSON", data: obj,
+                            success: function (data) {
+
+                            },
+                            error: function () {
+                                layerAler("提交失败");
+                            }
+                        });
+                    },
+                    error: function () {
+                        layerAler("提交失败");
+                    }
+                });
+
+                //查看是否存在子用户
+                $.ajax({async: false, url: "login.usermanage.loopsunuser.action", type: "POST", datatype: "JSON", data: {id: id},
+                    success: function (data) {
+                        var arrlist = data.rs;
+                        if (arrlist.length > 0) {
+                            for (var i = 0; i < arrlist.length; i++) {
+                                var uid = arrlist[i].id;
+                                upsunmUserP(uid, pid);
+                            }
+                        }
+                    },
+                    error: function () {
+                        layerAler("提交失败");
+                    }
+                });
+
+            }
+
+            //删除用户
             function deleteUser() {
                 var selects = $('#gravidaTable').bootstrapTable('getSelections');
                 var num = selects.length;
@@ -365,24 +455,28 @@
                     btn: [langs1[146][lang], langs1[147][lang]]//确定、取消按钮
                 }, function (index) {
                     var select = selects[0];
-                    $.ajax({async: false, url: "login.usermanage.loopsunuser.action", type: "POST", datatype: "JSON", data: {id: select.id},
+                    var uid = select.id;
+                    $.ajax({async: false, url: "login.usermanage.deleteUser.action", type: "POST", datatype: "JSON", data: {id: select.id},
+                        success: function (data) {
+                            var arrlist = data.rs;
+                            if (arrlist.length == 1) {
+                                $("#gravidaTable").bootstrapTable('refresh');
+                                addlogon(u_name, "删除", o_pid, "用户管理", "删除用户【" + select.name + "】");
+                            }
+                        },
+                        error: function () {
+                            layerAler("提交失败");
+                        }
+                    });
+
+                    $.ajax({async: false, url: "login.usermanage.loopsunuser.action", type: "POST", datatype: "JSON", data: {id: uid},
                         success: function (data) {
                             var arrlist = data.rs;
                             if (arrlist.length > 0) {
-                                layerAler(langs1[229][lang]);  //该用户存在子用户不可删除
-                            } else {
-                                $.ajax({async: false, url: "login.usermanage.deleteUser.action", type: "POST", datatype: "JSON", data: {id: select.id},
-                                    success: function (data) {
-                                        var arrlist = data.rs;
-                                        if (arrlist.length == 1) {
-                                            $("#gravidaTable").bootstrapTable('refresh');
-                                            addlogon(u_name, "删除", o_pid, "用户管理", "删除用户");
-                                        }
-                                    },
-                                    error: function () {
-                                        layerAler("提交失败");
-                                    }
-                                });
+                                for (var i = 0; i < arrlist.length; i++) {
+                                    var id = arrlist[i].id;
+                                    deletesumUser(id);
+                                }
                             }
                         },
                         error: function () {
@@ -395,16 +489,13 @@
             }
             //删除子孙用户
             function  deletesumUser(id) {
-
-                $.ajax({async: false, url: "login.usermanage.loopsunuser.action", type: "POST", datatype: "JSON", data: {id: id},
+                var uid = id;
+                $.ajax({async: false, url: "login.usermanage.deleteUser.action", type: "POST", datatype: "JSON", data: {id: uid},
                     success: function (data) {
                         var arrlist = data.rs;
-                        var uid = id;
-                        if (arrlist.length > 0) {
-                            for (var i = 0; i < arrlist.length; i++) {
-                                uid = arrlist.id;
-                                deletesumUser(uid);
-                            }
+                        if (arrlist.length == 1) {
+                            // $("#gravidaTable").bootstrapTable('refresh');
+                            //addlogon(u_name, "删除", o_pid, "用户管理", "删除用户");
                         }
                     },
                     error: function () {
@@ -412,12 +503,14 @@
                     }
                 });
 
-                $.ajax({async: false, url: "login.usermanage.deleteUser.action", type: "POST", datatype: "JSON", data: {id: id},
+                $.ajax({async: false, url: "login.usermanage.loopsunuser.action", type: "POST", datatype: "JSON", data: {id: uid},
                     success: function (data) {
                         var arrlist = data.rs;
-                        if (arrlist.length == 1) {
-                            $("#gravidaTable").bootstrapTable('refresh');
-                            addlogon(u_name, "删除", o_pid, "用户管理", "删除用户");
+                        if (arrlist.length > 0) {
+                            for (var i = 0; i < arrlist.length; i++) {
+                                uid = arrlist[i].id;
+                                deletesumUser(uid);
+                            }
                         }
                     },
                     error: function () {

@@ -2,10 +2,18 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="5">
         <file>
+            <url>src/java/com/mylib/ControlServlet.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>264</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
             <url>web/gateway.jsp</url>
             <bookmark id="5">
                 <name/>
-                <line>344</line>
+                <line>369</line>
                 <key/>
             </bookmark>
         </file>
@@ -14,14 +22,6 @@
             <bookmark id="2">
                 <name/>
                 <line>0</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/mylib/ControlServlet.java</url>
-            <bookmark id="1">
-                <name/>
-                <line>264</line>
                 <key/>
             </bookmark>
         </file>

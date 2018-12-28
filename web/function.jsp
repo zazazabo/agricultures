@@ -28,8 +28,25 @@
             var langs1 = parent.parent.getLnas();
             var pid = parent.parent.getpojectId();
             $(function () {
+                $("#l_comaddr2").combobox({
+                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
+                    onLoadSuccess: function (data) {
+                        $(this).combobox('select', data[0].id);
+                    },
+                    onSelect: function (record) {
+                        console.log(record);
+                        var l_comaddr = record.id;
+                        $("#sensorlist").combobox({
+                            url: "homePage.function.gesensroList.action?l_comaddr=" + l_comaddr,
+                            onLoadSuccess: function (data) {
+                                $(this).combobox('select', data[0].id);
+                            }
+                        });
+                    }
+                });
+                console.log();
                 $('#reordtabel').bootstrapTable({
-                    url: 'homePage.function.getdayinfo.action?pid=' + pid,
+                    url: 'homePage.function.getdayinfo.action',
                     columns: [
                         {
                             field: 'days',
@@ -108,7 +125,9 @@
                             limit: params.limit,
                             type: "1",
                             statr: $("#sday").val(),
-                            end: $("#eday").val()
+                            end: $("#eday").val(),
+                            name:encodeURI($("#sensorlist").val()),
+                            comaddr:$("#l_comaddr2").val()
                                
                         };      
                         return temp;  
@@ -118,9 +137,8 @@
                 $("#select").click(function () {
                     var statr = $("#sday").val();
                     var end = $("#eday").val();
-                    var type = $("#querytype").val();
                     var obj = {};
-
+                    obj.type = "ALL";
                     if (statr == "") {
 
                     } else {
@@ -131,8 +149,8 @@
                     } else {
                         obj.end = end;
                     }
-                    obj.pid = pid;
-                    obj.type = type;
+                    obj.name = encodeURI($("#sensorlist").val());
+                    obj.comaddr = $("#l_comaddr2").val();
                     var opt = {
                         url: "homePage.function.getdayinfo.action",
                         query: obj,
@@ -147,27 +165,11 @@
                     todayBtn: 1,
                     autoclose: 1
                 });
-                $("#l_comaddr2").combobox({
-                    url: "homePage.gayway.getComaddr.action?pid=${param.pid}",
-                    onLoadSuccess: function (data) {
-                        $(this).combobox('select', data[0].id);
-                    },
-                    onSelect: function (record) {
-                        console.log(record);
-                        var l_comaddr = record.id;
-                        $("#sensorlist").combobox({
-                            url: "homePage.function.gesensroList.action?l_comaddr="+l_comaddr,
-                            onLoadSuccess: function (data) {
-                                $(this).combobox('select', data[0].id);
-                            }
-                        });
-                    }
-                });
             });
         </script>
     </head>
     <body>
-        <div> 
+        <div style=" margin-top: 10px;"> 
             <span style=" margin-left: 10px;">网关名称：</span>
             <input id="l_comaddr2" name="l_comaddr" class="easyui-combobox"  style="width:150px; height: 30px" 
                    data-options="editable:true,valueField:'id', textField:'text' " />

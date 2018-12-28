@@ -188,13 +188,13 @@
      <xform desc="运行记录" id="function">
         <xhandle desc="查看当天记录信息" id="getdayinfo" rtnype="JSON">
             <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select convert(char(10),collectime,120) as days,convert(char(10),collectime,108) as times, value, name,type from t_sensorecord where   @CONDITION  " var="bootstrap">
-                <xflt id="CONDITION" nrp="" tpl="@statr AND @end AND @type AND @pid">
+                <xflt id="CONDITION" nrp="" tpl="@statr AND @end AND @name AND @comaddr">
                     <xfltpara id="statr" nrp="1=1" para="statr" sql="collectime &gt;=  ':statr 00:00:00'  ">
                     </xfltpara>
                     <xfltpara id="end" nrp="1=1" para="end" sql="collectime &lt;=  ':end 23:59:59' ">
                     </xfltpara>
-                    <xfltpara id="type" nrp="1=1" para="type" sql="type = ':type'"></xfltpara>
-                    <xfltpara id="pid" nrp="1=2" para="pid" sql="comaddr IN (SELECT comaddr AS l_comaddr FROM t_baseinfo   WHERE  pid = ':pid') order by times asc"></xfltpara>
+                    <xfltpara id="name" nrp="1=2" para="name" sql="name = ':name'"></xfltpara>
+                    <xfltpara id="comaddr" nrp="1=2" para="comaddr" sql="comaddr=':comaddr' order by days desc,times asc"></xfltpara>
                 </xflt>
             </xsql> 
         </xhandle>  
@@ -209,7 +209,7 @@
             </xsql> 
         </xhandle> 
         <xhandle desc="查询网关下传感器" id="gesensroList" rtnype="JSON">
-            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select id as id,name as text from t_sensor WHERE   @CONDITION  " var="list">
+            <xsql id="a1" list="true" page="true" tpe="SQL" tpl="select name as id,name as text from t_sensor WHERE   @CONDITION  " var="list">
                 <xflt id="CONDITION" nrp="" tpl="@l_comaddr">
                     <xfltpara id="l_comaddr" nrp="1=2" para="l_comaddr" sql="l_comaddr = ':l_comaddr'">
                     </xfltpara>

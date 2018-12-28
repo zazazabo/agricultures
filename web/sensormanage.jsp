@@ -815,7 +815,7 @@
                     smartDisplay: false,
                     clickToSelect: true,
                     singleSelect: false,
-                    sortName: 's_index',
+                    sortName: 'infonum',
                     locale: 'zh-CN', //中文支持,
                     showColumns: true,
                     sortOrder: 'asc',
@@ -842,9 +842,8 @@
                             limit: params.limit,
                             sort: v1, //排序字段 和 （desc、ase）
                             sortOrder: params.order,
-                            type_id: "1",
                             pid: "${param.pid}",
-                            l_comaddr: $("#l_comaddr").val()
+                            l_comaddr: $("#l_comaddr2").val()
                         };   
                         return temp;  
                     }
